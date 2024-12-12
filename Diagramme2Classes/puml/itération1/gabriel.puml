@@ -38,3 +38,5 @@ vueGraphiquePlusGrand ..|> Observateur
 Observateur ..> sujet : "sujet"
 Controler ..|> EventHandler
 Controler --> ModelInterface
+
+@end
