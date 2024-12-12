@@ -117,5 +117,20 @@ public class Analyseur {
             modifiers.add("volatile");
         }
         return modifiers;
-}
+    }
+
+    public Class getClasseParent() {
+        return this.analyseClasse.getSuperclass();
+    }
+
+    public Class[] getInterfaces() {
+        return this.analyseClasse.getInterfaces();
+    }
+
+    public String getNomClasse() {
+        return this.analyseClasse.getName();
+    }
+    public String[] getPackages() {
+        return this.analyseClasse.getPackage().getName().split("\\.");
+    }
 }
