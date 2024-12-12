@@ -3,7 +3,7 @@ package main.java.diagramme.Analyse;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Analyseur {
     private Class analyseClasse;
@@ -56,10 +56,8 @@ public class Analyseur {
                 return "public";
             case Modifier.PRIVATE:
                 return "private";
-            case Modifier.PROTECTED:
-                return "protected";
             default:
-                return "Erreur";
+                return "protected";
         }
     }
 
@@ -118,7 +116,6 @@ public class Analyseur {
         }
         return modifiers;
     }
-
     public Class getClasseParent() {
         return this.analyseClasse.getSuperclass();
     }
@@ -130,7 +127,66 @@ public class Analyseur {
     public String getNomClasse() {
         return this.analyseClasse.getName();
     }
-    public String[] getPackages() {
-        return this.analyseClasse.getPackage().getName().split("\\.");
+
+    public static Map<String, List<Field>> trierAttributsParModificateur(Field[] fields) {
+        Map<String, List<Field>> tri = new HashMap<>();
+        tri.put("public", new ArrayList<>());
+        tri.put("protected", new ArrayList<>());
+        tri.put("private", new ArrayList<>());
+
+        for (Field field : fields) {
+            int mod = field.getModifiers();
+            if (Modifier.isPublic(mod)) {
+                tri.get("public").add(field);
+            } else if (Modifier.isProtected(mod)) {
+                tri.get("protected").add(field);
+            } else{
+                tri.get("private").add(field);
+            }
+        }
+
+        return tri;
+    }
+
+    public static Map<String, List<Method>> trierMethodesParModificateur(Method[] methods) {
+        Map<String, List<Method>> tri = new HashMap<>();
+        tri.put("public", new ArrayList<>());
+        tri.put("protected", new ArrayList<>());
+        tri.put("private", new ArrayList<>());
+
+        for (Method method : methods) {
+            int mod = method.getModifiers();
+            if (Modifier.isPublic(mod)) {
+                tri.get("public").add(method);
+            } else if (Modifier.isProtected(mod)) {
+                tri.get("protected").add(method);
+            } else{
+                tri.get("private").add(method);
+            }
+        }
+
+        return tri;
+    }
+
+    public static void afficherTriAttributs(Map<String, List<Field>> tri) {
+        for (Map.Entry<String, List<Field>> entry : tri.entrySet()) {
+            System.out.println("Attributs " + entry.getKey() + ":");
+            for (Field field : entry.getValue()) {
+                System.out.println(" - " + field.getName());
+            }
+        }
+    }
+
+    public static void afficherTriMethodes(Map<String, List<Method>> tri) {
+        for (Map.Entry<String, List<Method>> entry : tri.entrySet()) {
+            System.out.println("Méthodes " + entry.getKey() + ":");
+            for (Method method : entry.getValue()) {
+                System.out.println(" - " + method.getName());
+            }
+        }
+    }
+
+    public static Package[] getPackages() {
+        return Package.getPackages();
     }
 }
