@@ -1,0 +1,19 @@
+@startuml
+@startuml
+package plantuml {
+package jcckit{
+package graphic{
+class BasicGraphicAttributes
+}
+}
+}
+package Fabriques{
+class FabriqueBasicGraphicAttributes{
++CreerAttributBasicGraphicAttributes()
++CreerMethodeBasicGraphicAttributes()
++CreerClasseBasicGraphicAttributes()
+}
+}
+FabriqueBasicGraphicAttributes --* BasicGraphicAttributes
+@enduml
+@enduml
