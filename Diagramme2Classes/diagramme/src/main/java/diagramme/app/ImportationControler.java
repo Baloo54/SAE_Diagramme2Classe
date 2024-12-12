@@ -1,4 +1,4 @@
-package diagramme;
+package main.java.diagramme.app;
 
 import java.io.File;
 
@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import main.java.diagramme.diagramme.Model;
 
 public class ImportationControler implements EventHandler<ActionEvent> {
     /**

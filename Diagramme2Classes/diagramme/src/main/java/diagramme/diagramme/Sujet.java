@@ -1,4 +1,4 @@
-package diagramme;
+package main.java.diagramme.diagramme;
 /**
  * interface sujet
  */

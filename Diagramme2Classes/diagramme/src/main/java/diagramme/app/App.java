@@ -1,9 +1,10 @@
-package diagramme;
+package main.java.diagramme.app;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import main.java.diagramme.diagramme.Model;
 
 /**
  * classe principale 
@@ -25,7 +26,6 @@ public class App extends Application{
         //les différents boutton
         Button button = new Button("Select Package");
         button.setOnAction(importationControler);
-
 
         VBox vBox = new VBox(button);
         Scene scene = new Scene(vBox, 960, 600);
