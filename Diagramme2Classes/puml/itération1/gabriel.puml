@@ -1,0 +1,40 @@
+@startuml mvc
+title MVC
+
+interface sujet {
+    + void ajouterObservateur(Observateur o)
+    + void notifierObservateurs()
+}
+interface Observateur {
+    + void actualiser(Sujet s)
+}
+class ModelInterface {
+    - File package
+    --
+    + ModelInterface()
+    + void ajouterObservateur(Observateur o)
+    + void notifierObservateurs()
+    + void ajouterMot(String mot)
+}
+class vueGraphiquePlusPetit {
+    + void actualiser(Sujet s)
+}
+class vueGraphiquePlusGrand {
+    + void actualiser(Sujet s)
+}
+interface EventHandler {
+    + void handle(ActionEvent event)
+}
+class Controler {
+    + void handle(ActionEvent event)
+}
+
+ModelInterface ..|> sujet
+ModelInterface --> Observateur
+ModelInterface --> vueGraphiquePlusPetit
+ModelInterface --> vueGraphiquePlusGrand
+vueGraphiquePlusPetit ..|> Observateur
+vueGraphiquePlusGrand ..|> Observateur
+Observateur ..> sujet : "sujet"
+Controler ..|> EventHandler
+Controler --> ModelInterface
