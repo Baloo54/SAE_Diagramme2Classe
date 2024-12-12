@@ -1,0 +1,45 @@
+@startuml
+Title Introspection
+Actor Utilisateur as u
+participant Application as "Application : main"
+participant Analyse as "Analyse : a"
+
+u -> Application : Importation du package 
+activate Application
+loop Pour chaque .class
+Application -> Analyse : AnalyseClasse(nomClasse)
+activate Analyse
+Analyse -> Analyse : Class.forName(nomClasse)
+ 
+Analyse -> Analyse : getClasses()
+Analyse --> Application : Class[] Classes
+loop for (Class<?> c : Classes)
+Application --> Application : System.out.println("Classe  : " + c.getName());
+end
+ 
+Analyse -> Analyse : getDeclaredFields()
+Analyse --> Application : Field[] Attributs
+loop for (Field f : Attributs) 
+Application --> Application : System.out.println("Attribut  : " + f.getName());
+end
+
+Analyse -> Analyse : getDeclaredConstructors()
+Analyse --> Application : Constructor[] Constructeurs
+loop for (Constructor c : constructeurs)
+Application --> Application : System.out.println("Constructeur  : " + c.getName());
+end
+
+Analyse -> Analyse : getDeclaredMethods()
+Analyse --> Application : Method[] Methodes
+deactivate Analyse
+loop for (Method m : Methodes)
+Application --> Application : System.out.println("Méthode  : " + m.getName());
+end
+end
+deactivate Application
+
+
+
+
+@enduml
+    
