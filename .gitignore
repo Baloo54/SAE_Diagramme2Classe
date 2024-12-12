@@ -24,7 +24,9 @@ bin/
 
 ### VS Code ###
 .vscode/
-
+pom.xml
+target/
+module-info.java
 ### Mac OS ###
 .DS_Store
 
