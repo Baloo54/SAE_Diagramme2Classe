@@ -1,0 +1,196 @@
+@startuml
+'https://plantuml.com/class-diagram
+package plantuml {
+package jcckit{
+package graphic{
+class Anchor
+class ClippingRectangle
+class BasicGraphicAttributes
+}
+}
+}
+package java{
+package lang{
+package reflect{
+}
+}
+}
+package javafx{
+package event{
+class EventHandler
+}
+}
+package Controleurs{
+abstract class Controleur{
+}
+class ControleurAjoutClasse{
++handle()
+}
+class ControleurAjoutMethode{
++handle()
+}
+class ControleurDeplacerClasse{
++handle()
+}
+class ControleurModifierVisibiliteClasse{
++handle()
+}
+class ControleurModifierVisibiliteMethode{
++handle()
+}
+class ControleurModifierVisibiliteHeritage{
++handle()
+}
+}
+package Modeles{
+class Modele{
++notifierTous()
++ajouterClasse(Classe c)
++ajouterMethode(Methode m)
++modifierVisibiliteClasse(Classe c)
++modifierVisibiliteMethode(Classe c ,Methode m)
++modifierVisibiliteHeridite(Classe c)
++deplacerClasse(Vue v, int x,int y)
+}
+}
+package Vues{
+interface Vue{
++ abstract actualiser(Modele m)
+}
+class VueClasse{
+}
+class VuePackage{
+}
+class VueFleche{
+}
+class VueTexte{
+}
+class InterfaceGraphique{
+}
+}
+package Diagrammes{
+class Fleche{
+-Classe Depart
+-Classe Arrivee
+-String typeFleche
+--
++getCardinaliteDepart()
++getCardinaliteArrivee()
+}
+class Cardinalite{
+-int max
+-int min
+--
++getMax()
++getMin()
++setMinMax(int min, int max)
++setMinMax(int x)
++toString()
+}
+class Diagramme{
++getFleches()
++getPackages()
+}
+}
+
+package Fabriques{
+class FabriqueBasicGraphicAttributes{
++CreerAttributBasicGraphicAttributes()
++CreerMethodeBasicGraphicAttributes()
++CreerClasseBasicGraphicAttributes()
+}
+}
+
+package Classes{
+interface Visible{
+-boolean visible
+--
++changerVisibilite()
++getVisible()
+}
+class Classe{
+-Hashmap<Classe classefille,boolean visible> classeFilles
+--
++changerVisibiliteHeritage()
++getClasseParent()
+}
+class Methode{
+-String nom
+-ArrayList<HashMap<String nom,String type>> parametres
+-ArrayList<String> modificateurs
+--
++getParametres()
+}
+interface ComposantClasse{
+}
+interface CompositionClasse{
+-String nom
+-String type
+-ArrayList<String> modificateurs
+--
++getModificateurs()
++getNom()
++getType()
+}
+class Attribut{
+-String value
+--
++getValue()
+}
+class Interface{
++getAttributs()
++getMethodes()
++getVisibleMethodes()
++ajouterMethode(Methode m)
++changerVisibiliteMethode(Methode m)
++changerVisibiliteHeritage()
+}
+class Package{
+-String nom
+--
++getClass()
++ajouterClasse(Classe c)
+}
+}
+package LectureFichier{
+class Analyse{
++creerDiagramme()
+}
+}
+Fleche "1"-->"0.2" Anchor : -ancres
+Fleche "0.*"<--"1" Diagramme : -fleches
+Modele "1 "-->"0.*   " Diagramme : -diagrammes
+Controleur <|-- ControleurAjoutClasse
+Controleur <|-- ControleurAjoutMethode
+Controleur <|-- ControleurDeplacerClasse
+Controleur "0.*"-->"1" Modele : -modele
+Modele "1"*-->"0.*" Vue : - vues
+InterfaceGraphique ..|> Vue
+VueFleche ..|> Vue
+VueClasse ..|> Vue
+VuePackage ..|> Vue
+Classe "0.*   "<--"1 " Package : -classes
+Package "0.*   "<--"1 " Diagramme : -packages
+Controleur -|> EventHandler
+ClippingRectangle <|-- VueClasse
+Interface "1  "-->"0.*" ComposantClasse : -attributs
+FabriqueBasicGraphicAttributes --* BasicGraphicAttributes
+VueTexte ..|> Vue
+VueTexte -* FabriqueBasicGraphicAttributes
+Analyse --* reflect
+Attribut ..|> ComposantClasse
+Cardinalite "0,2"<--"1" Fleche :-cardinalites
+Classe "1"-->"0.1" Classe :-classeParent
+Interface "1"-->"0.*" Interface : -interfaces
+Interface <|-- Classe
+Interface "1"-->"0.*   " Methode : -methodes
+Attribut ...|> CompositionClasse
+Interface ..|> CompositionClasse
+Classe ..|> ComposantClasse
+ControleurModifierVisibiliteClasse --|> Controleur
+ControleurModifierVisibiliteMethode --|> Controleur
+ControleurModifierVisibiliteHeritage --|> Controleur
+Visible <|.. Methode
+Visible <|.. Interface
+Analyse --* Diagramme
+@enduml

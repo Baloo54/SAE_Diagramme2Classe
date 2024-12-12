@@ -1,0 +1,77 @@
+@startuml
+package Controleurs{
+abstract class Controleur{
+}
+class ControleurAjoutClasse{
++handle()
+}
+class ControleurAjoutMethode{
++handle()
+}
+class ControleurDeplacerClasse{
++handle()
+}
+class ControleurModifierVisibiliteClasse{
++handle()
+}
+class ControleurModifierVisibiliteMethode{
++handle()
+}
+class ControleurModifierVisibiliteHeritage{
++handle()
+}
+}
+package Modeles{
+class Modele{
++notifierTous()
++ajouterClasse(Classe c)
++ajouterMethode(Methode m)
++modifierVisibiliteClasse(Classe c)
++modifierVisibiliteMethode(Classe c ,Methode m)
++modifierVisibiliteHeridite(Classe c)
++deplacerClasse(Vue v, int x,int y)
+}
+}
+package Vues{
+interface Vue{
++ abstract actualiser(Modele m)
+}
+class VueClasse{
+}
+class VuePackage{
+}
+class VueFleche{
+}
+class VueTexte{
+}
+class InterfaceGraphique{
+}
+}
+package Fabriques{
+class FabriqueBasicGraphicAttributes{
++CreerAttributBasicGraphicAttributes()
++CreerMethodeBasicGraphicAttributes()
++CreerClasseBasicGraphicAttributes()
+}
+}
+package javafx{
+package event{
+class EventHandler
+}
+}
+ControleurModifierVisibiliteClasse --|> Controleur
+ControleurModifierVisibiliteMethode --|> Controleur
+ControleurModifierVisibiliteHeritage --|> Controleur
+VueTexte ..|> Vue
+VueTexte --* FabriqueBasicGraphicAttributes
+Controleur -|> EventHandler
+Controleur <|-- ControleurAjoutClasse
+Controleur <|-- ControleurAjoutMethode
+Controleur <|-- ControleurDeplacerClasse
+Controleur "0.*"-->"1" Modele : -modele
+Modele "1"*-->"0.*" Vue : - vues
+InterfaceGraphique ..|> Vue
+VueFleche ..|> Vue
+VueClasse ..|> Vue
+VuePackage ..|> Vue
+@enduml
