@@ -25,7 +25,7 @@ public class ImportationControler implements EventHandler<ActionEvent> {
         this.userHome = System.getProperty("user.home");
     }
     /**
-     * handle
+     * permet de récupérer le package de l'utilisateur
      * @param event
      * @return void
      */

@@ -5,25 +5,29 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
+/**
+ * classe principale 
+ * qui run l'application
+ */
 public class App extends Application{
     public static void main(String[] args) {
         launch(args);
     }
-
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("JavaFX App");
-
+        //titre de l'application
+        primaryStage.setTitle("Diagramme");
+        //le modèle
         Model model = new Model();
+        //les différents controleurs
         ImportationControler importationControler = new ImportationControler(model, primaryStage);
       
-        Button button = new Button("Select Directory");
+        //les différents boutton
+        Button button = new Button("Select Package");
         button.setOnAction(importationControler);
 
 
         VBox vBox = new VBox(button);
-        //HBox hBox = new HBox(button1, button2);
         Scene scene = new Scene(vBox, 960, 600);
 
         primaryStage.setScene(scene);
