@@ -117,5 +117,75 @@ public class Analyseur {
             modifiers.add("volatile");
         }
         return modifiers;
-}
+    }
+
+    public static Map<String, List<Field>> trierAttributsParModificateur(Field[] fields) {
+        Map<String, List<Field>> tri = new HashMap<>();
+        tri.put("public", new ArrayList<>());
+        tri.put("protected", new ArrayList<>());
+        tri.put("private", new ArrayList<>());
+        tri.put("package-private", new ArrayList<>());
+
+        for (Field field : fields) {
+            int mod = field.getModifiers();
+            if (Modifier.isPublic(mod)) {
+                tri.get("public").add(field);
+            } else if (Modifier.isProtected(mod)) {
+                tri.get("protected").add(field);
+            } else if (Modifier.isPrivate(mod)) {
+                tri.get("private").add(field);
+            } else {
+                tri.get("package-private").add(field);
+            }
+        }
+
+        return tri;
+    }
+
+    public static Map<String, List<Method>> trierMethodesParModificateur(Method[] methods) {
+        Map<String, List<Method>> tri = new HashMap<>();
+        tri.put("public", new ArrayList<>());
+        tri.put("protected", new ArrayList<>());
+        tri.put("private", new ArrayList<>());
+        tri.put("package-private", new ArrayList<>());
+
+        for (Method method : methods) {
+            int mod = method.getModifiers();
+            if (Modifier.isPublic(mod)) {
+                tri.get("public").add(method);
+            } else if (Modifier.isProtected(mod)) {
+                tri.get("protected").add(method);
+            } else if (Modifier.isPrivate(mod)) {
+                tri.get("private").add(method);
+            } else {
+                tri.get("package-private").add(method);
+            }
+        }
+
+        return tri;
+    }
+
+    public static void afficherTriAttributs(Map<String, List<Field>> tri) {
+        for (Map.Entry<String, List<Field>> entry : tri.entrySet()) {
+            System.out.println("Attributs " + entry.getKey() + ":");
+            for (Field field : entry.getValue()) {
+                System.out.println(" - " + field.getName());
+            }
+        }
+    }
+
+    public static void afficherTriMethodes(Map<String, List<Method>> tri) {
+        for (Map.Entry<String, List<Method>> entry : tri.entrySet()) {
+            System.out.println("Méthodes " + entry.getKey() + ":");
+            for (Method method : entry.getValue()) {
+                System.out.println(" - " + method.getName());
+            }
+        }
+    }
+
+    public static List<Package> getPackages() {
+
+        Package[] packages = Package.getPackages();
+        return Arrays.asList(packages);
+    }
 }
