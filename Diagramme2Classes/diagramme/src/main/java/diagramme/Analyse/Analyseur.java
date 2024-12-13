@@ -61,7 +61,8 @@ public class Analyseur {
         }
     }
 
-    private static ArrayList<String> getModifierClasse(int i) {
+    private static ArrayList<String> getModifierClasse(Class c) {
+        int i = c.getModifiers();
         ArrayList<String> modifiers = new ArrayList<>();
         modifiers.add(getModifierVisibilite(i));
         if (Modifier.isAbstract(i)) {
@@ -75,7 +76,8 @@ public class Analyseur {
         return modifiers;
     }
 
-    private static ArrayList<String> getModifierMethode(int i) {
+    private static ArrayList<String> getModifierMethode(Method m) {
+        int i = m.getModifiers();
         ArrayList<String> modifiers = new ArrayList<>();
         modifiers.add(getModifierVisibilite(i));
         if (Modifier.isStatic(i)) {
@@ -99,7 +101,8 @@ public class Analyseur {
         return modifiers;
     }
 
-    private static ArrayList<String> getModifierAttribut(int i) {
+    private static ArrayList<String> getModifierAttribut(Field f) {
+        int i = f.getModifiers();
         ArrayList<String> modifiers = new ArrayList<>();
         modifiers.add(getModifierVisibilite(i));
         if (Modifier.isStatic(i)) {
@@ -113,6 +116,9 @@ public class Analyseur {
         }
         if (Modifier.isVolatile(i)) {
             modifiers.add("volatile");
+        }
+        if(f.getType().isArray()){
+            modifiers.add("array");
         }
         return modifiers;
     }
@@ -128,7 +134,8 @@ public class Analyseur {
         return this.analyseClasse.getName();
     }
 
-    public static Map<String, List<Field>> trierAttributsParModificateur(Field[] fields) {
+    public  Map<String, List<Field>> trierAttributsParModificateur() {
+        Field[] fields = this.analyseClasse.getDeclaredFields();
         Map<String, List<Field>> tri = new HashMap<>();
         tri.put("public", new ArrayList<>());
         tri.put("protected", new ArrayList<>());
@@ -148,12 +155,11 @@ public class Analyseur {
         return tri;
     }
 
-    public static Map<String, List<Method>> trierMethodesParModificateur(Method[] methods) {
+    public  Map<String, List<Method>> trierMethodesParModificateur(Method[] methods) {
         Map<String, List<Method>> tri = new HashMap<>();
         tri.put("public", new ArrayList<>());
         tri.put("protected", new ArrayList<>());
         tri.put("private", new ArrayList<>());
-
         for (Method method : methods) {
             int mod = method.getModifiers();
             if (Modifier.isPublic(mod)) {
@@ -164,11 +170,10 @@ public class Analyseur {
                 tri.get("private").add(method);
             }
         }
-
         return tri;
     }
 
-    public static void afficherTriAttributs(Map<String, List<Field>> tri) {
+    public  void afficherTriAttributs(Map<String, List<Field>> tri) {
         for (Map.Entry<String, List<Field>> entry : tri.entrySet()) {
             System.out.println("Attributs " + entry.getKey() + ":");
             for (Field field : entry.getValue()) {
