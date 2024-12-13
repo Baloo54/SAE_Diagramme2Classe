@@ -17,7 +17,7 @@ class AnalyseurTest {
     private Analyseur analyseur;
 
     @BeforeEach
-    void setUp() throws ClassNotFoundException {
+    void setup() throws ClassNotFoundException {
         analyseur = new Analyseur("main.java.diagramme.Analyse.Analyseur");
     }
 
