@@ -11,22 +11,41 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+
+/**
+ * Classe de test pour la classe Analyseur
+ */
+
 class AnalyseurTest {
 
-
+    /**
+     * Analyseur à tester
+     */
     private Analyseur analyseur;
 
+
+    /**
+     * Initialisation de l'analyseur avant chaque test
+     * @throws ClassNotFoundException
+     */
     @BeforeEach
-    void setUp() throws ClassNotFoundException {
+    void setup() throws ClassNotFoundException {
         analyseur = new Analyseur("main.java.diagramme.Analyse.Analyseur");
     }
 
+    /**
+     * Test de la méthode getNomClasse, retourne le nom de la classe
+     */
     @Test
     void testGetNomClasse() {
         String nomClasse = analyseur.getNomClasse();
         assertEquals("main.java.diagramme.Analyse.Analyseur", nomClasse);
     }
 
+    /**
+     * Test de la méthode getClasseParent, retourne la classe parent
+     */
     @Test
     void testGetClasseParent() {
         Class<?> classeParent = analyseur.getClasseParent();
@@ -34,6 +53,9 @@ class AnalyseurTest {
         assertEquals(Object.class, classeParent);
     }
 
+    /**
+     * Test de la méthode getInterfaces, retourne les interfaces implémentées
+     */
     @Test
     void testGetInterfaces() {
         Class<?>[] interfaces = analyseur.getInterfaces();
@@ -41,6 +63,11 @@ class AnalyseurTest {
         assertEquals(0, interfaces.length);
     }
 
+    /**
+     * Test de la méthode trierAttributsParModificateur, retourne les attributs triés par modificateur
+     * tri les attributs par modificateur dans une map
+     * @throws ClassNotFoundException
+     */
     @Test
     void trierAttributsParModificateur() throws ClassNotFoundException {
         Analyseur a = new Analyseur("main.java.diagramme.Analyse.Analyseur");
@@ -58,6 +85,10 @@ class AnalyseurTest {
         }
     }
 
+    /**
+     * Test de la méthode trierMethodesParModificate
+     * Tri les méthodes par modificateur dans une map
+     */
     @Test
     void testTrierMethodesParModificateur() {
         Method[] methods = analyseur.getClass().getDeclaredMethods();
@@ -68,6 +99,11 @@ class AnalyseurTest {
         assertTrue(triMethodes.containsKey("private"));
     }
 
+
+    /**
+     * Test de la méthode afficherAttributs et afficherMethodes
+     * Affiche les attributs et les méthodes de la classe
+     */
     @Test
     void AfficherElements() throws ClassNotFoundException {
         Analyseur a = new Analyseur("main.java.diagramme.Analyse.Analyseur");
@@ -77,6 +113,10 @@ class AnalyseurTest {
 
     }
 
+    /**
+     * Test de la méthode getPackages
+     * Retourne les packages de la classe
+     */
     @Test
     void testGetPackages() {
         Package[] packages = Analyseur.getPackages();
