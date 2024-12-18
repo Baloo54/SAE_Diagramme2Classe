@@ -42,25 +42,4 @@ public class ReadFile {
             }
         }
     }
-
-    /**
-     * La méthode principale pour tester la fonctionnalité de la classe ReadFile.
-     *
-     * @param args arguments de la ligne de commande
-     */
-    public static void main(String[] args) {
-        ReadFile finder = new ReadFile();
-        File directory = new File("C:/Users/Valentino/IdeaProjects");
-
-        List<String> classFiles = finder.findClassFiles(directory);
-
-        if (!classFiles.isEmpty()) {
-            System.out.println("Fichiers .class trouvés :");
-            for (String filePath : classFiles) {
-                System.out.println(filePath);
-            }
-        } else {
-            System.out.println("Aucun fichier .class trouvé dans le dossier spécifié.");
-        }
-    }
 }

@@ -2,6 +2,7 @@ package diagramme;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 /**
  * classe model
  */
@@ -42,6 +43,13 @@ public class Model implements Sujet{
      */
     public void ajouterPackage(File folder){
         this.folder = folder;
-        System.out.println(folder.getAbsolutePath());
     }
+    /**
+     *giveListeClasses
+     */
+    public List<String> giveListeClasse(){
+        ReadFile reader = new ReadFile();
+        return reader.findClassFiles(this.folder);
+    }
+
 }
