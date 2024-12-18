@@ -1,14 +1,16 @@
 package classes;
 
+import java.util.ArrayList;
+
 public class Attribut {
-    String value;
-    String type;
-    String modificateur;
+    private String value;
+    private String type;
+    private ArrayList<String> modificateurs;
 
     public Attribut(String value, String type, String modificateur) {
         this.value = value;
         this.type = type;
-        this.modificateur = modificateur;
+        this.modificateurs = new ArrayList<String>();
     }
 
     public String getValue() {
@@ -19,7 +21,7 @@ public class Attribut {
         return type;
     }
 
-    public String getModificateur() {
-        return modificateur;
+    public ArrayList<String> getModificateur() {
+        return modificateurs;
     }
 }

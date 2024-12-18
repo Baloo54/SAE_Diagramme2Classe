@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Methode {
-    String nom;
-    String retour;
-    ArrayList<HashMap<String, String>> parametres;
-    ArrayList<String> modificateurs;
+    private String nom;
+    private String retour;
+    private ArrayList<HashMap<String, String>> parametres;
+    private ArrayList<String> modificateurs;
 
 
     public Methode(String nom, String retour, ArrayList<HashMap<String, String>> parametres, ArrayList<String> modificateurs) {
