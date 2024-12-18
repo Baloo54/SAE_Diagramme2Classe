@@ -1,4 +1,4 @@
-package diagramme.diagramme;
+package diagramme;
 /**
  * interface sujet
  */
