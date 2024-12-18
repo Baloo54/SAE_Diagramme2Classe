@@ -12,9 +12,6 @@ public class Analyseur {
         this.analyseClasse = Class.forName(nomClasse);
     }
 
-    public void analyseNouvelleClasse(String nomClasse) throws ClassNotFoundException {
-        this.analyseClasse = Class.forName(nomClasse);
-    }
 
     public static void analyseClasse(String nomClasse) {
         try {
