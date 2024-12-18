@@ -1,4 +1,4 @@
-package main.java.diagramme.diagramme;
+package diagramme.diagramme;
 
 import java.io.File;
 import java.util.ArrayList;

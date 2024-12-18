@@ -1,10 +1,12 @@
-package main.java.diagramme.app;
+package diagramme.app;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import main.java.diagramme.diagramme.Model;
+import diagramme.diagramme.ImportationControler;
+import diagramme.diagramme.*;
 
 /**
  * classe principale 

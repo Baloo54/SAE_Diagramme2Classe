@@ -1,4 +1,4 @@
-package main.java.diagramme.Classes;
+package diagramme.classes;
 
 import java.util.ArrayList;
 

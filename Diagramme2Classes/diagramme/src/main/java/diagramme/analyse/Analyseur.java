@@ -1,4 +1,4 @@
-package main.java.diagramme.Analyse;
+package diagramme.analyse;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class Analyseur {
+    @SuppressWarnings("rawtypes")
     private Class analyseClasse;
 
     public Analyseur(String nomClasse) throws ClassNotFoundException {
