@@ -1,4 +1,4 @@
-package main.java.diagramme.diagramme;
+package diagramme.diagramme;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ public class Model implements Sujet{
      * folder correspond au dossier contenant le package .class
      */
     private ArrayList<Observateur> observateurs;
+    @SuppressWarnings("unused")
     private File folder;
     /**
      * Constructeur

@@ -1,4 +1,4 @@
-package main.java.diagramme.diagramme;
+package diagramme.diagramme;
 /**
  * interface Observateur
  */

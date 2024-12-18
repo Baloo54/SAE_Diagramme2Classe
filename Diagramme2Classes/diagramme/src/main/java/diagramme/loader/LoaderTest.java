@@ -19,7 +19,7 @@ public class LoaderTest extends ClassLoader {
             // Définir la classe en utilisant les octets
             return defineClass("main.java.diagramme.loader.LoaderExterne", classBytes, 0, classBytes.length);
         } catch (IOException e) {
-            throw new ClassNotFoundException("Impossible de charger la classe depuis le fichier : " + filePath, e)
+            throw new ClassNotFoundException("Impossible de charger la classe depuis le fichier : " + filePath, e);
         }
     }
 

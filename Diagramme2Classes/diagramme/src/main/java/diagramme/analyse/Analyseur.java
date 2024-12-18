@@ -1,4 +1,4 @@
-package main.java.diagramme.Analyse;
+package diagramme.analyse;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
