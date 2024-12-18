@@ -1,6 +1,6 @@
 @startuml
 package Classes{
-interface Visible{
+abstract class Visible{
 -boolean visible
 --
 +changerVisibilite()
@@ -16,12 +16,13 @@ class Methode{
 -String nom
 -ArrayList<HashMap<String nom,String type>> parametres
 -ArrayList<String> modificateurs
+-String retour
 --
 +getParametres()
 }
 interface ComposantClasse{
 }
-interface CompositionClasse{
+class Attribut{
 -String nom
 -String type
 -ArrayList<String> modificateurs
@@ -29,11 +30,6 @@ interface CompositionClasse{
 +getModificateurs()
 +getNom()
 +getType()
-}
-class Attribut{
--String value
---
-+getValue()
 }
 class Interface{
 +getAttributs()
@@ -50,16 +46,16 @@ class Package{
 +ajouterClasse(Classe c)
 }
 }
-Visible <|.. Methode
-Visible <|.. Interface
-Attribut ...|> CompositionClasse
-Interface ..|> CompositionClasse
+Visible <|-- Methode
+Attribut <|-- Interface
+Visible <|-- Attribut
 Classe ..|> ComposantClasse
 Classe "1"-->"0.1" Classe :-classeParent
 Interface "1"-->"0.*" Interface : -interfaces
 Interface <|-- Classe
 Interface "1"-->"0.*   " Methode : -methodes
 Attribut ..|> ComposantClasse
-Classe "0.*   "<--"1 " Package : -classes
+Interface "0.*   "<--"1 " Package : -classes
 Package "0.*   "<--"1 " Diagramme : -packages
+Interface --> ComposantClasse : -attributs
 @enduml

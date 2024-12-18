@@ -1,4 +1,4 @@
-package main.java.diagramme.loader;
+package diagramme.loader;
 
 import java.io.*;
 import java.nio.file.*;

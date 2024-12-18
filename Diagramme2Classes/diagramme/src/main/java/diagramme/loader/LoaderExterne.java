@@ -1,7 +1,7 @@
-package main.java.diagramme.loader;
+package diagramme.loader;
 
-import main.java.diagramme.exception.FichierIllisibleException;
-import main.java.diagramme.exception.FichierIncompatibleException;
+import diagramme.exception.FichierIllisibleException;
+import diagramme.exception.FichierIncompatibleException;
 
 import java.io.BufferedReader;
 import java.io.File;
