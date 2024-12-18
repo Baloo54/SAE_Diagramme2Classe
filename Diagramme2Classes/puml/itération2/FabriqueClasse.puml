@@ -1,11 +1,37 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
-autonumber
+class FabriqueClasse {
+    + createVueClasse(): VueClasse
+    + createVueTexte(): VueTexte
+    + createVueInterface(): VueInterface
+    + createVueMethode(): VueMethode
+    + createVuePackage(): VuePackage
+}
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+class VueClasse {
+    + afficher(): void
+}
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+class VueTexte {
+    + afficher(): void
+}
+
+class VueInterface {
+    + afficher(): void
+}
+
+class VueMethode {
+    + afficher(): void
+}
+
+class VuePackage {
+    + afficher(): void
+}
+
+FabriqueClasse --> VueClasse
+FabriqueClasse --> VueTexte
+FabriqueClasse --> VueInterface
+FabriqueClasse --> VueMethode
+FabriqueClasse --> VuePackage
+
 @enduml
