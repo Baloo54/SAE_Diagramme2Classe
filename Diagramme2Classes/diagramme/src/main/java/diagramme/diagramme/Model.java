@@ -11,6 +11,7 @@ public class Model implements Sujet{
      * folder correspond au dossier contenant le package .class
      */
     private ArrayList<Observateur> observateurs;
+    @SuppressWarnings("unused")
     private File folder;
     /**
      * Constructeur

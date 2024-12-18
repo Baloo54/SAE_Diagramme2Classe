@@ -1,4 +1,4 @@
-package main.java.diagramme.Analyse;
+package analyse;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import diagramme.analyse.Analyseur;
 
 
 /**
@@ -31,7 +31,7 @@ class AnalyseurTest {
      */
     @BeforeEach
     void setup() throws ClassNotFoundException {
-        analyseur = new Analyseur("main.java.diagramme.Analyse.Analyseur");
+        analyseur = new Analyseur("diagramme.analyse.Analyseur");
     }
 
     /**
@@ -40,7 +40,7 @@ class AnalyseurTest {
     @Test
     void testGetNomClasse() {
         String nomClasse = analyseur.getNomClasse();
-        assertEquals("main.java.diagramme.Analyse.Analyseur", nomClasse);
+        assertEquals("diagramme.analyse.Analyseur", nomClasse);
     }
 
     /**
@@ -70,7 +70,7 @@ class AnalyseurTest {
      */
     @Test
     void trierAttributsParModificateur() throws ClassNotFoundException {
-        Analyseur a = new Analyseur("main.java.diagramme.Analyse.Analyseur");
+        Analyseur a = new Analyseur("diagramme.analyse.Analyseur");
         Map<String, List<Field>> test = a.trierAttributsParModificateur();
         for (String key : test.keySet()) {
             if (!test.get(key).isEmpty()) {
@@ -106,8 +106,9 @@ class AnalyseurTest {
      */
     @Test
     void AfficherElements() throws ClassNotFoundException {
-        Analyseur a = new Analyseur("main.java.diagramme.Analyse.Analyseur");
-        Class<?> cl = Class.forName("main.java.diagramme.Analyse.Analyseur");
+        @SuppressWarnings("unused")
+        Analyseur a = new Analyseur("diagramme.analyse.Analyseur");
+        Class<?> cl = Class.forName("diagramme.analyse.Analyseur");
         Analyseur.afficherAttributs(cl);
         Analyseur.afficherMethodes(cl);
 
