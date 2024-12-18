@@ -21,7 +21,7 @@ class Methode{
 }
 interface ComposantClasse{
 }
-interface CompositionClasse{
+abstract CompositionClasse{
 -String nom
 -String type
 -ArrayList<String> modificateurs

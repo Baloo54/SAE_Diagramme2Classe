@@ -43,10 +43,6 @@ public class Analyseur {
         }
     }
 
-    public static void main(String[] args) {
-        analyseClasse("main.java.diagramme.Analyse.Analyseur");
-    }
-
     private static String getModifierVisibilite(int i) {
         switch (i) {
             case Modifier.PUBLIC:
