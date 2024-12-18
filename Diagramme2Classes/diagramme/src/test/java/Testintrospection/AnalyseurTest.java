@@ -1,7 +1,9 @@
-package analyse;
+package Testintrospection;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import analyse.Analyseur;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
