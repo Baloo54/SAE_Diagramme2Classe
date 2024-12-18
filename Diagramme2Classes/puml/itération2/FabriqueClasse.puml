@@ -1,0 +1,37 @@
+@startuml
+
+class FabriqueClasse {
+    + createVueClasse(): VueClasse
+    + createVueTexte(): VueTexte
+    + createVueInterface(): VueInterface
+    + createVueMethode(): VueMethode
+    + createVuePackage(): VuePackage
+}
+
+class VueClasse {
+    + afficher(): void
+}
+
+class VueTexte {
+    + afficher(): void
+}
+
+class VueInterface {
+    + afficher(): void
+}
+
+class VueMethode {
+    + afficher(): void
+}
+
+class VuePackage {
+    + afficher(): void
+}
+
+FabriqueClasse --> VueClasse
+FabriqueClasse --> VueTexte
+FabriqueClasse --> VueInterface
+FabriqueClasse --> VueMethode
+FabriqueClasse --> VuePackage
+
+@enduml

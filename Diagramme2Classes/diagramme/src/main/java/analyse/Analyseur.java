@@ -12,9 +12,6 @@ public class Analyseur {
         this.analyseClasse = Class.forName(nomClasse);
     }
 
-    public void analyseNouvelleClasse(String nomClasse) throws ClassNotFoundException {
-        this.analyseClasse = Class.forName(nomClasse);
-    }
 
     public static void analyseClasse(String nomClasse) {
         try {
@@ -44,10 +41,6 @@ public class Analyseur {
         for (Method m : methods) {
             System.out.println(m.getName());
         }
-    }
-
-    public static void main(String[] args) {
-        analyseClasse("main.java.diagramme.Analyse.Analyseur");
     }
 
     private static String getModifierVisibilite(int i) {

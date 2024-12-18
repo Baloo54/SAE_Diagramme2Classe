@@ -1,0 +1,48 @@
+@startuml
+Class Analyseur {
+- analyseClasse : Class
++ Analyseur(String)
++ AnalyseClasse(String) : void
++ afficherAttributs(Class) : void
++ afficherMethode(Class) : void
++ getModifierVisibilite(int) : String
++ Get ModifierClasse(Class) : ArrayList<String>
++ Get ModifierMethode(Method) : ArrayList<String>
++ Get ModifierAttribut(Field) : ArrayList<String>
++ getClasseParent() : Class
++ getInterfaces() : Class[]
++ getNomClass() : String
++ trierAttributsParModificateur() : Map<String, List<Field>>
++ trierMethodesParModificateur(Method[]) : Map<String, List<Method>>
++ AfficherTriAttribus(Map<String, List<Field>>) : void
++ AfficherTriMethodes(Map<String, List<Method>>) : void
++ getPackages() : Package[]
+}
+package java{
+package lang{
+package reflect{
+class Class {
+}
+
+class Field {
+}
+
+class Method {
+}
+class Modifier{
+}
+
+
+class Package {
+}
+}
+}
+}
+
+Analyseur --* Class
+Analyseur --* Field
+Analyseur --* Method
+Analyseur --* Package
+Analyseur --* Modifier
+@enduml
+
