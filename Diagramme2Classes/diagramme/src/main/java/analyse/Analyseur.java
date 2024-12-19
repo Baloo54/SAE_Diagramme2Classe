@@ -10,7 +10,7 @@ public class Analyseur {
     public Analyseur instance = new Analyseur();
 
     public Analyseur() throws ClassNotFoundException {
-        this.analyseClasse = Class.forName(nomClasse);
+       // this.analyseClasse = LoaderExterne.getInstance().loadClass(chemin);
     }
 
 
@@ -34,6 +34,7 @@ public class Analyseur {
         for (Field f : fields) {
             System.out.println(f.getName());
         }
+
     }
 
     public static void afficherMethodes(Class cl) {

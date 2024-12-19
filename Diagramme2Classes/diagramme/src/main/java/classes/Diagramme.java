@@ -24,7 +24,7 @@ public class Diagramme {
         Package p = new Package(pack);
         Classe c = new Classe("Object",classe.getSimpleName());
 
-        this.classes.add(c);
+        this.classes.add(p);
     }
     public int posPackage(Package pack){
         int i = 0;
