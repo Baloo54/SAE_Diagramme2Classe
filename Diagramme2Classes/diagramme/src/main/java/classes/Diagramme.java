@@ -1,5 +1,6 @@
 package classes;
 
+import analyse.Analyseur;
 import diagramme.loader.LoaderExterne;
 
 import java.nio.file.Path;
@@ -19,12 +20,8 @@ public class Diagramme {
      * @throws ClassNotFoundException
      */
     public void ajouterClasse(String chemin) throws ClassNotFoundException {
-        Class classe = LoaderExterne.getInstance().loadClass(chemin);
-        String pack = classe.getName().replace(classe.getSimpleName(), "");
-        Package p = new Package(pack);
-        Classe c = new Classe("Object",classe.getSimpleName());
-
-        this.classes.add(p);
+        Analyseur a = Analyseur.getInstance();
+        this.classes.add(a.construireClasse(chemin, this));
     }
     public int posPackage(Package pack){
         int i = 0;

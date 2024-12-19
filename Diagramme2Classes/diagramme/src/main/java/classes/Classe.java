@@ -21,6 +21,5 @@ public class Classe extends Interface {
     public Classe getClasseParent() {
         //TODO
         return null;
-
     }
 }

@@ -7,7 +7,7 @@ public class Interface extends Attribut {
    private ArrayList<Interface> interfaces;
    private ArrayList<Methode> methodes;
    private ArrayList<Attribut> attributs;
-   HashMap<Interface,Boolean> interfacesFilles;
+   private HashMap<Interface,Boolean> interfacesFilles;
 
 
     public Interface(String type,String nom) {
@@ -19,11 +19,11 @@ public class Interface extends Attribut {
 
     @Override
     public void changerVisibilite() {
-        if(!interfacesFilles.containsValue(true)) {
             super.changerVisibilite();
             for (Interface i : interfaces) {
                 if(interfacesFilles.get(i)) {
                     i.changerVisibilite();
+                    interfacesFilles.put(i, i.getVisible());
                 }
             }
             for (Methode m : methodes) {
@@ -31,15 +31,23 @@ public class Interface extends Attribut {
                     m.changerVisibilite();
                 }
             }
+    }
+
+    public void changerVisibilite(Interface i) {
+        if(this.getVisible()){
+            interfacesFilles.put(i, true);
+        } else {
+            interfacesFilles.put(i, false);
         }
     }
 
     public void changerVisibiliteInterfaceFille(Interface i) {
         interfacesFilles.put(i, !interfacesFilles.get(i));
     }
+
     public void changerVisibiliteHeritage() {
         for (Interface i : interfaces) {
-            i.changerVisibilite();
+            i.changerVisibilite(this);
         }
     }
     public void changerVisibiliteMethode(Methode m) {
@@ -48,5 +56,10 @@ public class Interface extends Attribut {
 
     public void ajouterMethode(Methode m) {
         methodes.add(m);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj)&&getType().equals(((Interface)obj).getType());
     }
 }

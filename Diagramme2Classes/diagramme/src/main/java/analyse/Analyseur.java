@@ -1,5 +1,9 @@
 package analyse;
 
+import classes.Diagramme;
+import classes.Package;
+import diagramme.loader.LoaderExterne;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -7,25 +11,16 @@ import java.util.*;
 
 public class Analyseur {
     private Class analyseClasse;
-    public Analyseur instance = new Analyseur();
+    public static Analyseur instance = new Analyseur();
 
-    public Analyseur() throws ClassNotFoundException {
-       // this.analyseClasse = LoaderExterne.getInstance().loadClass(chemin);
+    public Package construireClasse(String chemin, Diagramme d) throws ClassNotFoundException {
+        Class classe = LoaderExterne.getInstance().loadClass(chemin);
+        String pack = classe.getName().replace(classe.getSimpleName(), "");
+        Package p = new Package(pack);
+        return p;
     }
 
 
-    public static void analyseClasse(String nomClasse) {
-        try {
-            Class cl = Class.forName(nomClasse);
-            System.out.println("Classe: " + cl.getName());
-            afficherAttributs(cl);
-            afficherMethodes(cl);
-            Package p = cl.getPackage();
-            System.out.println("Package: " + p.getName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public static void afficherAttributs(Class cl) {
@@ -186,11 +181,7 @@ public class Analyseur {
         }
     }
 
-    public Analyseur getInstance() {
+    public static Analyseur getInstance() {
         return instance;
-    }
-
-    public static Package[] getPackages() {
-        return Package.getPackages();
     }
 }

@@ -27,7 +27,7 @@ class AnalyseurTest {
      */
     @BeforeEach
     void setup() throws ClassNotFoundException {
-        analyseur = new Analyseur("analyse.Analyseur");
+        analyseur = new Analyseur();
     }
 
     /**
@@ -66,7 +66,7 @@ class AnalyseurTest {
      */
     @Test
     void trierAttributsParModificateur() throws ClassNotFoundException {
-        Analyseur a = new Analyseur("analyse.Analyseur");
+        Analyseur a = new Analyseur();
         Map<String, List<Field>> test = a.trierAttributsParModificateur();
         for (String key : test.keySet()) {
             if (!test.get(key).isEmpty()) {
@@ -103,21 +103,10 @@ class AnalyseurTest {
     @Test
     void AfficherElements() throws ClassNotFoundException {
         @SuppressWarnings("unused")
-        Analyseur a = new Analyseur("analyse.Analyseur");
+        Analyseur a = new Analyseur();
         Class<?> cl = Class.forName("analyse.Analyseur");
         Analyseur.afficherAttributs(cl);
         Analyseur.afficherMethodes(cl);
 
-    }
-
-    /**
-     * Test de la méthode getPackages
-     * Retourne les packages de la classe
-     */
-    @Test
-    void testGetPackages() {
-        Package[] packages = Analyseur.getPackages();
-        assertNotNull(packages);
-        assertTrue(packages.length > 0);
     }
 }

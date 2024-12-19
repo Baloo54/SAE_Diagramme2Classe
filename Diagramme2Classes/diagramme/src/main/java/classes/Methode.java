@@ -32,4 +32,23 @@ public class Methode extends Visible {
     public String getRetour() {
         return retour;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean signature = false;
+        if(parametres.size()==((Methode) obj).getParametres().size()){
+            int i = 0;
+            ArrayList<Boolean> b = new ArrayList<>();
+            while( i<parametres.size()){
+                b.add(parametres.get(i)==((Methode) obj).getParametres().get(i));
+                i++;
+            }
+            if(i==0){
+                signature=true;
+            }else if(!b.contains(false)){
+                signature = true;
+            }
+        }
+        return getNom().equals(((Methode) obj).getNom()) && signature;
+    }
 }

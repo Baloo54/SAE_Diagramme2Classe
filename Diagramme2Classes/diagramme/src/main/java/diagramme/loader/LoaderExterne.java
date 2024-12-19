@@ -1,10 +1,9 @@
 package  diagramme.loader;
 
 import java.io.*;
-import java.lang.classfile.Opcode;
 
 public class LoaderExterne extends ClassLoader {
-    protected static final LoaderExterne instance = new LoaderExterne();
+    private static final LoaderExterne instance = new LoaderExterne();
     /**
      * Charge une classe depuis un fichier .class en vérifiant le package.
      *
