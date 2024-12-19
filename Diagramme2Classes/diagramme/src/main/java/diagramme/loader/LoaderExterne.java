@@ -1,55 +1,57 @@
-package diagramme.loader;
+package  diagramme.loader;
 
-import diagramme.exception.FichierIllisibleException;
-import diagramme.exception.FichierIncompatibleException;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.lang.classfile.Opcode;
 
 public class LoaderExterne extends ClassLoader {
+    protected static final LoaderExterne instance = new LoaderExterne();
+    /**
+     * Charge une classe depuis un fichier .class en vérifiant le package.
+     *
+     * @param filePath Chemin absolu du fichier .class
+     * @return La classe chargée
+     * @throws ClassNotFoundException Si la classe ne peut être trouvée ou chargée
+     * @throws IOException            Si une erreur d'E/S survient
+     */
+    public Class<?> loadClassFromFile(String filePath) throws ClassNotFoundException, IOException {
+        File file = new File(filePath);
+        if (!file.exists() || !file.isFile()) {
+            throw new ClassNotFoundException("Le fichier spécifié est introuvable : " + filePath);
+        }
+        // Lire le fichier .class en tant que tableau de bytes
+        byte[] classData = readFileAsBytes(file);
 
-    public static void main(String[] args) throws ClassNotFoundException {
-        LoaderExterne a = new LoaderExterne();
-            Class c = a.findClass("C:/Users/Username/Desktop/7.docx");
-        System.out.println(c.getName());
+        // Extraire le nom de la classe à partir du chemin et du contenu
+
+        String nomClass = SimpleDecompiler.getNomClasse(filePath);
+        // Charger la classe
+        return defineClass(nomClass, classData, 0, classData.length);
     }
 
-    public Class loadClass(String name) throws ClassNotFoundException {
-        if (!name.endsWith(".class")) {
-            throw new FichierIncompatibleException();
+    /**
+     * Lit le fichier donné sous forme de tableau de bytes.
+     */
+    private byte[] readFileAsBytes(File file) throws IOException {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            byte[] data = new byte[(int) file.length()];
+            fis.read(data);
+            return data;
         }
-        return findClass(name);
     }
 
-    //trouve le package
-//lecture du fichier obligatoire ?
-    //nom dossier d'un package toujours en entier
-    //. peut être sur une autre ligne
-    //commence par package toujours écrit en entier
-    //fini par ;
-    @Override
-    protected Class<?> findClass(String name) throws ClassNotFoundException {
-        Path path = Paths.get(name);
-        byte[] b;
-        System.out.println(path);
-        try {
-        BufferedReader reader = new BufferedReader(new FileReader(name));
-        String filename = "";
-        while (!filename.endsWith(";")){
-            reader.readLine();
+    /**
+     * Extrait un nom de classe valide à partir du chemin du fichier.
+     */
+    private String extractClassName(String filePath) {
+        // Remplacer les séparateurs de fichiers par des points
+        String className = filePath.replace(File.separatorChar, '.');
 
-        }
-            File f = new File(name);
-            b = Files.readAllBytes(path);
-        } catch (IOException e) {
-            throw new FichierIllisibleException();
-        }
+        // Retirer le préfixe jusqu'au dossier de base et l'extension .class
+        className = className.replaceAll(".*?(\\w+(\\.\\w+)*)\\.class$", "$1");
 
-        return defineClass("", b, 0, b.length);
+        return className;
+    }
+    public static LoaderExterne getInstance() {
+        return instance;
     }
 }

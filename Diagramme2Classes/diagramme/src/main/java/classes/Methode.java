@@ -3,7 +3,7 @@ package classes;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Methode {
+public class Methode extends Visible {
     private String nom;
     private String retour;
     private ArrayList<HashMap<String, String>> parametres;

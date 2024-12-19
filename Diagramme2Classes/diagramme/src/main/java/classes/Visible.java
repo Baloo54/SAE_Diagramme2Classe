@@ -1,4 +1,4 @@
-package main.java.classes;
+package classes;
 
 public abstract class Visible {
     private boolean visible;

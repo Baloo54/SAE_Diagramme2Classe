@@ -2,19 +2,15 @@ package classes;
 
 import java.util.ArrayList;
 
-public class Attribut {
-    private String value;
+public class Attribut extends Visible {
+    String nom;
     private String type;
     private ArrayList<String> modificateurs;
 
-    public Attribut(String value, String type, String modificateur) {
-        this.value = value;
+    public Attribut( String type, String nom) {
+        this.nom = nom;
         this.type = type;
         this.modificateurs = new ArrayList<String>();
-    }
-
-    public String getValue() {
-        return value;
     }
 
     public String getType() {

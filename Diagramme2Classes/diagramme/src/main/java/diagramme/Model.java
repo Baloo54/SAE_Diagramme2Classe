@@ -39,7 +39,7 @@ public class Model implements Sujet{
     }
     /**
      * ajouterPackage
-     * @param File folder
+     * @param folder folder
      */
     public void ajouterPackage(File folder){
         this.folder = folder;

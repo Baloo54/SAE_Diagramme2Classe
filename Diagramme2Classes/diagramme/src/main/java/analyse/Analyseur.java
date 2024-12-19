@@ -7,8 +7,9 @@ import java.util.*;
 
 public class Analyseur {
     private Class analyseClasse;
+    public Analyseur instance = new Analyseur();
 
-    public Analyseur(String nomClasse) throws ClassNotFoundException {
+    public Analyseur() throws ClassNotFoundException {
         this.analyseClasse = Class.forName(nomClasse);
     }
 
@@ -182,6 +183,10 @@ public class Analyseur {
                 System.out.println(" - " + method.getName());
             }
         }
+    }
+
+    public Analyseur getInstance() {
+        return instance;
     }
 
     public static Package[] getPackages() {

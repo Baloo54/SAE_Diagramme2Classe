@@ -1,19 +1,17 @@
-package main.java.classes;
-
-import classes.Interface;
-
+package classes;
 import java.util.HashMap;
 
 public class Classe extends Interface {
-    private HashMap<Classe,Boolean> classeFille;
+    private HashMap<Classe,Boolean> classesFilles;
+    private Classe classeParent = null;
 
-    public Classe(String value, String type, String modificateur) {
-        super(value, type, modificateur);
-        this.classeFille = new HashMap<Classe,Boolean>();
+    public Classe(String type,String nom) {
+        super(type,nom);
+        this.classesFilles = new HashMap<Classe,Boolean>();
     }
 
     public HashMap<Classe,Boolean> getClasseFille() {
-        return classeFille;
+        return classesFilles;
     }
 
     public void changerVisibiliteHeritage() {
