@@ -1,26 +1,36 @@
 package diagramme.Vues;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 public class VueMethode {
     private Pane root;
 
-    public VueMethode(String definition) {
+    public VueMethode(Method method) {
         root = new Pane();
-        afficher(definition);
+        afficher(method);
     }
 
-    public void afficher(String definition) {
-        Rectangle rect = new Rectangle(150, 50);
-        rect.setStyle("-fx-fill: yellow; -fx-stroke: black;");
-        Text label = new Text(10, 30, "Méthode : " + definition);
+    public void afficher(Method method) {
+        // Texte représentant la méthode
+        String visibility = getVisibility(method.getModifiers());
+        String methodSignature = visibility + " " + method.getName() + "()";
 
-        root.getChildren().addAll(rect, label);
+        Text methodText = new Text(10, 20, methodSignature);
+        root.getChildren().add(methodText);
     }
 
     public Pane getView() {
         return root;
+    }
+
+    private String getVisibility(int modifiers) {
+        if (Modifier.isPublic(modifiers)) return "+";
+        if (Modifier.isPrivate(modifiers)) return "-";
+        if (Modifier.isProtected(modifiers)) return "#";
+        return "~"; // Default/package-private
     }
 }

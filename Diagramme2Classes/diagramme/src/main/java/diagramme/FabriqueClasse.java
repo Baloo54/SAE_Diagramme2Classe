@@ -1,39 +1,34 @@
 package diagramme;
 
-import diagramme.ReadFile;
-import javafx.scene.layout.Pane;
 import diagramme.Vues.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.util.List;
 
 public class FabriqueClasse {
 
-    public Pane createViewsFromFile(File file) {
+    public Pane creerVue(File file) {
         ReadFile reader = new ReadFile();
         List<String> classDefinitions = reader.findClassFiles(file);
 
-        Pane root = new Pane();
-        int yPosition = 20;
+        VBox root = new VBox(20); // Utilisation d'un VBox pour gérer les positions
+        root.setStyle("-fx-padding: 10; -fx-background-color: #f0f0f0;");
 
         for (String definition : classDefinitions) {
             if (definition.contains("class")) {
-                VueClasse vueClasse = new VueClasse(definition);
-                vueClasse.getView().setLayoutY(yPosition);
+                VueClasse vueClasse = new VueClasse(definition.getClass());
                 root.getChildren().add(vueClasse.getView());
-                yPosition += 120;
-            } else if (definition.contains("method")) {
-                VueMethode vueMethode = new VueMethode(definition);
-                vueMethode.getView().setLayoutY(yPosition);
-                root.getChildren().add(vueMethode.getView());
-                yPosition += 80;
             } else if (definition.contains("interface")) {
-                VueInterface vueInterface = new VueInterface(definition);
-                vueInterface.getView().setLayoutY(yPosition);
+                VueInterface vueInterface = new VueInterface(definition.getClass());
                 root.getChildren().add(vueInterface.getView());
-                yPosition += 100;
+            } else if (definition.contains("method")) {
+                VueMethode vueMethode = new VueMethode(definition.getClass().getEnclosingMethod());
+                root.getChildren().add(vueMethode.getView());
             }
         }
+
         return root;
     }
 }
