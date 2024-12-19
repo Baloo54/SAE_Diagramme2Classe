@@ -1,23 +1,25 @@
 package diagramme.Vues;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class VueInterface {
     private Pane root;
 
-    public VueInterface(String definition) {
+    public VueInterface(Class<?> clazz) {
         root = new Pane();
-        afficher(definition);
+        afficher(clazz);
     }
 
-    public void afficher(String definition) {
-        Circle circle = new Circle(50, 50, 40);
-        circle.setStyle("-fx-fill: lightgreen; -fx-stroke: black;");
-        Text label = new Text(35, 55, "Interface : " + definition);
+    public void afficher(Class<?> clazz) {
+        // Rectangle pour l'interface
+        Rectangle box = new Rectangle(200, 100);
+        box.setStyle("-fx-fill: lightyellow; -fx-stroke: black;");
 
-        root.getChildren().addAll(circle, label);
+        // Nom de l'interface
+        Text interfaceName = new Text(10, 20, "Interface: " + clazz.getSimpleName());
+        root.getChildren().addAll(box, interfaceName);
     }
 
     public Pane getView() {

@@ -3,24 +3,24 @@ package diagramme.Vues;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-public class VueMethode {
+public class VueAttribut {
     private Pane root;
 
-    public VueMethode(Method method) {
+    public VueAttribut(Field field) {
         root = new Pane();
-        afficher(method);
+        afficher(field);
     }
 
-    public void afficher(Method method) {
-        // Texte représentant la méthode
-        String visibility = getVisibility(method.getModifiers());
-        String methodSignature = visibility + " " + method.getName() + "()";
+    public void afficher(Field field) {
+        // Texte représentant l'attribut
+        String visibility = getVisibility(field.getModifiers());
+        String fieldSignature = visibility + " " + field.getName() + " : " + field.getType().getSimpleName();
 
-        Text methodText = new Text(10, 20, methodSignature);
-        root.getChildren().add(methodText);
+        Text fieldText = new Text(10, 20, fieldSignature);
+        root.getChildren().add(fieldText);
     }
 
     public Pane getView() {
