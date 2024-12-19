@@ -1,7 +1,7 @@
 @startuml
 
 class FabriqueClasse {
-    + createViewsFromFile(File): Pane
+    + creerVue(File): Pane
 }
 
 class VueClasse {

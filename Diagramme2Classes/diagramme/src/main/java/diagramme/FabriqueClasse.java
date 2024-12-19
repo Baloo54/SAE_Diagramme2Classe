@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FabriqueClasse {
 
-    public Pane createViewsFromFile(File file) {
+    public Pane creerVue(File file) {
         ReadFile reader = new ReadFile();
         List<String> classDefinitions = reader.findClassFiles(file);
 

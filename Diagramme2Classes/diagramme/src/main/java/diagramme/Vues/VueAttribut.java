@@ -31,6 +31,6 @@ public class VueAttribut {
         if (Modifier.isPublic(modifiers)) return "+";
         if (Modifier.isPrivate(modifiers)) return "-";
         if (Modifier.isProtected(modifiers)) return "#";
-        return "~"; // Default/package-private
+        return "~";
     }
 }
