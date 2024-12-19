@@ -1,37 +1,32 @@
 @startuml
 
 class FabriqueClasse {
-    + createVueClasse(): VueClasse
-    + createVueAttribut(): VueAttribut
-    + createVueInterface(): VueInterface
-    + createVueMethode(): VueMethode
-    + createVuePackage(): VuePackage
+    + createViewsFromFile(File): Pane
 }
 
 class VueClasse {
-    + afficher(): void
+    + afficher(definition: String): void
+    + getView(): Pane
 }
 
 class VueAttribut {
-    + afficher(): void
+    + afficher(field: Field): void
+    + getView(): Pane
 }
 
 class VueInterface {
-    + afficher(): void
+    + afficher(definition: String): void
+    + getView(): Pane
 }
 
 class VueMethode {
-    + afficher(): void
-}
-
-class VuePackage {
-    + afficher(): void
+    + afficher(method: Method): void
+    + getView(): Pane
 }
 
 FabriqueClasse --> VueClasse
 FabriqueClasse --> VueAttribut
 FabriqueClasse --> VueInterface
 FabriqueClasse --> VueMethode
-FabriqueClasse --> VuePackage
 
 @enduml
