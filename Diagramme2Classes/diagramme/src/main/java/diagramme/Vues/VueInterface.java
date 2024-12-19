@@ -13,8 +13,8 @@ public class VueInterface {
         afficher(clazz);
     }
 
-    public void afficher(Class<?> clazz) {
-        Text interfaceName = new Text("Interface: " + clazz.getSimpleName());
+    public void afficher(Class<?> cl) {
+        Text interfaceName = new Text("Interface: " + cl.getSimpleName());
         interfaceName.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         root.getChildren().add(interfaceName);
     }

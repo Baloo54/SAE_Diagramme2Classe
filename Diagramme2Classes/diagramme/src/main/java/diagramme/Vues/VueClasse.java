@@ -10,10 +10,10 @@ import java.lang.reflect.Method;
 public class VueClasse {
     private VBox root;
 
-    public VueClasse(Class<?> clazz) {
+    public VueClasse(Class<?> cl) {
         root = new VBox(10);
         root.setStyle("-fx-border-color: black; -fx-background-color: white; -fx-padding: 10;");
-        afficher(clazz);
+        afficher(cl);
     }
 
     public void afficher(Class<?> clazz) {
