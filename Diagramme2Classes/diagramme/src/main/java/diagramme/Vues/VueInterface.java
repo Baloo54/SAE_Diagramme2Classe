@@ -1,25 +1,22 @@
 package diagramme.Vues;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class VueInterface {
-    private Pane root;
+    private VBox root;
 
     public VueInterface(Class<?> clazz) {
-        root = new Pane();
+        root = new VBox(10);
+        root.setStyle("-fx-border-color: black; -fx-background-color: lightyellow; -fx-padding: 10;");
         afficher(clazz);
     }
 
     public void afficher(Class<?> clazz) {
-        // Rectangle pour l'interface
-        Rectangle box = new Rectangle(200, 100);
-        box.setStyle("-fx-fill: lightyellow; -fx-stroke: black;");
-
-        // Nom de l'interface
-        Text interfaceName = new Text(10, 20, "Interface: " + clazz.getSimpleName());
-        root.getChildren().addAll(box, interfaceName);
+        Text interfaceName = new Text("Interface: " + clazz.getSimpleName());
+        interfaceName.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        root.getChildren().add(interfaceName);
     }
 
     public Pane getView() {
