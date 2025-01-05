@@ -6,10 +6,16 @@ import diagramme.loader.LoaderExterne;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+/**
+ * Classe représentant un diagramme
+ */
 public class Diagramme {
     private ArrayList<Package> classes;
     
 
+    /**
+     * Constructeur de la classe
+     */
     public Diagramme() {
         this.classes = new ArrayList<>();
     }

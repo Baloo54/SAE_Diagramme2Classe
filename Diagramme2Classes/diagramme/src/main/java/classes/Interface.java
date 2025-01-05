@@ -3,6 +3,9 @@ package classes;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Classe représentant une interface
+ */
 public class Interface extends Attribut {
    private ArrayList<Interface> interfaces;
    private ArrayList<Methode> methodes;
@@ -10,6 +13,11 @@ public class Interface extends Attribut {
    private HashMap<Interface,Boolean> interfacesFilles;
 
 
+    /**
+     * Constructeur de la classe
+     * @param type : type de l'interface
+     * @param nom : nom de l'interface
+     */
     public Interface(String type,String nom) {
         super(type,nom);
         this.interfaces = new ArrayList<Interface>();
@@ -17,6 +25,9 @@ public class Interface extends Attribut {
         this.attributs = new ArrayList<Attribut>();
     }
 
+    /**
+     * Méthode permettant de changer la visibilité de l'interface
+     */
     @Override
     public void changerVisibilite() {
             super.changerVisibilite();
@@ -40,6 +51,7 @@ public class Interface extends Attribut {
             interfacesFilles.put(i, false);
         }
     }
+
 
     public void changerVisibiliteInterfaceFille(Interface i) {
         interfacesFilles.put(i, !interfacesFilles.get(i));
