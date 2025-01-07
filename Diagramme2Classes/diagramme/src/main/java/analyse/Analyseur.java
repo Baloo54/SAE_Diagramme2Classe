@@ -16,7 +16,8 @@ import java.util.*;
 public class Analyseur {
 
     // Instance
-    private static final Analyseur INSTANCE = new Analyseur();
+    private static Analyseur INSTANCE;
+
 
     // Classe à analyser
     private Class analyseClasse;
@@ -30,15 +31,20 @@ public class Analyseur {
 
     /**
      * Méthode permettant de récupèrer l'instance
+     *
      * @return l'instance
      */
     public static Analyseur getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Analyseur();
+        }
         return INSTANCE;
     }
 
 
     /**
      * Méthode permettant de définire la classe à analyser
+     *
      * @param classe : la classe à analyser
      */
     private void setClasseAnalyse(Class classe) {
@@ -47,6 +53,7 @@ public class Analyseur {
 
     /**
      * Analyse une classe à partir de son chemin en string
+     *
      * @param chemin : chemin vers la classe à analyser
      * @return l'objet Classe contenant l'analyse
      * @throws ClassNotFoundException si la classe n'est pas trouvée
@@ -62,6 +69,7 @@ public class Analyseur {
         ArrayList<String> modifiers = getModifierClasse(classe);
         for (String modifier : modifiers) {
             classeAnalysee.addModificateur(modifier);
+
         }
 
         // Analyse des attributs
@@ -81,21 +89,22 @@ public class Analyseur {
             Interface inter = new Interface("interface", interfaceClass.getSimpleName());
             classeAnalysee.addInterface(inter);
         }
-
         return classeAnalysee;
     }
 
     /**
      * Méthode permettant d'analyser un attribut
+     *
      * @param field : attribut à analyser
      */
     private Attribut analyserAttribut(Field field) {
         ArrayList<String> modifiers = getModifierAttribut(field);
-        return new Attribut(field.getName(), field.getType().getSimpleName(), modifiers);
+        return new Attribut(field.getType().getSimpleName(), field.getName());
     }
 
     /**
      * Méthode permettant d'analyser une méthode
+     *
      * @param method : méthode à analyser
      */
     private Methode analyserMethode(Method method) {
@@ -113,6 +122,7 @@ public class Analyseur {
 
     /**
      * Méthode permettant de récupèrer les modificateurs sous forme de String
+     *
      * @param modifiers : modificateurs sous forme d'entier
      */
     private static String getModifierVisibilite(int modifiers) {
@@ -124,6 +134,7 @@ public class Analyseur {
 
     /**
      * Méthode permettant de récupèrer les modificateurs d'une classe
+     *
      * @param c : classe à analyser
      */
     private static ArrayList<String> getModifierClasse(Class c) {
@@ -137,6 +148,7 @@ public class Analyseur {
 
     /**
      * Méthode permettant de récupèrer les modificateurs d'une méthode
+     *
      * @param m : méthode à analyser
      */
     private static ArrayList<String> getModifierMethode(Method m) {
@@ -155,6 +167,7 @@ public class Analyseur {
 
     /**
      * Méthode permettant de Récupèrer les modificateurs d'un attribut
+     *
      * @param f : attribut à analyser
      */
     private static ArrayList<String> getModifierAttribut(Field f) {
@@ -192,4 +205,24 @@ public class Analyseur {
     public String getNomClasse() {
         return this.analyseClasse.getName();
     }
+
+    /**
+     * Méthode permettant d'afficher les resultats de l'analyse
+     */
+    public void afficherResultats() {
+        System.out.println("Nom de la classe : " + this.analyseClasse.getName());
+        System.out.println("Classe parente : " + this.analyseClasse.getSuperclass().getName());
+
+        System.out.println("Attributs :");
+        for (Field field : this.analyseClasse.getDeclaredFields()) {
+            System.out.println(" - " + field.getName() + " : " + Modifier.toString(field.getModifiers()));
+        }
+
+        System.out.println("Méthodes :");
+        for (Method method : this.analyseClasse.getDeclaredMethods()) {
+            System.out.println(" - " + method.getName() + " : " + Modifier.toString(method.getModifiers()));
+        }
+    }
 }
+
+

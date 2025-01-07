@@ -1,5 +1,6 @@
 package classes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,12 +9,13 @@ import java.util.List;
 public class Attribut extends Visible {
     private String nom;
     private String type;
-    private List<String> modificateurs;
+    private ArrayList<String> modificateurs;
 
-    public Attribut(String nom, String type, List<String> modificateurs) {
+    public Attribut( String type, String nom) {
+        super();
         this.nom = nom;
         this.type = type;
-        this.modificateurs = modificateurs;
+        this.modificateurs = new ArrayList<String>();
     }
 
     public String getNom() {

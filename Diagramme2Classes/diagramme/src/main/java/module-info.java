@@ -6,4 +6,5 @@ module version1 {
     exports diagramme;
     exports diagramme.loader;
     exports app;
+    exports classes;
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Classe {
+public class Classe extends Interface {
     private String type;
     private String nom;
     private List<String> modificateurs;
@@ -14,8 +14,7 @@ public class Classe {
     private Package pack;
 
     public Classe(String type, String nom) {
-        this.type = type;
-        this.nom = nom;
+        super(type, nom);
         this.modificateurs = new ArrayList<>();
         this.attributs = new ArrayList<>();
         this.methodes = new ArrayList<>();

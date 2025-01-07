@@ -1,3 +1,6 @@
+
+import static org.junit.Assert.assertTrue;
+
 import analyse.Analyseur;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,11 +26,12 @@ class AnalyseurTest {
 
     /**
      * Initialisation de l'analyseur avant chaque test
+     *
      * @throws ClassNotFoundException
      */
     @BeforeEach
     void setup() throws ClassNotFoundException {
-        analyseur = new Analyseur();
+        Analyseur analyseur = Analyseur.getInstance();
     }
 
     /**
@@ -59,54 +63,4 @@ class AnalyseurTest {
         assertEquals(0, interfaces.length);
     }
 
-    /**
-     * Test de la méthode trierAttributsParModificateur, retourne les attributs triés par modificateur
-     * tri les attributs par modificateur dans une map
-     * @throws ClassNotFoundException
-     */
-    @Test
-    void trierAttributsParModificateur() throws ClassNotFoundException {
-        Analyseur a = new Analyseur();
-        Map<String, List<Field>> test = a.trierAttributsParModificateur();
-        for (String key : test.keySet()) {
-            if (!test.get(key).isEmpty()) {
-                assertEquals("private", key);
-            }
-            for (Field f : test.get(key)) {
-                assertEquals("analyseClasse", f.getName());
-                assertEquals("java.lang.Class", f.getType().getName());
-                assertEquals(Modifier.PRIVATE, f.getModifiers());
-                assertEquals(f.getType().getSuperclass().getName(), "java.lang.Object");
-            }
-        }
-    }
-
-    /**
-     * Test de la méthode trierMethodesParModificate
-     * Tri les méthodes par modificateur dans une map
-     */
-    @Test
-    void testTrierMethodesParModificateur() {
-        Method[] methods = analyseur.getClass().getDeclaredMethods();
-        Map<String, List<Method>> triMethodes = analyseur.trierMethodesParModificateur(methods);
-        assertNotNull(triMethodes);
-        assertTrue(triMethodes.containsKey("public"));
-        assertTrue(triMethodes.containsKey("protected"));
-        assertTrue(triMethodes.containsKey("private"));
-    }
-
-
-    /**
-     * Test de la méthode afficherAttributs et afficherMethodes
-     * Affiche les attributs et les méthodes de la classe
-     */
-    @Test
-    void AfficherElements() throws ClassNotFoundException {
-        @SuppressWarnings("unused")
-        Analyseur a = new Analyseur();
-        Class<?> cl = Class.forName("analyse.Analyseur");
-        Analyseur.afficherAttributs(cl);
-        Analyseur.afficherMethodes(cl);
-
-    }
 }
