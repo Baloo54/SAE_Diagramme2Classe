@@ -1,187 +1,228 @@
 package analyse;
 
-import classes.Diagramme;
+import classes.*;
 import classes.Package;
 import diagramme.loader.LoaderExterne;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
+/**
+ * Classe réalisant l'analyse d'une classe Java
+ */
 public class Analyseur {
+
+    // Instance
+    private static Analyseur INSTANCE;
+
+
+    // Classe à analyser
     private Class analyseClasse;
-    public static Analyseur instance = new Analyseur();
 
-    public Package construireClasse(String chemin, Diagramme d) throws ClassNotFoundException {
+    /**
+     * Constructeur privé pour le patron singleton
+     */
+    private Analyseur() {
+        this.analyseClasse = null;
+    }
+
+    /**
+     * Méthode permettant de récupèrer l'instance
+     *
+     * @return l'instance
+     */
+    public static Analyseur getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Analyseur();
+        }
+        return INSTANCE;
+    }
+
+
+    /**
+     * Méthode permettant de définire la classe à analyser
+     *
+     * @param classe : la classe à analyser
+     */
+    private void setClasseAnalyse(Class classe) {
+        this.analyseClasse = classe;
+    }
+
+    /**
+     * Analyse une classe à partir de son chemin en string
+     *
+     * @param chemin : chemin vers la classe à analyser
+     * @return l'objet Classe contenant l'analyse
+     * @throws ClassNotFoundException si la classe n'est pas trouvée
+     */
+    public Classe analyserClasse(String chemin) throws ClassNotFoundException {
         Class classe = LoaderExterne.getInstance().loadClass(chemin);
-        String pack = classe.getName().replace(classe.getSimpleName(), "");
-        Package p = new Package(pack);
-        return p;
-    }
+        setClasseAnalyse(classe);
 
+        Classe classeAnalysee = new Classe("class", classe.getSimpleName());
+        classeAnalysee.addPackage(new Package(classe.getPackage().getName()));
 
+        // Analyse des modificateurs
+        ArrayList<String> modifiers = getModifierClasse(classe);
+        for (String modifier : modifiers) {
+            classeAnalysee.addModificateur(modifier);
 
-
-    public static void afficherAttributs(Class cl) {
-        Field[] fields = cl.getDeclaredFields();
-        System.out.println("Attributs:");
-        for (Field f : fields) {
-            System.out.println(f.getName());
         }
 
-    }
-
-    public static void afficherMethodes(Class cl) {
-        Method[] methods = cl.getDeclaredMethods();
-        System.out.println("Méthodes:");
-        for (Method m : methods) {
-            System.out.println(m.getName());
+        // Analyse des attributs
+        for (Field field : classe.getDeclaredFields()) {
+            Attribut attribut = analyserAttribut(field);
+            classeAnalysee.addAttribut(attribut);
         }
-    }
 
-    private static String getModifierVisibilite(int i) {
-        switch (i) {
-            case Modifier.PUBLIC:
-                return "public";
-            case Modifier.PRIVATE:
-                return "private";
-            default:
-                return "protected";
+        // Analyse des méthodes
+        for (Method method : classe.getDeclaredMethods()) {
+            Methode methode = analyserMethode(method);
+            classeAnalysee.addMethode(methode);
         }
+
+        // Analyse des interfaces
+        for (Class<?> interfaceClass : classe.getInterfaces()) {
+            Interface inter = new Interface("interface", interfaceClass.getSimpleName());
+            classeAnalysee.addInterface(inter);
+        }
+        return classeAnalysee;
     }
 
+    /**
+     * Méthode permettant d'analyser un attribut
+     *
+     * @param field : attribut à analyser
+     */
+    private Attribut analyserAttribut(Field field) {
+        ArrayList<String> modifiers = getModifierAttribut(field);
+        return new Attribut(field.getType().getSimpleName(), field.getName());
+    }
+
+    /**
+     * Méthode permettant d'analyser une méthode
+     *
+     * @param method : méthode à analyser
+     */
+    private Methode analyserMethode(Method method) {
+        ArrayList<HashMap<String, String>> parametres = new ArrayList<>();
+        for (Parameter param : method.getParameters()) {
+            HashMap<String, String> paramMap = new HashMap<>();
+            paramMap.put("type", param.getType().getSimpleName());
+            paramMap.put("nom", param.getName());
+            parametres.add(paramMap);
+        }
+
+        ArrayList<String> modifiers = getModifierMethode(method);
+        return new Methode(method.getName(), method.getReturnType().getSimpleName(), parametres, modifiers);
+    }
+
+    /**
+     * Méthode permettant de récupèrer les modificateurs sous forme de String
+     *
+     * @param modifiers : modificateurs sous forme d'entier
+     */
+    private static String getModifierVisibilite(int modifiers) {
+        if (Modifier.isPublic(modifiers)) return "public";
+        if (Modifier.isPrivate(modifiers)) return "private";
+        if (Modifier.isProtected(modifiers)) return "protected";
+        return "package";
+    }
+
+    /**
+     * Méthode permettant de récupèrer les modificateurs d'une classe
+     *
+     * @param c : classe à analyser
+     */
     private static ArrayList<String> getModifierClasse(Class c) {
-        int i = c.getModifiers();
-        ArrayList<String> modifiers = new ArrayList<>();
-        modifiers.add(getModifierVisibilite(i));
-        if (Modifier.isAbstract(i)) {
-            modifiers.add("abstract");
-        } else if (Modifier.isFinal(i)) {
-            modifiers.add("final");
-        }
-        if (Modifier.isStrict(i)) {
-            modifiers.add("strictfp");
-        }
-        return modifiers;
+        int modifiers = c.getModifiers();
+        ArrayList<String> result = new ArrayList<>();
+        result.add(getModifierVisibilite(modifiers));
+        if (Modifier.isAbstract(modifiers)) result.add("abstract");
+        if (Modifier.isFinal(modifiers)) result.add("final");
+        return result;
     }
 
+    /**
+     * Méthode permettant de récupèrer les modificateurs d'une méthode
+     *
+     * @param m : méthode à analyser
+     */
     private static ArrayList<String> getModifierMethode(Method m) {
-        int i = m.getModifiers();
-        ArrayList<String> modifiers = new ArrayList<>();
-        modifiers.add(getModifierVisibilite(i));
-        if (Modifier.isStatic(i)) {
-            modifiers.add("static");
-        }
-        if (Modifier.isAbstract(i)) {
-            modifiers.add("abstract");
-        } else {
-            if (Modifier.isNative(i)) {
-                modifiers.add("native");
-            } else if (Modifier.isStrict(i)) {
-                modifiers.add("strictfp");
-            }
-            if (Modifier.isFinal(i)) {
-                modifiers.add("final");
-            }
-            if (Modifier.isSynchronized(i)) {
-                modifiers.add("synchronized");
-            }
-        }
-        return modifiers;
+        int modifiers = m.getModifiers();
+        ArrayList<String> result = new ArrayList<>();
+        result.add(getModifierVisibilite(modifiers));
+        if (Modifier.isPublic(modifiers)) result.add("public");
+        if (Modifier.isPrivate(modifiers)) result.add("private");
+        if (Modifier.isProtected(modifiers)) result.add("protected");
+        if (Modifier.isStatic(modifiers)) result.add("static");
+        if (Modifier.isAbstract(modifiers)) result.add("abstract");
+        if (Modifier.isFinal(modifiers)) result.add("final");
+        if (Modifier.isSynchronized(modifiers)) result.add("synchronized");
+        return result;
     }
 
+    /**
+     * Méthode permettant de Récupèrer les modificateurs d'un attribut
+     *
+     * @param f : attribut à analyser
+     */
     private static ArrayList<String> getModifierAttribut(Field f) {
-        int i = f.getModifiers();
-        ArrayList<String> modifiers = new ArrayList<>();
-        modifiers.add(getModifierVisibilite(i));
-        if (Modifier.isStatic(i)) {
-            modifiers.add("static");
-        }
-        if (Modifier.isFinal(i)) {
-            modifiers.add("final");
-        }
-        if (Modifier.isTransient(i)) {
-            modifiers.add("transient");
-        }
-        if (Modifier.isVolatile(i)) {
-            modifiers.add("volatile");
-        }
-        if(f.getType().isArray()){
-            modifiers.add("array");
-        }
-        return modifiers;
+        int modifiers = f.getModifiers();
+        ArrayList<String> result = new ArrayList<>();
+        result.add(getModifierVisibilite(modifiers));
+        if (Modifier.isPublic(modifiers)) result.add("public");
+        if (Modifier.isPrivate(modifiers)) result.add("private");
+        if (Modifier.isProtected(modifiers)) result.add("protected");
+        if (Modifier.isStatic(modifiers)) result.add("static");
+        if (Modifier.isFinal(modifiers)) result.add("final");
+        if (Modifier.isTransient(modifiers)) result.add("transient");
+        if (Modifier.isVolatile(modifiers)) result.add("volatile");
+        if (f.getType().isArray()) result.add("array");
+        return result;
     }
+
+    /**
+     * Méthode permettant de récupèrer la classe parente
+     */
     public Class getClasseParent() {
         return this.analyseClasse.getSuperclass();
     }
 
+    /**
+     * Méthode permettant de récupèrer les interfaces
+     */
     public Class[] getInterfaces() {
         return this.analyseClasse.getInterfaces();
     }
 
+    /**
+     * Méthode permettant de récupèrer le nom de la classe
+     */
     public String getNomClasse() {
         return this.analyseClasse.getName();
     }
 
-    public  Map<String, List<Field>> trierAttributsParModificateur() {
-        Field[] fields = this.analyseClasse.getDeclaredFields();
-        Map<String, List<Field>> tri = new HashMap<>();
-        tri.put("public", new ArrayList<>());
-        tri.put("protected", new ArrayList<>());
-        tri.put("private", new ArrayList<>());
+    /**
+     * Méthode permettant d'afficher les resultats de l'analyse
+     */
+    public void afficherResultats() {
+        System.out.println("Nom de la classe : " + this.analyseClasse.getName());
+        System.out.println("Classe parente : " + this.analyseClasse.getSuperclass().getName());
 
-        for (Field field : fields) {
-            int mod = field.getModifiers();
-            if (Modifier.isPublic(mod)) {
-                tri.get("public").add(field);
-            } else if (Modifier.isProtected(mod)) {
-                tri.get("protected").add(field);
-            } else{
-                tri.get("private").add(field);
-            }
+        System.out.println("Attributs :");
+        for (Field field : this.analyseClasse.getDeclaredFields()) {
+            System.out.println(" - " + field.getName() + " : " + Modifier.toString(field.getModifiers()));
         }
 
-        return tri;
-    }
-
-    public  Map<String, List<Method>> trierMethodesParModificateur(Method[] methods) {
-        Map<String, List<Method>> tri = new HashMap<>();
-        tri.put("public", new ArrayList<>());
-        tri.put("protected", new ArrayList<>());
-        tri.put("private", new ArrayList<>());
-        for (Method method : methods) {
-            int mod = method.getModifiers();
-            if (Modifier.isPublic(mod)) {
-                tri.get("public").add(method);
-            } else if (Modifier.isProtected(mod)) {
-                tri.get("protected").add(method);
-            } else{
-                tri.get("private").add(method);
-            }
+        System.out.println("Méthodes :");
+        for (Method method : this.analyseClasse.getDeclaredMethods()) {
+            System.out.println(" - " + method.getName() + " : " + Modifier.toString(method.getModifiers()));
         }
-        return tri;
-    }
-
-    public  void afficherTriAttributs(Map<String, List<Field>> tri) {
-        for (Map.Entry<String, List<Field>> entry : tri.entrySet()) {
-            System.out.println("Attributs " + entry.getKey() + ":");
-            for (Field field : entry.getValue()) {
-                System.out.println(" - " + field.getName());
-            }
-        }
-    }
-
-    public static void afficherTriMethodes(Map<String, List<Method>> tri) {
-        for (Map.Entry<String, List<Method>> entry : tri.entrySet()) {
-            System.out.println("Méthodes " + entry.getKey() + ":");
-            for (Method method : entry.getValue()) {
-                System.out.println(" - " + method.getName());
-            }
-        }
-    }
-
-    public static Analyseur getInstance() {
-        return instance;
     }
 }
+
+

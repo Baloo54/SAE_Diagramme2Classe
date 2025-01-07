@@ -2,17 +2,20 @@ package classes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class Methode extends Visible {
+/**
+ * Classe représentant une méthode
+ */
+public class Methode extends Visible{
     private String nom;
-    private String retour;
-    private ArrayList<HashMap<String, String>> parametres;
-    private ArrayList<String> modificateurs;
+    private String typeRetour;
+    private List<HashMap<String, String>> parametres;
+    private List<String> modificateurs;
 
-
-    public Methode(String nom, String retour, ArrayList<HashMap<String, String>> parametres, ArrayList<String> modificateurs) {
+    public Methode(String nom, String typeRetour, List<HashMap<String, String>> parametres, List<String> modificateurs) {
         this.nom = nom;
-        this.retour = retour;
+        this.typeRetour = typeRetour;
         this.parametres = parametres;
         this.modificateurs = modificateurs;
     }
@@ -21,17 +24,14 @@ public class Methode extends Visible {
         return nom;
     }
 
-    public ArrayList<HashMap<String, String>> getParametres() {
+    public String getTypeRetour() {
+        return typeRetour;
+    }
+
+    public List<HashMap<String, String>> getParametres() {
         return parametres;
     }
 
-    public ArrayList<String> getModificateurs() {
-        return modificateurs;
-    }
-
-    public String getRetour() {
-        return retour;
-    }
 
     @Override
     public boolean equals(Object obj) {

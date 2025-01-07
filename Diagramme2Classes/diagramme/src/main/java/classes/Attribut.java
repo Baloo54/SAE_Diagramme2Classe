@@ -1,7 +1,11 @@
 package classes;
 
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Classe représentant un attribut
+ */
 public class Attribut extends Visible {
     private String nom;
     private String type;
@@ -14,17 +18,15 @@ public class Attribut extends Visible {
         this.modificateurs = new ArrayList<String>();
     }
 
+    public String getNom() {
+        return nom;
+    }
+
     public String getType() {
         return type;
     }
 
-    public ArrayList<String> getModificateur() {
-        return modificateurs;
-    }
 
-    public String getNom() {
-        return nom;
-    }
 
     @Override
     public boolean equals(Object obj) {

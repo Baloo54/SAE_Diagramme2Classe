@@ -1,17 +1,19 @@
 package classes;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Classe extends Interface {
-    private HashMap<Classe,Boolean> classesFilles;
-    private Classe classeParent = null;
+    private List<Methode> methodes;
+    private List<Interface> interfaces;
+    private Classe classeParent;
+    private HashMap<Classe, Boolean> classesFilles;
 
-    public Classe(String type,String nom) {
-        super(type,nom);
-        this.classesFilles = new HashMap<Classe,Boolean>();
-    }
-
-    public HashMap<Classe,Boolean> getClasseFille() {
-        return classesFilles;
+    public Classe(String type, String nom) {
+        super(type, nom);
+        this.methodes = new ArrayList<>();
+        this.interfaces = new ArrayList<>();
     }
 
     public void changerVisibiliteHeritage() {
@@ -22,7 +24,18 @@ public class Classe extends Interface {
                 }
         }
     }
+    @Override
+    public void changerVisibilite() {
+        super.changerVisibilite();
+        if (!this.getVisible()) {
+            for (Classe c : classesFilles.keySet()) {
+                if (classesFilles.get(c)) {
+                    classesFilles.put(c, false);
+                }
+            }
+        }
+    }
+
     public void changerVisibiliteClasseFille(Classe c) {
         this.classesFilles.put(c,!this.classesFilles.get(c));
-    }
 }
