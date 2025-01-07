@@ -1,6 +1,8 @@
 package classes;
 
 /**
+ *
+ * Classe abstraite Visible permettant de gérer la visibilité des éléments masquables dans le diagramme
  * Classe représentant un élément visible
  */
 public abstract class Visible {

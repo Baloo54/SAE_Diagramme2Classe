@@ -8,13 +8,8 @@ import java.io.IOException;
 public class SimpleDecompiler {
 
     public static String getNomClasse(String chemin) throws IOException {
-        // Vérifiez si un fichier .class a été fourni en argument
-
-        // Le chemin du fichier .class à analyser (en utilisant l'argument de ligne de commande)
-        String classFilePath = "C:\\LoaderExterne.class";
-
         // Charger le fichier .class
-        FileInputStream fileInputStream = new FileInputStream(classFilePath);
+        FileInputStream fileInputStream = new FileInputStream(chemin);
         ClassReader classReader = new ClassReader(fileInputStream);
         final String[] className = new String[1];
         // Analyser la classe
