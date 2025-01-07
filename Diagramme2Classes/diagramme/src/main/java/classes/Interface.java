@@ -112,6 +112,21 @@ public class Interface extends Attribut {
         return heritageVisible;
     }
 
+    public void addMethode(Methode methode) {
+        methodes.add(methode);
+    }
+
+    public void addInterface(Interface inter) {
+        interfaces.add(inter);
+        interfacesFilles.put(inter, true);
+    }
+
+    public void addAttribut(Attribut attribut) {
+        attributs.add(attribut);
+    }
+
+
+
     public ArrayList<Interface> getInterfaces() {
         return interfaces;
     }

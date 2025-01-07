@@ -26,7 +26,9 @@ public class Attribut extends Visible {
         return type;
     }
 
-
+    public void addModificateur(String modificateur) {
+        modificateurs.add(modificateur);
+    }
 
     @Override
     public boolean equals(Object obj) {

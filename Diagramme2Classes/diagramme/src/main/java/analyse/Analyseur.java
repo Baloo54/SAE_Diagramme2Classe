@@ -61,9 +61,9 @@ public class Analyseur {
     public Classe analyserClasse(String chemin) throws ClassNotFoundException {
         Class classe = LoaderExterne.getInstance().loadClass(chemin);
         setClasseAnalyse(classe);
-
+        Package p = new Package(classe.getPackage().getName());
         Classe classeAnalysee = new Classe("class", classe.getSimpleName());
-        classeAnalysee.addPackage(new Package(classe.getPackage().getName()));
+        p.ajouterClasse(classeAnalysee);
 
         // Analyse des modificateurs
         ArrayList<String> modifiers = getModifierClasse(classe);
