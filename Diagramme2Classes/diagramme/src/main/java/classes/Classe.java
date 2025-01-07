@@ -19,11 +19,12 @@ public class Classe extends Interface {
     public void changerVisibiliteHeritage() {
         super.changerVisibiliteHeritage();
         if (!this.getHeritageVisible()) {
-            if(this.classeParent != null) {
-                    this.classeParent.changerVisibiliteClasseFille(this);
-                }
+            if (this.classeParent != null) {
+                this.classeParent.changerVisibiliteClasseFille(this);
+            }
         }
     }
+
     @Override
     public void changerVisibilite() {
         super.changerVisibilite();
@@ -37,5 +38,6 @@ public class Classe extends Interface {
     }
 
     public void changerVisibiliteClasseFille(Classe c) {
-        this.classesFilles.put(c,!this.classesFilles.get(c));
+        this.classesFilles.put(c, !this.classesFilles.get(c));
+    }
 }
