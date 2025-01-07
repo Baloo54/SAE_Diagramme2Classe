@@ -15,11 +15,14 @@ public class Classe extends Interface {
     }
 
     public void changerVisibiliteHeritage() {
-        //TODO
+        super.changerVisibiliteHeritage();
+        if (!this.getHeritageVisible()) {
+            if(this.classeParent != null) {
+                    this.classeParent.changerVisibiliteClasseFille(this);
+                }
+        }
     }
-
-    public Classe getClasseParent() {
-        //TODO
-        return null;
+    public void changerVisibiliteClasseFille(Classe c) {
+        this.classesFilles.put(c,!this.classesFilles.get(c));
     }
 }
