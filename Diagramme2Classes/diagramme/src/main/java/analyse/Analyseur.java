@@ -210,17 +210,17 @@ public class Analyseur {
      * Méthode permettant d'afficher les resultats de l'analyse
      */
     public void afficherResultats() {
-        System.out.println("Nom de la classe : " + this.analyseClasse.getName());
-        System.out.println("Classe parente : " + this.analyseClasse.getSuperclass().getName());
+        System.out.println("Nom de la classe : " + this.analyseClasse.getName().replaceAll(".*\\.",""));
+        System.out.println("Classe parente : " + this.analyseClasse.getSuperclass().getName().replaceAll(".*\\.",""));
 
         System.out.println("Attributs :");
         for (Field field : this.analyseClasse.getDeclaredFields()) {
-            System.out.println(" - " + field.getName() + " : " + Modifier.toString(field.getModifiers()));
+            System.out.println(" - " + Modifier.toString(field.getModifiers()) + " " + field.getName());
         }
 
         System.out.println("Méthodes :");
         for (Method method : this.analyseClasse.getDeclaredMethods()) {
-            System.out.println(" - " + method.getName() + " : " + Modifier.toString(method.getModifiers()));
+            System.out.println(" - " + Modifier.toString(method.getModifiers()) + " " + method.getName());
         }
     }
 }
