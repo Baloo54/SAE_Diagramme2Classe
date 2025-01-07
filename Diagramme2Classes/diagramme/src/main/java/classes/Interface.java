@@ -1,30 +1,20 @@
 package classes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
  * Classe représentant une interface
  */
-public class Interface extends Attribut {
-   private ArrayList<Interface> interfaces;
-   private ArrayList<Methode> methodes;
-   private ArrayList<Attribut> attributs;
-   private HashMap<Interface,Boolean> interfacesFilles;
+public class Interface {
+    private String type;
+    private String nom;
 
-
-    /**
-     * Constructeur de la classe
-     * @param type : type de l'interface
-     * @param nom : nom de l'interface
-     */
-    public Interface(String type,String nom) {
-        super(type,nom);
-        this.interfaces = new ArrayList<Interface>();
-        this.methodes = new ArrayList<Methode>();
-        this.attributs = new ArrayList<Attribut>();
+    public Interface(String type, String nom) {
+        this.type = type;
+        this.nom = nom;
     }
 
+    public String getNom() {
+        return nom;
+    }
     /**
      * Méthode permettant de changer la visibilité de l'interface
      */
@@ -66,9 +56,6 @@ public class Interface extends Attribut {
         m.changerVisibilite();
     }
 
-    public void ajouterMethode(Methode m) {
-        methodes.add(m);
-    }
 
     @Override
     public boolean equals(Object obj) {

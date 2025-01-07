@@ -1,48 +1,44 @@
 package classes;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-/**
- * Classe représentant une classe
- */
-public class Classe extends Interface {
-    /**
-     * Attributs de la classe
-     */
-    private HashMap<Classe,Boolean> classesFilles;
-    private Classe classeParent = null;
+public class Classe {
+    private String type;
+    private String nom;
+    private List<String> modificateurs;
+    private List<Attribut> attributs;
+    private List<Methode> methodes;
+    private List<Interface> interfaces;
+    private Package pack;
 
-    /**
-     * Constructeur de la classe
-     * @param type : type de la classe
-     * @param nom : nom de la classe
-     */
-    public Classe(String type,String nom) {
-        super(type,nom);
-        this.classesFilles = new HashMap<Classe,Boolean>();
+    public Classe(String type, String nom) {
+        this.type = type;
+        this.nom = nom;
+        this.modificateurs = new ArrayList<>();
+        this.attributs = new ArrayList<>();
+        this.methodes = new ArrayList<>();
+        this.interfaces = new ArrayList<>();
     }
 
-    /**
-     * Méthode permettant de récupérer les classes filles
-     * @return : les classes filles
-     */
-    public HashMap<Classe,Boolean> getClasseFille() {
-        return classesFilles;
+    public void addModificateur(String mod) {
+        this.modificateurs.add(mod);
     }
 
-    /**
-     * Méthode permettant de récupérer la visibilité de l'héritage
-     * @return : la visibilité de l'héritage
-     */
-    public void changerVisibiliteHeritage() {
-        //TODO
+    public void addAttribut(Attribut attr) {
+        this.attributs.add(attr);
     }
 
-    /**
-     * Méthode permettant de récupérer la classe parent
-     * @return : la classe parent
-     */
-    public Classe getClasseParent() {
-        //TODO
-        return null;
+    public void addMethode(Methode methode) {
+        this.methodes.add(methode);
+    }
+
+    public void addInterface(Interface interf) {
+        this.interfaces.add(interf);
+    }
+
+    public void addPackage(Package pack) {
+        this.pack = pack;
     }
 }
