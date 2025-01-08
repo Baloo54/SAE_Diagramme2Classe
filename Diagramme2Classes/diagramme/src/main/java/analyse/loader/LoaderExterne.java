@@ -3,6 +3,8 @@ package  analyse.loader;
 import java.io.*;
 
 public class LoaderExterne extends ClassLoader {
+
+    private static LoaderExterne loader = new LoaderExterne();
     /**
      * Charge une classe depuis un fichier .class en vérifiant le package.
      *
@@ -15,7 +17,6 @@ public class LoaderExterne extends ClassLoader {
         try {
             return Class.forName(filePath);
         } catch (ClassNotFoundException e) {
-            getInstance();
             File file = new File(filePath);
             if (!file.exists() || !file.isFile()) {
                 throw new ClassNotFoundException("Le fichier spécifié est introuvable : " + filePath);
@@ -43,6 +44,6 @@ public class LoaderExterne extends ClassLoader {
         }
     }
     public static LoaderExterne getInstance() {
-        return new LoaderExterne();
+        return loader;
     }
 }
