@@ -16,7 +16,7 @@ public class TestAnalyseur extends Application{
     public void start(Stage primaryStage){
         Analyseur analyseur = Analyseur.getInstance();
         try {
-            Interface classe = analyseur.analyserClasse("classes.Classe");
+            Interface classe = analyseur.analyserClasse("C:\\Users\\mathi\\OneDrive\\Bureau\\Nouveau dossier (3)\\clone\\SAE_Diagramme2Classe\\Diagramme2Classes\\out\\production\\Diagramme2Classes\\classes\\Classe.class");
             VueClasse vueClasse = new VueClasse(classe);
             vueClasse.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
             Pane p = new Pane();
