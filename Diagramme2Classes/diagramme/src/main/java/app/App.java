@@ -36,7 +36,7 @@ public class App extends Application {
         //model
         Model model = new Model();
         //vue
-        Analyseur.getInstance().analyserClasse("C:\\Users\\mathi\\OneDrive\\Bureau\\Nouveau dossier (3)\\clone\\SAE_Diagramme2Classe\\Diagramme2Classes\\out\\production\\Diagramme2Classes\\diagramme\\Vues\\VuePrincipale.class");//permet de rendre chargeable la classe VuePrincipale
+        Analyseur.getInstance().analyserClasse("out\\production\\Diagramme2Classes\\diagramme\\Vues\\VuePrincipale.class");//permet de rendre chargeable la classe VuePrincipale
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
