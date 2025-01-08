@@ -49,10 +49,10 @@ public class Model implements Sujet{
      */
     public void ajouterPackage(File folder){
         ReadFile reader = new ReadFile();
-        List<String> classes = reader.findClassFiles(folder);
+        List<String> chemin = reader.findClassFiles(folder);
         Analyseur analyseur = Analyseur.getInstance();
         
-        for (String string : classes) {
+        for (String string : chemin) {
             try {
                 Interface c = analyseur.analyserClasse(string);
                 if (!this.classes.contains(c))

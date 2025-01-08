@@ -24,9 +24,12 @@ public class Interface extends Attribut {
     // Indique si l'héritage est visible
     private boolean heritageVisible = true;
 
+    // Nom du package de la classe
+    private String packageClasse;
+
     /**
      * Constructeur pour initialiser une interface avec un type et un nom.
-     * 
+     *
      * @param type Le type de l'interface.
      * @param nom  Le nom de l'interface.
      */
@@ -61,7 +64,7 @@ public class Interface extends Attribut {
 
     /**
      * Change la visibilité d'une interface fille.
-     * 
+     *
      * @param i L'interface fille dont la visibilité doit être changée.
      */
     public void changerVisibiliteInterfaceFille(Interface i) {
@@ -75,7 +78,7 @@ public class Interface extends Attribut {
 
     /**
      * Vérifie si une interface fille est visible.
-     * 
+     *
      * @param i L'interface fille à vérifier.
      * @return true si l'interface fille est visible, false sinon.
      */
@@ -106,7 +109,7 @@ public class Interface extends Attribut {
 
     /**
      * Change la visibilité d'une méthode spécifique.
-     * 
+     *
      * @param m La méthode dont la visibilité doit être changée.
      */
     public void changerVisibiliteMethode(Methode m) {
@@ -115,7 +118,7 @@ public class Interface extends Attribut {
 
     /**
      * Vérifie si deux interfaces sont égales en fonction de leur type et attributs.
-     * 
+     *
      * @param obj L'objet à comparer.
      * @return true si les interfaces sont égales, false sinon.
      */
@@ -126,7 +129,7 @@ public class Interface extends Attribut {
 
     /**
      * Retourne la liste des méthodes de l'interface.
-     * 
+     *
      * @return Liste des méthodes.
      */
     public ArrayList<Methode> getMethodes() {
@@ -135,7 +138,7 @@ public class Interface extends Attribut {
 
     /**
      * Retourne la visibilité de l'héritage.
-     * 
+     *
      * @return true si l'héritage est visible, false sinon.
      */
     public boolean getHeritageVisible() {
@@ -144,7 +147,7 @@ public class Interface extends Attribut {
 
     /**
      * Ajoute une méthode à l'interface.
-     * 
+     *
      * @param methode La méthode à ajouter.
      */
     public void addMethode(Methode methode) {
@@ -153,7 +156,7 @@ public class Interface extends Attribut {
 
     /**
      * Ajoute une interface héritée.
-     * 
+     *
      * @param inter L'interface à ajouter.
      */
     public void addInterface(Interface inter) {
@@ -163,7 +166,7 @@ public class Interface extends Attribut {
 
     /**
      * Ajoute un attribut à l'interface.
-     * 
+     *
      * @param attribut L'attribut à ajouter.
      */
     public void addAttribut(Attribut attribut) {
@@ -172,7 +175,7 @@ public class Interface extends Attribut {
 
     /**
      * Retourne la liste des interfaces héritées.
-     * 
+     *
      * @return Liste des interfaces.
      */
     public ArrayList<Interface> getInterfaces() {
@@ -181,6 +184,7 @@ public class Interface extends Attribut {
 
     /**
      * Retourne la liste des attributs
+     *
      * @return liste des attributs
      */
     public ArrayList<Attribut> getAttributs() {

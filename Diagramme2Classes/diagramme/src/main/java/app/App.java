@@ -35,9 +35,9 @@ public class App extends Application {
         VBox diagramArea = new VBox();
         diagramArea.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: lightgray;");
         //model
+        LoaderExterne.getInstance().loadClassFromFile("out\\production\\Diagramme2Classes\\diagramme\\Model.class");//permet de rendre chargeable la classe Model
         Model model = new Model();
         //vue
-        LoaderExterne.getInstance().loadClassFromFile("out\\production\\Diagramme2Classes\\diagramme\\Model.class");//permet de rendre chargeable la classe Model
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
