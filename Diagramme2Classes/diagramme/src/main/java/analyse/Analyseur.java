@@ -22,16 +22,6 @@ public class Analyseur {
     // Instance unique de l'analyseur (Singleton)
     private static Analyseur INSTANCE;
 
-    // Classe en cours d'analyse
-    private Class analyseClasse;
-
-    /**
-     * Constructeur privé pour implémenter le patron Singleton.
-     */
-    private Analyseur() {
-        this.analyseClasse = null;
-    }
-
     /**
      * Retourne l'instance unique de l'analyseur.
      * 
@@ -45,15 +35,6 @@ public class Analyseur {
     }
 
     /**
-     * Définit la classe à analyser.
-     * 
-     * @param classe Classe Java à analyser.
-     */
-    private void setClasseAnalyse(Class classe) {
-        this.analyseClasse = classe;
-    }   
-
-    /**
      * Analyse une classe à partir de son chemin sous forme de chaîne de caractères.
      * 
      * @param chemin Chemin vers la classe à analyser.
@@ -63,11 +44,11 @@ public class Analyseur {
      */
     public Package analyserClasse(String chemin) throws ClassNotFoundException, IOException  {
         Class classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
-        setClasseAnalyse(classe);
         String packageNom = classe.getPackage().getName();
         ArrayList<Package> p = new ArrayList<>();
-        if(packageNom == null) {
-            packageNom = "";
+        //package composé ou non
+        if(packageNom.split("\\.").length == 1){
+            p.add(new Package(""));
         }else {
             for (String s : packageNom.split("\\.")) {
                 p.add(new Package(s));
@@ -99,6 +80,17 @@ public class Analyseur {
         // Analyse des interfaces implémentées
         for (Class<?> interfaceClass : classe.getInterfaces()) {
             Interface inter = new Interface("interface", interfaceClass.getSimpleName());
+            String packageInterface = interfaceClass.getPackage().getName();
+            ArrayList<Package> pInterface = new ArrayList<>();
+            //package composé ou non
+            if (packageInterface.split("\\.").length == 1) {
+                pInterface.add(new Package(""));
+            }
+            else {
+                for (String s : packageInterface.split("\\.")) {
+                    pInterface.add(new Package(s));
+                }
+            }
             classeAnalysee.addInterface(inter);
         }
         if (type.equals("class")) {
@@ -180,8 +172,8 @@ public class Analyseur {
         int modifiers = m.getModifiers();
         ArrayList<String> result = new ArrayList<>();
         if (Modifier.isPublic(modifiers)) result.add("public");
-        if (Modifier.isPrivate(modifiers)) result.add("private");
-        if (Modifier.isProtected(modifiers)) result.add("protected");
+        else if (Modifier.isPrivate(modifiers)) result.add("private");
+        else if (Modifier.isProtected(modifiers)) result.add("protected");
         if (Modifier.isStatic(modifiers)) result.add("static");
         if (Modifier.isAbstract(modifiers)) result.add("abstract");
         if (Modifier.isFinal(modifiers)) result.add("final");
@@ -189,46 +181,21 @@ public class Analyseur {
         return result;
     }
 
-    /**
-     * Retourne la classe parente.
-     * 
-     * @return La classe parente de la classe analysée.
-     */
-    public Class getClasseParent() {
-        return this.analyseClasse.getSuperclass();
-    }
-
-    /**
-     * Retourne les interfaces implémentées.
-     * 
-     * @return Tableau des interfaces implémentées.
-     */
-    public Class[] getInterfaces() {
-        return this.analyseClasse.getInterfaces();
-    }
-
-    /**
-     * Retourne le nom complet de la classe.
-     * 
-     * @return Nom complet de la classe analysée.
-     */
-    public String getNomClasse() {
-        return this.analyseClasse.getName();
-    }
 
     /**
      * Affiche les résultats de l'analyse dans la console.
      */
-    public void afficherResultats() {
-        System.out.println("Nom de la classe : " + this.analyseClasse.getName().replaceAll(".*\\.",""));
-        System.out.println("Classe parente : " + this.analyseClasse.getSuperclass().getName().replaceAll(".*\\.",""));
+    public void afficherResultats(Interface analyseClasse) {
+        System.out.println("Nom de la classe : " + analyseClasse.getNom());
+        if(analyseClasse instanceof Classe){
+        System.out.println("Classe parente : " + ((Classe)analyseClasse).getClasseParent().getNom());}
         System.out.println("Attributs :");
-        for (Field field : this.analyseClasse.getDeclaredFields()) {
-            System.out.println(" - " + Modifier.toString(field.getModifiers()) + " " + field.getName());
+        for (Attribut field : analyseClasse.getAttributs()) {
+            System.out.println(" nb modificateur - " + Modifier.toString(field.getModificateurs().size()) + " " + field.getNom());
         }
         System.out.println("Méthodes :");
-        for (Method method : this.analyseClasse.getDeclaredMethods()) {
-            System.out.println(" - " + Modifier.toString(method.getModifiers()) + " " + method.getName());
+        for (Methode method : analyseClasse.getMethodes()) {
+            System.out.println(" - " +method.getModificateurs().size() + " " + method.getNom());
         }
     }
 }

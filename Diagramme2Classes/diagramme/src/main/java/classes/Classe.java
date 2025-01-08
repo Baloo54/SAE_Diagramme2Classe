@@ -10,12 +10,6 @@ import java.util.List;
  */
 public class Classe extends Interface {
 
-    // Liste des méthodes définies dans la classe
-    private List<Methode> methodes;
-
-    // Liste des interfaces implémentées par la classe
-    private List<Interface> interfaces;
-
     // Classe parent dans une relation d'héritage
     private Classe classeParent;
 
@@ -30,8 +24,8 @@ public class Classe extends Interface {
      */
     public Classe(String type, String nom) {
         super(type, nom);
-        this.methodes = new ArrayList<>();
-        this.interfaces = new ArrayList<>();
+        classesFilles = new HashMap<>();
+        classeParent = null;
     }
 
     /**
@@ -74,5 +68,9 @@ public class Classe extends Interface {
 
     public void setClasseParent(Classe classeParent) {
         this.classeParent = classeParent;
+    }
+
+    public Classe getClasseParent() {
+        return classeParent;
     }
 }

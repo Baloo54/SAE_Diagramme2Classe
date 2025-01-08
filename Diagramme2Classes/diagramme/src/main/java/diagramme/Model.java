@@ -52,7 +52,7 @@ public class Model implements Sujet{
         
         for (String string : classes) {
             try {
-                this.classes.add(analyseur.analyserClasse(string));
+                this.classes.add((Classe)analyseur.analyserClasse(string).getInterfaces().getFirst());
             } catch (ClassNotFoundException e) {
                 System.out.println(e.getMessage());
             } catch (IOException e) {

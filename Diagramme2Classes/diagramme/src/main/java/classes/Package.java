@@ -82,4 +82,7 @@ public class Package {
     public ArrayList<Package> getPackages() {
         return packages;
     }
+    public ArrayList<Interface> getClasses() {
+        return interfaces;
+    }
 }
