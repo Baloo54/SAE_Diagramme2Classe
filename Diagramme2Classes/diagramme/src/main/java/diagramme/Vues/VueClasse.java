@@ -21,7 +21,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class VueClasse extends StackPane{
     
-    private Classe classe; // Instance de la classe représentée
+    private Interface classe; // Instance de la classe représentée
 
     /**
      * Constructeur de la classe VueClasse.
@@ -30,7 +30,7 @@ public class VueClasse extends StackPane{
      * 
      * @param classe La classe UML à représenter.
      */
-    public VueClasse(Classe classe){
+    public VueClasse(Interface classe){
         this.classe = classe;
         ArrayList<DecorateurLabel> methodes = new ArrayList<>();
         ArrayList<DecorateurLabel> attributs = new ArrayList<>();
@@ -114,15 +114,11 @@ public class VueClasse extends StackPane{
      */
     private DecorateurLabel getModificateurClasse(ArrayList<String> modificateurs, Label label){
         DecorateurLabel result = new DecorateurLabel(label);
-        for (String modificateur : modificateurs) {
-            switch(modificateur){
-                case "interface": 
-                    result = new InterfaceDecorateur(result);
-                    break;
-                case "abstract":
-                    result = new AbstractDecorateur(new ItaliqueDecorateur(result));
-                    break;
-            }
+        if(classe.getType().equals("interface")){
+            result = new InterfaceDecorateur(result);
+        }
+        else if (classe.getModificateurs().contains("abstract")){
+            result = new AbstractDecorateur(new ItaliqueDecorateur(result));
         }
         return result;
     }
@@ -155,7 +151,7 @@ public class VueClasse extends StackPane{
         }
         return result;
     }
-    public Classe getClasse(){
+    public Interface getClasse(){
         return this.classe;
     }
 }
