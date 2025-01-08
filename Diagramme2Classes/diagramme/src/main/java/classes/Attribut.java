@@ -30,6 +30,10 @@ public class Attribut extends Visible {
         modificateurs.add(modificateur);
     }
 
+public List<String> getModificateurs() {
+        return modificateurs;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return nom.equals(((Attribut) obj).getNom());

@@ -210,8 +210,8 @@ public class Analyseur {
      * Méthode permettant d'afficher les resultats de l'analyse
      */
     public void afficherResultats() {
-        System.out.println("Nom de la classe : " + this.analyseClasse.getName().replaceAll(".*\\.",""));
-        System.out.println("Classe parente : " + this.analyseClasse.getSuperclass().getName().replaceAll(".*\\.",""));
+        System.out.println("Nom de la classe : " + this.analyseClasse.getName().replaceAll(".*\\.", ""));
+        System.out.println("Classe parente : " + this.analyseClasse.getSuperclass().getName().replaceAll(".*\\.", ""));
 
         System.out.println("Attributs :");
         for (Field field : this.analyseClasse.getDeclaredFields()) {
@@ -223,6 +223,85 @@ public class Analyseur {
             System.out.println(" - " + Modifier.toString(method.getModifiers()) + " " + method.getName());
         }
     }
+
+    /**
+     * Méthode permettant d'exporter au format Puml
+     * @param classeAnalysee : l'objet Classe analysé
+     * @return code Puml
+     */
+    public String exportPuml(Classe classeAnalysee) {
+        StringBuilder puml = new StringBuilder();
+        puml.append("@startuml\n");
+        puml.append("class ").append(classeAnalysee.getNom()).append(" {\n");
+
+        for (Attribut attribut : classeAnalysee.getAttributs()) {
+            ArrayList<String> modificateurs = (ArrayList<String>) attribut.getModificateurs();
+            String visibility = getPumlModificateur(modificateurs);
+            puml.append("    ")
+                    .append(visibility)
+                    .append(" ")
+                    .append(attribut.getNom())
+                    .append(" : ")
+                    .append(attribut.getType())
+                    .append("\n");
+        }
+
+        for (Methode methode : classeAnalysee.getMethodes()) {
+            String visibility = getPumlModificateur(methode.getModificateurs());
+            puml.append("    ")
+                    .append(visibility)
+                    .append(" ")
+                    .append(methode.getNom())
+                    .append("(");
+
+            List<HashMap<String, String>> parametres = methode.getParametres();
+            for (int i = 0; i < parametres.size(); i++) {
+                HashMap<String, String> param = parametres.get(i);
+                puml.append(param.get("nom"))
+                        .append(" : ")
+                        .append(param.get("type"));
+                if (i < parametres.size() - 1) {
+                    puml.append(", ");
+                }
+            }
+
+            puml.append(") : ").append(methode.getTypeRetour()).append("\n");
+        }
+        puml.append("}\n");
+
+        if (classeAnalysee.getClasseParent() != null) {
+            puml.append(classeAnalysee.getClasseParent().getNom())
+                    .append(" <|-- ")
+                    .append(classeAnalysee.getNom())
+                    .append("\n");
+        }
+
+        for (Interface inter : classeAnalysee.getInterfaces()) {
+            puml.append("interface ").append(inter.getNom()).append(" {\n");
+
+            for (Methode methode : inter.getMethodes()) {
+                puml.append("    + ").append(methode.getNom()).append("()\n");
+            }
+            puml.append("}\n");
+
+            puml.append(inter.getNom()).append(" <|.. ").append(classeAnalysee.getNom()).append("\n");
+        }
+        puml.append("@enduml\n");
+        return puml.toString();
+    }
+
+
+    /**
+     * Méthode permettant de traduire les modificateurs au format Puml
+     * @param modificateurs : liste des modificateurs
+     * @return modificateurs au format Puml
+     */
+    private String getPumlModificateur(List<String> modificateurs) {
+        if (modificateurs.contains("private")) return "-";
+        if (modificateurs.contains("protected")) return "#";
+        return "+";
+    }
 }
+
 
 

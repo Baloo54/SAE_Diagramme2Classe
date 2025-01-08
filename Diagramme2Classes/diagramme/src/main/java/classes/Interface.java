@@ -130,4 +130,14 @@ public class Interface extends Attribut {
     public ArrayList<Interface> getInterfaces() {
         return interfaces;
     }
+
+    // Ajoutez ces méthodes
+    public ArrayList<Attribut> getAttributs() {
+        return attributs;
+    }
+
+    public ArrayList<String> getModificateurs() {
+        return new ArrayList<>();
+    }
 }
+

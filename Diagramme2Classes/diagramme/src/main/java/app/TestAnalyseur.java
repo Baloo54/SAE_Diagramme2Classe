@@ -9,7 +9,17 @@ public class TestAnalyseur {
         Analyseur analyseur = Analyseur.getInstance();
         try {
             Classe classe = analyseur.analyserClasse("classes.Classe");
+
+            // affichage de la classe
+            System.out.println(classe);
+
+            // resultats de l'analyse
             analyseur.afficherResultats();
+            String puml = analyseur.exportPuml(classe);
+
+            // affichage du puml
+            System.out.println(puml);
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
