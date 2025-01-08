@@ -61,7 +61,13 @@ public class Analyseur {
     public Classe analyserClasse(String chemin) throws ClassNotFoundException {
         Class classe = LoaderExterne.getInstance().loadClass(chemin);
         setClasseAnalyse(classe);
-        Package p = new Package(classe.getPackage().getName());
+        String packageNom = classe.getPackage().getName();
+        if(packageNom == null) {
+            packageNom = "";
+        }else if(packageNom.contains("[")){
+            packageNom = packageNom.replace("[", "");
+        }
+        Package p = new Package(packageNom);
         Classe classeAnalysee = new Classe("class", classe.getSimpleName());
         p.ajouterClasse(classeAnalysee);
 
@@ -69,7 +75,6 @@ public class Analyseur {
         ArrayList<String> modifiers = getModifierClasse(classe);
         for (String modifier : modifiers) {
             classeAnalysee.addModificateur(modifier);
-
         }
 
         // Analyse des attributs
