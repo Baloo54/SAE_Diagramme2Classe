@@ -67,6 +67,7 @@ public class Model implements Sujet{
     }
     /**
      * getter getClasses
+     *
      * @return ArrayList<Classe>
      */
     public ArrayList<Interface> getClasses() {

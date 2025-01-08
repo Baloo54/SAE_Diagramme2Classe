@@ -2,12 +2,15 @@ package analyse;
 
 import classes.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
+
 
 import analyse.loader.LoaderExterne;
 
@@ -23,7 +26,7 @@ public class Analyseur {
 
     /**
      * Retourne l'instance unique de l'analyseur.
-     * 
+     *
      * @return L'instance de l'analyseur.
      */
     public static Analyseur getInstance() {
@@ -35,13 +38,13 @@ public class Analyseur {
 
     /**
      * Analyse une classe à partir de son chemin sous forme de chaîne de caractères.
-     * 
+     *
      * @param chemin Chemin vers la classe à analyser.
      * @return Un objet Classe contenant les résultats de l'analyse.
      * @throws ClassNotFoundException Si la classe n'est pas trouvée.
-     * @throws IOException 
+     * @throws IOException
      */
-    public Interface analyserClasse(String chemin) throws ClassNotFoundException, IOException  {
+    public Interface analyserClasse(String chemin) throws ClassNotFoundException, IOException {
         Class classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
         String type = classe.isInterface() ? "interface" : "class";
         Classe classeAnalysee = new Classe(type, classe.getSimpleName());
@@ -78,7 +81,7 @@ public class Analyseur {
 
     /**
      * Analyse un attribut d'une classe.
-     * 
+     *
      * @param field Attribut à analyser.
      * @return Un objet Attribut représentant l'attribut analysé.
      */
@@ -90,7 +93,7 @@ public class Analyseur {
 
     /**
      * Analyse une méthode d'une classe.
-     * 
+     *
      * @param method Méthode à analyser.
      * @return Un objet Methode représentant la méthode analysée.
      */
@@ -109,7 +112,7 @@ public class Analyseur {
 
     /**
      * Retourne les modificateurs d'une classe sous forme de chaîne de caractères.
-     * 
+     *
      * @param c Classe à analyser.
      * @return Liste des modificateurs.
      */
@@ -124,7 +127,7 @@ public class Analyseur {
 
     /**
      * Retourne la visibilité d'un modificateur.
-     * 
+     *
      * @param modifiers Modificateurs sous forme d'entier.
      * @return La visibilité (public, private, protected ou package).
      */
@@ -160,24 +163,26 @@ public class Analyseur {
      */
     public void afficherResultats(Interface analyseClasse) {
         System.out.println("Nom de la classe : " + analyseClasse.getNom());
-        if(analyseClasse instanceof Classe){
-        System.out.println("Classe parente : " + ((Classe)analyseClasse).getClasseParent().getNom());}
+        if (analyseClasse instanceof Classe) {
+            System.out.println("Classe parente : " + ((Classe) analyseClasse).getClasseParent().getNom());
+        }
         System.out.println("Attributs :");
         for (Attribut field : analyseClasse.getAttributs()) {
-            System.out.println(" nb modificateur - " + Modifier.toString(field.getModificateurs().size()) + " " + field.getNom());
+            System.out.println(" - " + field.getModificateurs() + " " + field.getNom());
         }
         System.out.println("Méthodes :");
         for (Methode method : analyseClasse.getMethodes()) {
-            System.out.println(" - " +method.getModificateurs().size() + " " + method.getNom());
+            System.out.println(" - " + method.getModificateurs() + " " + method.getNom());
         }
     }
 
     /**
      * Méthode permettant d'exporter au format Puml
+     *
      * @param classeAnalysee : l'objet Classe analysé
      * @return code Puml
      */
-    public String exportPuml(Interface classeAnalysee) {
+    public String exportPuml(Classe classeAnalysee) {
         StringBuilder puml = new StringBuilder();
         puml.append("@startuml\n");
         puml.append("class ").append(classeAnalysee.getNom()).append(" {\n");
@@ -216,7 +221,8 @@ public class Analyseur {
             puml.append(") : ").append(methode.getTypeRetour()).append("\n");
         }
         puml.append("}\n");
-        if(classeAnalysee instanceof Classe) {
+
+        if (classeAnalysee instanceof Classe) {
             Classe classe = (Classe) classeAnalysee;
             if (classe.getClasseParent() != null) {
                 puml.append(classe.getClasseParent().getNom())
@@ -237,12 +243,22 @@ public class Analyseur {
             puml.append(inter.getNom()).append(" <|.. ").append(classeAnalysee.getNom()).append("\n");
         }
         puml.append("@enduml\n");
-        return puml.toString();
-    }
 
+        // Écriture dans un fichier
+        String fileName = classeAnalysee.getNom() + ".puml";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(puml.toString());
+            System.out.println("Fichier généré : " + fileName);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la création du fichier : " + e.getMessage());
+        }
+
+        return fileName;
+    }
 
     /**
      * Méthode permettant de traduire les modificateurs au format Puml
+     *
      * @param modificateurs : liste des modificateurs
      * @return modificateurs au format Puml
      */

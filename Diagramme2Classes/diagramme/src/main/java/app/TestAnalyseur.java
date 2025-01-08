@@ -16,7 +16,7 @@ public class TestAnalyseur extends Application{
     public void start(Stage primaryStage){
         Analyseur analyseur = Analyseur.getInstance();
         try {
-            Interface classe = analyseur.analyserClasse("C:\\Users\\mathi\\OneDrive\\Bureau\\Nouveau dossier (3)\\clone\\SAE_Diagramme2Classe\\Diagramme2Classes\\out\\production\\Diagramme2Classes\\classes\\Classe.class");
+            Interface classe = analyseur.analyserClasse("C:\\Users\\rouli\\SAE_Diagramme2Classe\\out\\production\\SAE_Diagramme2Classe\\classes\\Classe.class");
             VueClasse vueClasse = new VueClasse(classe);
             vueClasse.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
             Pane p = new Pane();
@@ -27,7 +27,7 @@ public class TestAnalyseur extends Application{
             primaryStage.setScene(scene);
             primaryStage.show();
             analyseur.afficherResultats(classe);
-           String puml = analyseur.exportPuml(classe);
+            String puml = analyseur.exportPuml((Classe) classe);
             System.out.println(puml);
         } catch (ClassNotFoundException e) {
            System.out.println(e.getMessage());
