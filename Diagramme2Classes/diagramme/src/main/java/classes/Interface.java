@@ -121,7 +121,7 @@ public class Interface extends Attribut {
      */
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj) && getType().equals(((Interface) obj).getType());
+        return getNom().equals(((Interface) obj).getNom());
     }
 
     /**
