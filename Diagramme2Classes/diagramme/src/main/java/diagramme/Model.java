@@ -1,8 +1,12 @@
 package diagramme;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import analyse.Analyseur;
+import classes.*;
 /**
  * classe model
  */
@@ -12,8 +16,8 @@ public class Model implements Sujet{
      * folder correspond au dossier contenant le package .class
      */
     private ArrayList<Observateur> observateurs;
-    @SuppressWarnings("unused")
-    private File folder;
+    private ArrayList<Classe> classes = new ArrayList<>();
+
     /**
      * Constructeur
      */
@@ -42,14 +46,26 @@ public class Model implements Sujet{
      * @param folder folder
      */
     public void ajouterPackage(File folder){
-        this.folder = folder;
+        ReadFile reader = new ReadFile();
+        List<String> classes = reader.findClassFiles(folder);
+        Analyseur analyseur = Analyseur.getInstance();
+        
+        for (String string : classes) {
+            try {
+                this.classes.add(analyseur.analyserClasse(string));
+            } catch (ClassNotFoundException e) {
+                System.out.println(e.getMessage());
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        notifierObservateurs();
     }
     /**
-     *giveListeClasses
+     * getter getClasses
+     * @return ArrayList<Classe>
      */
-    public List<String> giveListeClasse(){
-        ReadFile reader = new ReadFile();
-        return reader.findClassFiles(this.folder);
+    public ArrayList<Classe> getClasses() {
+        return classes;
     }
-
 }

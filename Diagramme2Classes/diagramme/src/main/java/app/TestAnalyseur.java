@@ -1,27 +1,38 @@
 package app;
 
+import java.io.IOException;
 import analyse.Analyseur;
-import classes.Classe;
+import diagramme.Vues.*;
+import classes.*;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-public class TestAnalyseur {
-
-    public static void main (String[] args) {
+public class TestAnalyseur extends Application{
+    public void start(Stage primaryStage){
         Analyseur analyseur = Analyseur.getInstance();
         try {
-            Classe classe = analyseur.analyserClasse("classes.Classe");
-
-            // affichage de la classe
-            System.out.println(classe);
-
-            // resultats de l'analyse
-            analyseur.afficherResultats();
-            String puml = analyseur.exportPuml(classe);
-
-            // affichage du puml
-            System.out.println(puml);
-
+            Classe classe = analyseur.analyserClasse("/home/nightmarev2/Documents/SAE_Diagramme2Classe/Diagramme2Classes/target/classes/classes/Interface.class");
+            VueClasse vueClasse = new VueClasse(classe);
+            vueClasse.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
+            Pane p = new Pane();
+            p.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
+            p.getChildren().add(vueClasse);
+            Scene scene = new Scene(p);
+            primaryStage.setTitle("Diagramme UML");
+            primaryStage.setScene(scene);
+            primaryStage.show();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+           System.out.println(e.getMessage());
+        } catch (IOException e){
+            System.out.println(e.getMessage());
         }
+    }
+    public static void main (String[] args) {
+        launch(args);
     }
 }

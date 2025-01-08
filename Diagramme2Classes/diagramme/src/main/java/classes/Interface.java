@@ -3,40 +3,55 @@ package classes;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 /**
- * Classe représentant une interface
+ * Classe représentant une interface dans un modèle orienté objet.
+ * Une interface peut contenir des méthodes, des attributs et peut hériter d'autres interfaces.
  */
 public class Interface extends Attribut {
+
+    // Liste des interfaces héritées par cette interface
     private ArrayList<Interface> interfaces;
+
+    // Liste des méthodes définies dans cette interface
     private ArrayList<Methode> methodes;
+
+    // Liste des attributs définis dans cette interface
     private ArrayList<Attribut> attributs;
+
+    // Mappage des interfaces filles et de leur visibilité (true ou false)
     private HashMap<Interface, Boolean> interfacesFilles;
+
+    // Indique si l'héritage est visible
     private boolean heritageVisible = true;
 
+    /**
+     * Constructeur pour initialiser une interface avec un type et un nom.
+     * 
+     * @param type Le type de l'interface.
+     * @param nom  Le nom de l'interface.
+     */
     public Interface(String type, String nom) {
         super(type, nom);
-        this.interfaces = new ArrayList<Interface>();
-        this.methodes = new ArrayList<Methode>();
-        this.attributs = new ArrayList<Attribut>();
+        this.interfaces = new ArrayList<>();
+        this.interfacesFilles = new HashMap<>();
+        this.methodes = new ArrayList<>();
+        this.attributs = new ArrayList<>();
     }
+
     /**
-     * Méthode permettant de changer la visibilité de l'interface
+     * Change la visibilité de l'interface.
+     * Si l'interface devient invisible, ses relations avec d'autres interfaces deviennent également invisibles.
      */
     @Override
     public void changerVisibilite() {
-        //masque ou affiche l'interface
         super.changerVisibilite();
-        //masque tous les interfaces filles et méthodes si l'interface est masquée
         if (!this.getVisible()) {
             for (Interface i : interfaces) {
-                //si l'interface parent est visible, on masque la relation de cette interface pour l'interface parente
                 if (i.interfacesFilles.get(this)) {
                     i.interfacesFilles.put(this, false);
                 }
             }
             for (Interface i : interfacesFilles.keySet()) {
-                //si l'interface fille est visible, on masque la relation de l'interface fille pour cette interface
                 if (interfacesFilles.get(i)) {
                     interfacesFilles.put(i, false);
                 }
@@ -45,43 +60,43 @@ public class Interface extends Attribut {
     }
 
     /**
-     * change la visibilité d'une interfaceFille lors du changement de visibilité de l'héritage
-     * @param i
+     * Change la visibilité d'une interface fille.
+     * 
+     * @param i L'interface fille dont la visibilité doit être changée.
      */
     public void changerVisibiliteInterfaceFille(Interface i) {
         if (this.getVisible()) {
-            //si l'interface est visible, on change la visibilité de l'interface fille
             interfacesFilles.put(i, !interfacesFilles.get(i));
         } else {
-            //en théorie l'interface est masquée que lorsque qu'il n'y a plus de relations visibles
-            //donc si l'interface est masquée, elle devient visible et l'interface fille concerné également
             this.changerVisibilite();
             interfacesFilles.put(i, !interfacesFilles.get(i));
         }
     }
 
+    /**
+     * Vérifie si une interface fille est visible.
+     * 
+     * @param i L'interface fille à vérifier.
+     * @return true si l'interface fille est visible, false sinon.
+     */
     public boolean etreVisibleFille(Interface i) {
         return interfacesFilles.get(i);
     }
 
-
-
     /**
-     * change la visibilité de l'héritage
+     * Change la visibilité de l'héritage de l'interface.
+     * Met à jour la visibilité des relations d'héritage avec les interfaces parentes.
      */
     public void changerVisibiliteHeritage() {
         heritageVisible = !heritageVisible;
-        if(!heritageVisible){
+        if (!heritageVisible) {
             for (Interface i : interfaces) {
-                //si l'interface parent est masquée, on masque la relation de cette interface pour l'interface fille
                 if (i.etreVisibleFille(this)) {
                     i.changerVisibiliteInterfaceFille(this);
                 }
             }
-        }
-        else {
+        } else {
             for (Interface i : interfaces) {
-                //si l'interface parent est visible, on affiche la relation de cette interface pour l'interface fille
                 if (!i.etreVisibleFille(this)) {
                     i.changerVisibiliteInterfaceFille(this);
                 }
@@ -90,54 +105,85 @@ public class Interface extends Attribut {
     }
 
     /**
-     * change la visiblité d'un Méthode
-     *
-     * @param m
+     * Change la visibilité d'une méthode spécifique.
+     * 
+     * @param m La méthode dont la visibilité doit être changée.
      */
     public void changerVisibiliteMethode(Methode m) {
         m.changerVisibilite();
     }
 
-
+    /**
+     * Vérifie si deux interfaces sont égales en fonction de leur type et attributs.
+     * 
+     * @param obj L'objet à comparer.
+     * @return true si les interfaces sont égales, false sinon.
+     */
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj) && getType().equals(((Interface) obj).getType());
     }
 
+    /**
+     * Retourne la liste des méthodes de l'interface.
+     * 
+     * @return Liste des méthodes.
+     */
     public ArrayList<Methode> getMethodes() {
         return methodes;
     }
 
-    public boolean getHeritageVisible(){
+    /**
+     * Retourne la visibilité de l'héritage.
+     * 
+     * @return true si l'héritage est visible, false sinon.
+     */
+    public boolean getHeritageVisible() {
         return heritageVisible;
     }
 
+    /**
+     * Ajoute une méthode à l'interface.
+     * 
+     * @param methode La méthode à ajouter.
+     */
     public void addMethode(Methode methode) {
         methodes.add(methode);
     }
 
+    /**
+     * Ajoute une interface héritée.
+     * 
+     * @param inter L'interface à ajouter.
+     */
     public void addInterface(Interface inter) {
         interfaces.add(inter);
         interfacesFilles.put(inter, true);
     }
 
+    /**
+     * Ajoute un attribut à l'interface.
+     * 
+     * @param attribut L'attribut à ajouter.
+     */
     public void addAttribut(Attribut attribut) {
         attributs.add(attribut);
     }
 
-
-
+    /**
+     * Retourne la liste des interfaces héritées.
+     * 
+     * @return Liste des interfaces.
+     */
     public ArrayList<Interface> getInterfaces() {
         return interfaces;
     }
 
-    // Ajoutez ces méthodes
+    /**
+     * Retourne la liste des attributs
+     * @return liste des attributs
+     */
     public ArrayList<Attribut> getAttributs() {
         return attributs;
     }
-
-    public ArrayList<String> getModificateurs() {
-        return new ArrayList<>();
-    }
 }
-
