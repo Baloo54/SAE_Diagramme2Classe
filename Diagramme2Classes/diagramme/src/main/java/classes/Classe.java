@@ -71,4 +71,8 @@ public class Classe extends Interface {
     public void changerVisibiliteClasseFille(Classe c) {
         this.classesFilles.put(c, !this.classesFilles.get(c));
     }
+
+    public void setClasseParent(Classe classeParent) {
+        this.classeParent = classeParent;
+    }
 }

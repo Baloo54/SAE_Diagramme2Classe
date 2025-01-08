@@ -61,21 +61,22 @@ public class Analyseur {
      * @throws ClassNotFoundException Si la classe n'est pas trouvée.
      * @throws IOException 
      */
-    public Classe analyserClasse(String chemin) throws ClassNotFoundException, IOException  {
+    public Package analyserClasse(String chemin) throws ClassNotFoundException, IOException  {
         Class classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
         setClasseAnalyse(classe);
         String packageNom = classe.getPackage().getName();
-        Package p = null;
+        ArrayList<Package> p = new ArrayList<>();
         if(packageNom == null) {
             packageNom = "";
         }else {
             for (String s : packageNom.split("\\.")) {
-                packageNom = s;
+                p.add(new Package(s));
             }
         }
 
-        Classe classeAnalysee = new Classe("class", classe.getSimpleName());
-        p.ajouterClasse(classeAnalysee);
+        String type = classe.isInterface() ? "interface" : "class";
+
+        Classe classeAnalysee = new Classe(type, classe.getSimpleName());
 
         // Analyse des modificateurs
         ArrayList<String> modifiers = getModifierClasse(classe);
@@ -100,7 +101,14 @@ public class Analyseur {
             Interface inter = new Interface("interface", interfaceClass.getSimpleName());
             classeAnalysee.addInterface(inter);
         }
-        return classeAnalysee;
+        if (type.equals("class")) {
+            classeAnalysee.setClasseParent(new Classe("class", classe.getSuperclass().getSimpleName()));
+        }
+        p.getLast().ajouterClasse(classeAnalysee);
+        for (int i = p.size() - 1; i > 0; i--) {
+            p.get(i - 1).addPackage(p.get(i));
+        }
+        return p.getFirst();
     }
 
     /**
