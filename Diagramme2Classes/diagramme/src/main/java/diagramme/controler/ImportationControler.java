@@ -36,4 +36,5 @@ public class ImportationControler implements EventHandler<ActionEvent> {
         File selectedDirectory = directoryChooser.showDialog(primaryStage);
         model.ajouterPackage(selectedDirectory);
     }
+
 }
