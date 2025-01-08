@@ -73,8 +73,8 @@ public class Model implements Sujet{
      *
      * @return ArrayList<Classe>
      */
-    public ArrayList<Interface> getClasses() {
-        return classes;
+    public List<Interface> getClasses() {
+        return this.classes;
     }
     public Position getPosition(Interface c) {
         return positions.get(c);

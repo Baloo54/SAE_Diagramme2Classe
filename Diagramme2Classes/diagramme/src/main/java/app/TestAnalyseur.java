@@ -32,7 +32,7 @@ public class TestAnalyseur extends Application {
             Button exportButton = new Button("Exporter en PNG");
             exportButton.setOnAction(event -> {
                 analyseur.exporterDiagrammeEnPNG(p, "diagramme.png");
-                System.out.println("Diagramme exporté avec succès !");
+                System.out.println("Diagramme exporté en PNG");
             });
 
             // Mise en page avec BorderPane

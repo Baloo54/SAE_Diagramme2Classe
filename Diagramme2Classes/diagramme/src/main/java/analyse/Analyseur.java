@@ -193,7 +193,6 @@ public class Analyseur {
     public String exportPuml(Classe classeAnalysee) {
         StringBuilder puml = new StringBuilder();
         puml.append("@startuml\n");
-        puml.append("class ").append(classeAnalysee.getNom()).append(" {\n");
 
         for (Attribut attribut : classeAnalysee.getAttributs()) {
             ArrayList<String> modificateurs = (ArrayList<String>) attribut.getModificateurs();
