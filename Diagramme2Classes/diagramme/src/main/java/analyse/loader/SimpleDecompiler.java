@@ -1,4 +1,4 @@
-package diagramme.loader;
+package analyse.loader;
 
 import org.objectweb.asm.*;
 

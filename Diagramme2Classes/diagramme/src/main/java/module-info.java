@@ -4,7 +4,10 @@ module version1 {
     requires transitive javafx.graphics;
     requires org.objectweb.asm; // librairie ow2.asm
     exports diagramme;
-    exports diagramme.loader;
+    exports diagramme.Vues.decorateur;
+    exports analyse.loader;
     exports app;
     exports classes;
+    exports diagramme.Vues;
+    exports diagramme.controler;
 }
