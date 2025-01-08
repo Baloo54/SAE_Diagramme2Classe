@@ -1,0 +1,67 @@
+@startuml
+class Visible {
+    + visible : boolean
+    + changeVisible() : void
+    + isVisible() : boolean
+}
+
+class Methode {
+    + nom : String
+    + modificateurs : ArrayList<String>
+    + parametres : ArrayList<HashMap<String, String>>
+    + retour : String
+}
+
+class Attribut {
+    + nom : String
+    + type : String
+    + modificateur : ArrayList<String>
+}
+
+class LoaderExterne {
+    + instance : LoaderExterne
+    + LoaderExterne() : LoaderExterne
+    + loadFromFile(String) : File
+    + loadClassAsFile(File) : File
+    + loadClassAsName(String) : String
+}
+
+class Interface {
+    + nom : String
+    + changeVisible() : void
+    + ajouterUneMethode(Methode) : void
+    + changeVisibleHeritage(Interface) : void
+    + ajouterUneMethodeDansClass(Methode) : void
+}
+
+class Package {
+    + nom : String
+    + ajouterClasse(Classe) : void
+    + ajouterUneInterface(Interface) : void
+}
+
+class Classe {
+    + nom : String
+    + ajouterAttribut(Attribut) : void
+    + ajouterMethode(Methode) : void
+    + changeVisibleHeritage(Interface) : void
+    + classeFille : Classe
+    + classeParent : Classe
+}
+
+class Diagramme {
+    + ajouterClasse(Classe) : void
+    + ajouterPackage(Package) : void
+    + popUpDiagramme() : void
+}
+
+Visible <|-- Interface
+Interface "1" --> "*" Methode : contient
+Interface <|-- Classe : heritage
+Classe "1" --> "*" Attribut : attributs
+Classe "1" --> "*" Methode : methods
+Package "1" --> "*" Classe : classes
+Package "1" --> "*" Interface : interfaces
+Diagramme "1" --> "*" Classe
+Diagramme "1" --> "*" Package
+@enduml

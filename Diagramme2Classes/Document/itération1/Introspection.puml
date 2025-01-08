@@ -1,4 +1,4 @@
-@startuml
+    @startuml
 Title Introspection
 Actor Utilisateur as u
 participant Application as "Application : main"

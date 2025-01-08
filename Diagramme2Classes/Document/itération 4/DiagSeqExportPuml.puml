@@ -1,0 +1,39 @@
+@startuml
+actor App
+
+App -> Analyseur : exportPuml(Classe classeAnalysee)
+activate Analyseur
+
+Analyseur -> StringBuilder : new StringBuilder()
+activate StringBuilder
+StringBuilder --> Analyseur : StringBuilder
+deactivate StringBuilder
+
+loop pour chaque attributs
+    Analyseur -> Analyseur : getPumlModificateur(attribut.getModificateurs())
+    activate Analyseur
+    Analyseur --> Analyseur : Modificateurs au format Puml
+    deactivate Analyseur
+end
+
+loop pour chaque Methodes
+    Analyseur -> Analyseur : getPumlModificateur(methode.getModificateurs())
+    activate Analyseur
+    Analyseur --> Analyseur : Modificateurs au format Puml
+    deactivate Analyseur
+end
+
+group Si (classeAnalysee.getClasseParent() != null)
+    Analyseur -> StringBuilder : append(classeAnalysee.getClasseParent().getNom())
+end
+
+loop pour chaque Interface
+    loop pour chaque Methodes
+        Analyseur -> StringBuilder : append(methode.getNom())
+    end
+end
+
+Analyseur --> App : puml.toString()
+deactivate Analyseur
+
+@enduml

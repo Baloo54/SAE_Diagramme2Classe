@@ -1,0 +1,93 @@
+@startuml
+class Analyseur {
+  + instance: Analyseur
+  + exportPuml(Classe): String
+  + analyserClasse(String): Package
+  + afficherResultats(Interface): void
+}
+
+class Attribut {
+  + nom: String
+  + type: String
+  + modificateurs: ArrayList<String>
+  + Attribut(String, String)
+  + addModificateur(String): void
+}
+
+class Classe {
+  + classeParent: Classe
+  + Classe(String, String)
+  + changerVisibilite(): void
+  + changerVisibiliteHeritage(): void
+}
+
+class Diagramme {
+  + Diagramme()
+  + ajouterClasse(String): void
+}
+
+class Interface {
+  + attributs: ArrayList<Attribut>
+  + methodes: ArrayList<Methode>
+  + interfaces: ArrayList<Interface>
+  + Interface(String, String)
+  + addMethode(Methode): void
+  + changerVisibilite(): void
+}
+
+class Methode {
+  + nom: String
+  + parametres: List<HashMap<String, String>>
+  + modificateurs: ArrayList<String>
+  + typeRetour: String
+  + Methode(String, String, List<HashMap<String, String>>, ArrayList<String>)
+}
+
+class Model {
+  + classes: ArrayList<Classe>
+  + ajouterPackage(File): void
+  + ajouterObservateur(Observateur): void
+}
+
+class Package {
+  + nom: String
+  + packages: ArrayList<Package>
+  + interfaces: ArrayList<Interface>
+  + classes: ArrayList<Interface>
+  + Package(String)
+  + addPackage(Package): void
+}
+
+class VueClasse {
+  + classe: Classe
+  + VueClasse(Classe)
+}
+
+interface Observateur {
+  + actualiser(Sujet): void
+}
+
+interface Sujet {
+  + notifierObservateurs(): void
+  + ajouterObservateur(Observateur): void
+}
+
+Analyseur --> Attribut : "«create»"
+Analyseur --> Classe : "«create»"
+Analyseur --> Interface : "«create»"
+Analyseur --> Methode : "«create»"
+Analyseur --> Package : "«create»"
+Diagramme --> Classe
+Diagramme --> Package
+Interface --> Attribut : "attributs"
+Interface --> Methode : "methodes"
+Interface --> Interface : "interfaces"
+Model --> Classe : "classes"
+Model --> Observateur : "observateurs"
+Package --> Interface : "interfaces"
+Package --> Classe : "classes"
+VueClasse --> Classe
+
+@enduml
+
+
