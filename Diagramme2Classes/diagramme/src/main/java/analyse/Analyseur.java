@@ -27,7 +27,7 @@ import java.util.List;
 public class Analyseur {
 
     // Instance unique de l'analyseur (Singleton)
-    private static Analyseur INSTANCE;
+    private static Analyseur instance;
 
     /**
      * Retourne l'instance unique de l'analyseur.
@@ -35,10 +35,10 @@ public class Analyseur {
      * @return L'instance de l'analyseur.
      */
     public static Analyseur getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Analyseur();
+        if (instance == null) {
+            instance = new Analyseur();
         }
-        return INSTANCE;
+        return instance;
     }
 
     /**
