@@ -1,6 +1,7 @@
 package app;
 
 import analyse.Analyseur;
+import analyse.loader.LoaderExterne;
 import diagramme.Model;
 import diagramme.Vues.VuePrincipale;
 import diagramme.controler.ImportationControler;
@@ -36,7 +37,7 @@ public class App extends Application {
         //model
         Model model = new Model();
         //vue
-        Analyseur.getInstance().analyserClasse("out\\production\\Diagramme2Classes\\diagramme\\Vues\\VuePrincipale.class");//permet de rendre chargeable la classe VuePrincipale
+        LoaderExterne.getInstance().loadClassFromFile("out\\production\\Diagramme2Classes\\diagramme\\Model.class");//permet de rendre chargeable la classe Model
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
