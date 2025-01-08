@@ -55,8 +55,11 @@ public class Model implements Sujet{
         for (String string : classes) {
             try {
                 Interface c = analyseur.analyserClasse(string);
+                if (!this.classes.contains(c))
+                {
                     this.classes.add(c);
                     this.positions.put(c, new Position(0,0));
+                }
             } catch (ClassNotFoundException e) {
                 System.out.println(e.getMessage());
             } catch (IOException e) {

@@ -1,6 +1,7 @@
 package app;
 
 
+import analyse.loader.LoaderExterne;
 import diagramme.Model;
 import diagramme.Vues.VuePrincipale;
 import diagramme.controler.ExportationControler;
@@ -14,6 +15,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+
 
 /**
  * Classe principale qui exécute l'application.
@@ -37,6 +40,7 @@ public class App extends Application {
         Model model = new Model();
 
         // Vue
+        LoaderExterne.getInstance().loadClassFromFile("out\\production\\Diagramme2Classes\\diagramme\\Model.class");//permet de rendre chargeable la classe Model
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
