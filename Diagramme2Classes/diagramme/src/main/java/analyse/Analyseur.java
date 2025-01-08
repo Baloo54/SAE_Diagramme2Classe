@@ -65,12 +65,15 @@ public class Analyseur {
         Class classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
         setClasseAnalyse(classe);
         String packageNom = classe.getPackage().getName();
+        Package p = null;
         if(packageNom == null) {
             packageNom = "";
-        }else if(packageNom.contains("[")){
-            packageNom = packageNom.replace("[", "");
+        }else {
+            for (String s : packageNom.split("\\.")) {
+                packageNom = s;
+            }
         }
-        Package p = new Package(packageNom);
+
         Classe classeAnalysee = new Classe("class", classe.getSimpleName());
         p.ajouterClasse(classeAnalysee);
 

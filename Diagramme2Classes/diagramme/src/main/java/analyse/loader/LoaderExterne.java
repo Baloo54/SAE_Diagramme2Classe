@@ -11,20 +11,25 @@ public class LoaderExterne extends ClassLoader {
      * @throws ClassNotFoundException Si la classe ne peut être trouvée ou chargée
      * @throws IOException            Si une erreur d'E/S survient
      */
-    public Class<?> loadClassFromFile(String filePath) throws ClassNotFoundException, IOException{
-        getInstance();
-        File file = new File(filePath);
-        if (!file.exists() || !file.isFile()) {
-            throw new ClassNotFoundException("Le fichier spécifié est introuvable : " + filePath);
+    public Class<?> loadClassFromFile(String filePath) throws ClassNotFoundException, IOException {
+        try {
+            return Class.forName(filePath);
+        } catch (ClassNotFoundException e) {
+            getInstance();
+            File file = new File(filePath);
+            if (!file.exists() || !file.isFile()) {
+                throw new ClassNotFoundException("Le fichier spécifié est introuvable : " + filePath);
+            }
+            // Lire le fichier .class en tant que tableau de bytes
+            byte[] classData = readFileAsBytes(file);
+
+            // Extraire le nom de la classe à partir du chemin et du contenu
+
+            String nomClass = SimpleDecompiler.getNomClasse(filePath);
+            // Charger la classe
+            return defineClass(nomClass, classData, 0, classData.length);
+
         }
-        // Lire le fichier .class en tant que tableau de bytes
-        byte[] classData = readFileAsBytes(file);
-
-        // Extraire le nom de la classe à partir du chemin et du contenu
-
-        String nomClass = SimpleDecompiler.getNomClasse(filePath);
-        // Charger la classe
-        return defineClass(nomClass, classData, 0, classData.length);
     }
 
     /**
