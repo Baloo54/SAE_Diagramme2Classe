@@ -22,8 +22,8 @@ public class Classe extends Interface {
      * @param type Le type de la classe.
      * @param nom  Le nom de la classe.
      */
-    public Classe(String type, String nom) {
-        super(type, nom);
+    public Classe(String type, String nom, String packageClasse) {
+        super(type, nom, packageClasse);
         classesFilles = new HashMap<>();
         classeParent = null;
     }

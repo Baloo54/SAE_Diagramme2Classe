@@ -33,12 +33,13 @@ public class Interface extends Attribut {
      * @param type Le type de l'interface.
      * @param nom  Le nom de l'interface.
      */
-    public Interface(String type, String nom) {
+    public Interface(String type, String nom, String packageClasse) {
         super(type, nom);
         this.interfaces = new ArrayList<>();
         this.interfacesFilles = new HashMap<>();
         this.methodes = new ArrayList<>();
         this.attributs = new ArrayList<>();
+        this.packageClasse = packageClasse;
     }
 
     /**
@@ -189,5 +190,9 @@ public class Interface extends Attribut {
      */
     public ArrayList<Attribut> getAttributs() {
         return attributs;
+    }
+
+    public String getPackageClasse() {
+        return packageClasse;
     }
 }

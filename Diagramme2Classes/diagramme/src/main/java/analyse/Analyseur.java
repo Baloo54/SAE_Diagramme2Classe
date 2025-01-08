@@ -1,33 +1,32 @@
 package analyse;
 
-import classes.*;
+import analyse.loader.LoaderExterne;
+import classes.Attribut;
+import classes.Classe;
+import classes.Interface;
+import classes.Methode;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
-import java.util.*;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Pane;
-
-import javax.imageio.ImageIO;
-import java.io.File;
-
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-
-import java.awt.image.BufferedImage;
-
-
-import analyse.loader.LoaderExterne;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Classe réalisant l'analyse d'une classe Java.
@@ -61,8 +60,13 @@ public class Analyseur {
      */
     public Interface analyserClasse(String chemin) throws ClassNotFoundException, IOException {
         Class classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
-        String type = classe.isInterface() ? "interface" : "class";
-        Classe classeAnalysee = new Classe(type, classe.getSimpleName());
+        String type = classe.isInterface() ? "interface" : "classe";
+        Interface classeAnalysee;
+        if (type.equals("classe")) {
+            classeAnalysee = new Classe(type, classe.getSimpleName(), classe.getPackageName());
+        } else {
+            classeAnalysee = new Interface(type, classe.getSimpleName(), classe.getPackageName());
+        }
 
         // Analyse des modificateurs
         ArrayList<String> modifiers = getModifierClasse(classe);
@@ -84,11 +88,11 @@ public class Analyseur {
 
         // Analyse des interfaces implémentées
         for (Class<?> interfaceClass : classe.getInterfaces()) {
-            Interface inter = new Interface("interface", interfaceClass.getSimpleName());
+            Interface inter = new Interface("interface", interfaceClass.getSimpleName(), interfaceClass.getPackageName());
             classeAnalysee.addInterface(inter);
         }
-        if (type.equals("class")) {
-            classeAnalysee.setClasseParent(new Classe("class", classe.getSuperclass().getSimpleName()));
+        if (type.equals("classe") && classe.getSuperclass() != null) {
+            ((Classe) classeAnalysee).setClasseParent(new Classe("classe", classe.getSuperclass().getSimpleName(), classe.getSuperclass().getPackageName()));
         }
 
         return classeAnalysee;
@@ -285,8 +289,8 @@ public class Analyseur {
     /**
      * Exporte le diagramme affiché dans un Pane JavaFX sous forme de fichier PNG.
      *
-     * @param diagrammePane  le Pane contenant le diagramme à exporter.
-     * @param cheminFichier  le chemin de sortie du fichier PNG.
+     * @param diagrammePane le Pane contenant le diagramme à exporter.
+     * @param cheminFichier le chemin de sortie du fichier PNG.
      */
     public void exporterDiagrammeEnPNG(Pane diagrammePane, String cheminFichier) {
         try {
@@ -335,8 +339,8 @@ public class Analyseur {
      * Exporte le diagramme affiché dans un Pane JavaFX sous forme de fichier PDF.
      * Utilise Apache PDFBox pour générer le fichier PDF.
      *
-     * @param diagrammePane  Le Pane contenant le diagramme.
-     * @param cheminFichier  Le chemin de sortie du fichier PDF.
+     * @param diagrammePane Le Pane contenant le diagramme.
+     * @param cheminFichier Le chemin de sortie du fichier PDF.
      */
     public void exporterDiagrammeEnPDF(Pane diagrammePane, String cheminFichier) {
         try {
@@ -373,4 +377,5 @@ public class Analyseur {
         } catch (Exception e) {
             System.err.println("Erreur lors de l'exportation en PDF : " + e.getMessage());
         }
-    }}
+    }
+}
