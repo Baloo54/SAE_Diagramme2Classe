@@ -1,48 +1,65 @@
-/**
- * Classe VuePrincipale - Vue principale du diagramme.
- * 
- * Cette classe représente la vue principale d'un diagramme en tant que conteneur graphique.
- * Elle implémente l'interface Observateur pour être notifiée des changements dans le modèle.
- * 
- * @author [Nom de l'auteur]
- * @version 1.0
- * @since [Date de création]
- */
 package diagramme.Vues;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 import classes.Classe;
 import diagramme.Model;
 import diagramme.Observateur;
+import diagramme.Position;
 import diagramme.Sujet;
+import diagramme.controler.DeplacementControler;
 import javafx.scene.layout.StackPane;
 
-/**
- * La classe VuePrincipale est un conteneur principal pour l'affichage graphique des classes.
- * Elle étend StackPane et implémente l'interface Observateur pour mettre 
- * à jour son contenu en fonction des modifications du modèle associé.
- */
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 public class VuePrincipale extends StackPane implements Observateur {
-    /**
-     * Méthode d'actualisation appelée lorsqu'un changement est détecté dans le sujet observé.
-     * Elle met à jour l'affichage en ajoutant des vues pour chaque classe du modèle.
-     * 
-     * @param s Le sujet observé (doit être une instance de Model).
-     */
+
+    // Stocke les classes affichées avec leur vue correspondante
+    private HashMap<Classe, VueClasse> vues = new HashMap<>();
+
     @Override
     public void actualiser(Sujet s) {
-        // Récupérer la liste des classes depuis le modèle
-        ArrayList<Classe> classes = ((Model) (s)).getClasses();
+        Model model = (Model) s;
 
-        // Créer un générateur de nombres aléatoires
-        Random random = new Random();
+        // Marquer toutes les vues comme "non vérifiées" pour supprimer ensuite celles qui ne sont plus nécessaires
+        HashMap<Classe, Boolean> marqueurs = new HashMap<>();
+        for (Classe classe : vues.keySet()) {
+            marqueurs.put(classe, false);
+        }
 
-        // Ajouter chaque classe à l'affichage en tant que VueClasse avec translation aléatoire
-        for (Classe classe : classes) {
-            VueClasse vueClasse = new VueClasse(classe);
-            getChildren().add(vueClasse);
+        // Mettre à jour ou ajouter de nouvelles classes
+        for (Classe classe : model.getClasses()) {
+            Position position = model.getPosition(classe);
+
+            if (vues.containsKey(classe)) {
+                // Si la classe existe déjà, mettre à jour sa position
+                VueClasse vueClasse = vues.get(classe);
+                vueClasse.setTranslateX(position.getX());
+                vueClasse.setTranslateY(position.getY());
+            } else {
+                // Si la classe est nouvelle, créer une vue et l'ajouter
+                VueClasse nouvelleVue = new VueClasse(classe);
+                DeplacementControler controler = new DeplacementControler(model);
+                controler.ajouterEvenements(nouvelleVue);
+
+                nouvelleVue.setTranslateX(position.getX());
+                nouvelleVue.setTranslateY(position.getY());
+                getChildren().add(nouvelleVue);
+                vues.put(classe, nouvelleVue); // Ajouter dans la liste
+
+            }
+            // Marquer la classe comme vérifiée
+            marqueurs.put(classe, true);
+        }
+
+        // Supprimer les classes qui ne sont plus dans le modèle
+        Iterator<Map.Entry<Classe, VueClasse>> iterator = vues.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Classe, VueClasse> entry = iterator.next();
+            if (!marqueurs.get(entry.getKey())) {
+                getChildren().remove(entry.getValue()); // Retirer du visuel
+                iterator.remove(); // Retirer de la HashMap
+            }
         }
     }
 }

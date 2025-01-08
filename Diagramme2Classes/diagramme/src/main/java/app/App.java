@@ -32,16 +32,16 @@ public class App extends Application {
         diagramArea.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: lightgray;");
         //model
         Model model = new Model();
+        //vue
+        VuePrincipale principal = new VuePrincipale();
+        model.ajouterObservateur(principal);
+        diagramArea.getChildren().add(principal);
         //controler
         ImportationControler importationControler = new ImportationControler(model,primaryStage);
-        //vue
-        VuePrincipale vuePrincipale = new VuePrincipale();
-        model.ajouterObservateur(vuePrincipale);
-        diagramArea.getChildren().add(vuePrincipale);
         //boutons
         Button fichierButton = new Button("Fichier");
         fichierButton.setOnAction(importationControler);
-
+      
 
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);

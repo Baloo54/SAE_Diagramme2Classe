@@ -1,61 +1,89 @@
 @startuml
-package Classes{
-abstract class Visible{
--boolean visible
---
-+changerVisibilite()
-+getVisible()
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Attribut {
+  + Attribut(String, String):
+  - type: String
+  - modificateurs: ArrayList<String>
+  - nom: String
+  + addModificateur(String): void
+  + getType(): String
+  + getNom(): String
+  + equals(Object): boolean
 }
-class Classe{
--Hashmap<Classe classefille,boolean visible> classeFilles
---
-+changerVisibiliteHeritage()
-+getClasseParent()
+class Classe {
+  + Classe(String, String):
+  - interfaces: List<Interface>
+  - methodes: List<Methode>
+  - classesFilles: HashMap<Classe, Boolean>
+  - classeParent: Classe
+  + changerVisibilite(): void
+  + changerVisibiliteClasseFille(Classe): void
+  + changerVisibiliteHeritage(): void
 }
-class Methode{
--String nom
--ArrayList<HashMap<String nom,String type>> parametres
--ArrayList<String> modificateurs
--String retour
---
-+getParametres()
+class Diagramme {
+  + Diagramme():
+  - classes: ArrayList<Package>
+  + ajouterClasse(String): void
+  + posPackage(Package): int
 }
-interface ComposantClasse{
+class Interface {
+  + Interface(String, String):
+  - interfaces: ArrayList<Interface>
+  - interfacesFilles: HashMap<Interface, Boolean>
+  - methodes: ArrayList<Methode>
+  - attributs: ArrayList<Attribut>
+  - heritageVisible: boolean
+  + changerVisibiliteHeritage(): void
+  + getHeritageVisible(): boolean
+  + addMethode(Methode): void
+  + changerVisibilite(): void
+  + addInterface(Interface): void
+  + etreVisibleFille(Interface): boolean
+  + addAttribut(Attribut): void
+  + equals(Object): boolean
+  + changerVisibiliteMethode(Methode): void
+  + getMethodes(): ArrayList<Methode>
+  + getInterfaces(): ArrayList<Interface>
+  + changerVisibiliteInterfaceFille(Interface): void
 }
-class Attribut{
--String nom
--String type
--ArrayList<String> modificateurs
---
-+getModificateurs()
-+getNom()
-+getType()
+class Methode {
+  + Methode(String, String, List<HashMap<String, String>>, List<String>):
+  - modificateurs: List<String>
+  - nom: String
+  - parametres: List<HashMap<String, String>>
+  - typeRetour: String
+  + equals(Object): boolean
+  + getParametres(): List<HashMap<String, String>>
+  + getNom(): String
+  + getTypeRetour(): String
 }
-class Interface{
-+getAttributs()
-+getMethodes()
-+getVisibleMethodes()
-+ajouterMethode(Methode m)
-+changerVisibiliteMethode(Methode m)
-+changerVisibiliteHeritage()
+class Package {
+  + Package(String):
+  - interfaces: ArrayList<Interface>
+  - nom: String
+  + getNom(): String
+  + ajouterClasse(Interface): void
 }
-class Package{
--String nom
---
-+getClass()
-+ajouterClasse(Classe c)
+class Visible {
+  + Visible():
+  - visible: boolean
+  + getVisible(): boolean
+  + changerVisibilite(): void
 }
-}
-Visible <|-- Methode
-Attribut <|-- Interface
-Visible <|-- Attribut
-Classe ..|> ComposantClasse
-Classe "1"-->"0.1" Classe :-classeParent
-Interface "1"-->"0.*" Interface : -interfaces
-Interface <|-- Classe
-Interface "1"-->"0.*   " Methode : -methodes
-Attribut ..|> ComposantClasse
-Interface "0.*   "<--"1 " Package : -classes
-Package "0.*   "<--"1 " Diagramme : -packages
-Interface --> ComposantClasse : -attributs
+
+Attribut   -[#000082,plain]-^  Visible
+Classe     -[#000082,plain]-^  Interface
+Classe    "1" *-[#595959,plain]-> "interfaces\n*" Interface
+Classe    "1" *-[#595959,plain]-> "methodes\n*" Methode
+Diagramme "1" *-[#595959,plain]-> "classes\n*" Package
+Diagramme  -[#595959,dashed]->  Package   : "«create»"
+Interface  -[#000082,plain]-^  Attribut
+Interface "1" *-[#595959,plain]-> "attributs\n*" Attribut
+Interface "1" *-[#595959,plain]-> "methodes\n*" Methode
+Methode    -[#000082,plain]-^  Visible
+Package   "1" *-[#595959,plain]-> "interfaces\n*" Interface
 @enduml

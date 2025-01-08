@@ -37,7 +37,7 @@ public class ReadFile {
         for (File file : folder.listFiles()) {
             if (file.isDirectory()) {
                 findClassFilesRecursive(file, classFilePaths);
-            } else if (file.isFile() && file.getName().endsWith(".class") && !file.getName().equals("module-info.class") && !file.getName().contains("$1")) {
+            } else if (file.isFile() && file.getName().endsWith(".class") && !file.getName().equals("module-info.class") && !file.getName().contains("$")) {
                 classFilePaths.add(file.getAbsolutePath());
             }
         }

@@ -8,4 +8,6 @@ module version1 {
     exports analyse.loader;
     exports app;
     exports classes;
+    exports diagramme.Vues;
+    exports diagramme.controler;
 }
