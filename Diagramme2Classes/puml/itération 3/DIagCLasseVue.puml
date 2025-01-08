@@ -1,0 +1,63 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AbstractDecorateur {
+  + AbstractDecorateur(Label):
+}
+class DecorateurLabel {
+  + DecorateurLabel(Label):
+  + getLabelWidth(): double
+  + getLabelHeight(): double
+}
+class InterfaceDecorateur {
+  + InterfaceDecorateur(Label):
+}
+class ItaliqueDecorateur {
+  + ItaliqueDecorateur(Label):
+}
+class PrivateDecorateur {
+  + PrivateDecorateur(Label):
+}
+class ProtectedDecorateur {
+  + ProtectedDecorateur(Label):
+}
+class PublicDecorateur {
+  + PublicDecorateur(Label):
+}
+class SoulignementDecorateur {
+  + SoulignementDecorateur(Label):
+}
+class VueClasse {
+  + VueClasse(Classe):
+  - classe: Classe
+  - getModificateur(ArrayList<String>, Label): DecorateurLabel
+  + getClasse(): Classe
+  - getModificateurClasse(ArrayList<String>, Label): DecorateurLabel
+}
+class VuePrincipale {
+  + VuePrincipale():
+  - vues: HashMap<Classe, VueClasse>
+  + actualiser(Sujet): void
+}
+
+AbstractDecorateur      -[#000082,plain]-^  DecorateurLabel
+InterfaceDecorateur     -[#000082,plain]-^  DecorateurLabel
+ItaliqueDecorateur      -[#000082,plain]-^  DecorateurLabel
+PrivateDecorateur       -[#000082,plain]-^  DecorateurLabel
+ProtectedDecorateur     -[#000082,plain]-^  DecorateurLabel
+PublicDecorateur        -[#000082,plain]-^  DecorateurLabel
+SoulignementDecorateur  -[#000082,plain]-^  DecorateurLabel
+VueClasse               -[#595959,dashed]->  AbstractDecorateur     : "«create»"
+VueClasse               -[#595959,dashed]->  DecorateurLabel        : "«create»"
+VueClasse               -[#595959,dashed]->  InterfaceDecorateur    : "«create»"
+VueClasse               -[#595959,dashed]->  ItaliqueDecorateur     : "«create»"
+VueClasse               -[#595959,dashed]->  PrivateDecorateur      : "«create»"
+VueClasse               -[#595959,dashed]->  ProtectedDecorateur    : "«create»"
+VueClasse               -[#595959,dashed]->  PublicDecorateur       : "«create»"
+VueClasse               -[#595959,dashed]->  SoulignementDecorateur : "«create»"
+VuePrincipale          "1" *-[#595959,plain]-> "vues\n*" VueClasse
+VuePrincipale           -[#595959,dashed]->  VueClasse              : "«create»"
+@enduml
