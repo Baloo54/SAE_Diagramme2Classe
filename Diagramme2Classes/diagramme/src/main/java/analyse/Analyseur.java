@@ -1,7 +1,6 @@
 package analyse;
 
 import classes.*;
-import classes.Package;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -42,21 +41,9 @@ public class Analyseur {
      * @throws ClassNotFoundException Si la classe n'est pas trouvée.
      * @throws IOException 
      */
-    public Package analyserClasse(String chemin) throws ClassNotFoundException, IOException  {
+    public Interface analyserClasse(String chemin) throws ClassNotFoundException, IOException  {
         Class classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
-        String packageNom = classe.getPackage().getName();
-        ArrayList<Package> p = new ArrayList<>();
-        //package composé ou non
-        if(packageNom.split("\\.").length == 1){
-            p.add(new Package(""));
-        }else {
-            for (String s : packageNom.split("\\.")) {
-                p.add(new Package(s));
-            }
-        }
-
         String type = classe.isInterface() ? "interface" : "class";
-
         Classe classeAnalysee = new Classe(type, classe.getSimpleName());
 
         // Analyse des modificateurs
@@ -80,27 +67,13 @@ public class Analyseur {
         // Analyse des interfaces implémentées
         for (Class<?> interfaceClass : classe.getInterfaces()) {
             Interface inter = new Interface("interface", interfaceClass.getSimpleName());
-            String packageInterface = interfaceClass.getPackage().getName();
-            ArrayList<Package> pInterface = new ArrayList<>();
-            //package composé ou non
-            if (packageInterface.split("\\.").length == 1) {
-                pInterface.add(new Package(""));
-            }
-            else {
-                for (String s : packageInterface.split("\\.")) {
-                    pInterface.add(new Package(s));
-                }
-            }
             classeAnalysee.addInterface(inter);
         }
         if (type.equals("class")) {
             classeAnalysee.setClasseParent(new Classe("class", classe.getSuperclass().getSimpleName()));
         }
-        p.getLast().ajouterClasse(classeAnalysee);
-        for (int i = p.size() - 1; i > 0; i--) {
-            p.get(i - 1).addPackage(p.get(i));
-        }
-        return p.getFirst();
+
+        return classeAnalysee;
     }
 
     /**
@@ -204,7 +177,7 @@ public class Analyseur {
      * @param classeAnalysee : l'objet Classe analysé
      * @return code Puml
      */
-    public String exportPuml(Classe classeAnalysee) {
+    public String exportPuml(Interface classeAnalysee) {
         StringBuilder puml = new StringBuilder();
         puml.append("@startuml\n");
         puml.append("class ").append(classeAnalysee.getNom()).append(" {\n");
@@ -243,12 +216,14 @@ public class Analyseur {
             puml.append(") : ").append(methode.getTypeRetour()).append("\n");
         }
         puml.append("}\n");
-
-        if (classeAnalysee.getClasseParent() != null) {
-            puml.append(classeAnalysee.getClasseParent().getNom())
-                    .append(" <|-- ")
-                    .append(classeAnalysee.getNom())
-                    .append("\n");
+        if(classeAnalysee instanceof Classe) {
+            Classe classe = (Classe) classeAnalysee;
+            if (classe.getClasseParent() != null) {
+                puml.append(classe.getClasseParent().getNom())
+                        .append(" <|-- ")
+                        .append(classeAnalysee.getNom())
+                        .append("\n");
+            }
         }
 
         for (Interface inter : classeAnalysee.getInterfaces()) {

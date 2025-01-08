@@ -16,7 +16,7 @@ public class TestAnalyseur extends Application{
     public void start(Stage primaryStage){
         Analyseur analyseur = Analyseur.getInstance();
         try {
-            Classe classe = (Classe)analyseur.analyserClasse("classes.Classe").getClasses().getFirst();
+            Interface classe = analyseur.analyserClasse("classes.Classe");
             VueClasse vueClasse = new VueClasse(classe);
             vueClasse.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
             Pane p = new Pane();

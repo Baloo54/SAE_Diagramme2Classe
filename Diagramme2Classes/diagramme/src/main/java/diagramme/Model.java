@@ -8,7 +8,6 @@ import java.util.List;
 
 import analyse.Analyseur;
 import classes.*;
-import classes.Package;
 
 /**
  * classe model
@@ -55,16 +54,9 @@ public class Model implements Sujet{
         
         for (String string : classes) {
             try {
-                for (Interface c : analyseur.analyserClasse(string).getInterfaces()) {
+                Interface c = analyseur.analyserClasse(string);
                     this.classes.add(c);
                     this.positions.put(c, new Position(0,0));
-                }
-                for (Package p : analyseur.analyserClasse(string).getPackages()) {
-                    for (Interface c : analyseur.analyserClasse(string).getInterfaces()) {
-                        this.classes.add(c);
-                        this.positions.put(c, new Position(0,0));
-                    }
-                }
             } catch (ClassNotFoundException e) {
                 System.out.println(e.getMessage());
             } catch (IOException e) {
