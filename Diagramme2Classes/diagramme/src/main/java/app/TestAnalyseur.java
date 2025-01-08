@@ -29,16 +29,31 @@ public class TestAnalyseur extends Application {
             p.getChildren().add(vueClasse);
 
             // Bouton pour exporter le diagramme en PNG
-            Button exportButton = new Button("Exporter en PNG");
-            exportButton.setOnAction(event -> {
+            Button exportPNGButton = new Button("Exporter en PNG");
+            exportPNGButton.setOnAction(event -> {
                 analyseur.exporterDiagrammeEnPNG(p, "diagramme.png");
-                System.out.println("Diagramme exporté avec succès !");
+                System.out.println("Diagramme exporté avec succès en PNG !");
+            });
+
+            // Bouton pour exporter le diagramme en PDF
+            Button exportPDFButton = new Button("Exporter en PDF");
+            exportPDFButton.setOnAction(event -> {
+                analyseur.exporterDiagrammeEnPDF(p, "diagramme.pdf");
+                System.out.println("Diagramme exporté avec succès en PDF !");
             });
 
             // Mise en page avec BorderPane
             BorderPane root = new BorderPane();
             root.setCenter(p);
-            root.setBottom(exportButton);
+
+            // Ajout des boutons
+            Pane buttonPane = new Pane();
+            exportPNGButton.setLayoutX(10);
+            exportPNGButton.setLayoutY(10);
+            exportPDFButton.setLayoutX(150);
+            exportPDFButton.setLayoutY(10);
+            buttonPane.getChildren().addAll(exportPNGButton, exportPDFButton);
+            root.setBottom(buttonPane);
 
             // Configuration de la scène
             Scene scene = new Scene(root, 800, 600);

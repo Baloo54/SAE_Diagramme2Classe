@@ -3,7 +3,9 @@ module version1 {
     requires javafx.base;
     requires transitive javafx.graphics;
     requires org.objectweb.asm;
-    requires java.desktop; // librairie ow2.asm
+    requires java.desktop;
+    requires itextpdf;
+    requires org.apache.pdfbox; // librairie ow2.asm
     exports diagramme;
     exports diagramme.Vues.decorateur;
     exports analyse.loader;
