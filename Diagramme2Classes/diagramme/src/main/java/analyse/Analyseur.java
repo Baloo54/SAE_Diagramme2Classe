@@ -19,6 +19,13 @@ import javax.imageio.ImageIO;
 import java.io.File;
 
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
+import java.awt.image.BufferedImage;
+
 
 import analyse.loader.LoaderExterne;
 
@@ -323,4 +330,47 @@ public class Analyseur {
         }
         return bufferedImage;
     }
-}
+
+    /**
+     * Exporte le diagramme affiché dans un Pane JavaFX sous forme de fichier PDF.
+     * Utilise Apache PDFBox pour générer le fichier PDF.
+     *
+     * @param diagrammePane  Le Pane contenant le diagramme.
+     * @param cheminFichier  Le chemin de sortie du fichier PDF.
+     */
+    public void exporterDiagrammeEnPDF(Pane diagrammePane, String cheminFichier) {
+        try {
+            // Capture le contenu du Pane dans une image
+            WritableImage image = new WritableImage((int) diagrammePane.getWidth(), (int) diagrammePane.getHeight());
+            diagrammePane.snapshot(new SnapshotParameters(), image);
+
+            // Convertit l'image en BufferedImage
+            BufferedImage bufferedImage = toBufferedImage(image);
+
+            // Sauvegarde temporairement l'image comme fichier PNG
+            File tempFile = File.createTempFile("diagramme", ".png");
+            ImageIO.write(bufferedImage, "png", tempFile);
+
+            // Création du document PDF
+            PDDocument document = new PDDocument();
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            // Ajout de l'image au document PDF
+            PDImageXObject pdImage = PDImageXObject.createFromFile(tempFile.getAbsolutePath(), document);
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+            contentStream.drawImage(pdImage, 100, 500, 400, 300); // Position et taille
+            contentStream.close();
+
+            // Sauvegarde du document PDF
+            document.save(cheminFichier);
+            document.close();
+
+            System.out.println("Diagramme exporté avec succès en PDF : " + cheminFichier);
+
+            // Suppression du fichier temporaire
+            tempFile.delete();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'exportation en PDF : " + e.getMessage());
+        }
+    }}
