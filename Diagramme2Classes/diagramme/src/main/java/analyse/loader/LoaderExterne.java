@@ -1,9 +1,8 @@
-package  diagramme.loader;
+package  analyse.loader;
 
 import java.io.*;
 
 public class LoaderExterne extends ClassLoader {
-    private static final LoaderExterne instance = new LoaderExterne();
     /**
      * Charge une classe depuis un fichier .class en vérifiant le package.
      *
@@ -12,7 +11,8 @@ public class LoaderExterne extends ClassLoader {
      * @throws ClassNotFoundException Si la classe ne peut être trouvée ou chargée
      * @throws IOException            Si une erreur d'E/S survient
      */
-    public Class<?> loadClassFromFile(String filePath) throws ClassNotFoundException, IOException {
+    public Class<?> loadClassFromFile(String filePath) throws ClassNotFoundException, IOException{
+        getInstance();
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()) {
             throw new ClassNotFoundException("Le fichier spécifié est introuvable : " + filePath);
@@ -37,20 +37,7 @@ public class LoaderExterne extends ClassLoader {
             return data;
         }
     }
-
-    /**
-     * Extrait un nom de classe valide à partir du chemin du fichier.
-     */
-    private String extractClassName(String filePath) {
-        // Remplacer les séparateurs de fichiers par des points
-        String className = filePath.replace(File.separatorChar, '.');
-
-        // Retirer le préfixe jusqu'au dossier de base et l'extension .class
-        className = className.replaceAll(".*?(\\w+(\\.\\w+)*)\\.class$", "$1");
-
-        return className;
-    }
     public static LoaderExterne getInstance() {
-        return instance;
+        return new LoaderExterne();
     }
 }

@@ -1,7 +1,8 @@
-package diagramme;
+package diagramme.controler;
 
 import java.io.File;
 
+import diagramme.Model;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.DirectoryChooser;
