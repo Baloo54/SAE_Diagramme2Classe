@@ -108,8 +108,7 @@ public class VueClasse extends StackPane{
 
     /**
      * Applique les modificateurs à un label représentant le titre de la classe UML.
-     * 
-     * @param modificateur Le modificateur de la classe (par exemple "interface", "abstract").
+     *
      * @param label Le label à décorer.
      * @return Le label décoré avec le modificateur spécifié.
      */
@@ -130,8 +129,7 @@ public class VueClasse extends StackPane{
 
     /**
      * Applique les modificateurs de visibilité (public, private, protected) à un label représentant un attribut ou une méthode.
-     * 
-     * @param modificateur Le modificateur de visibilité (par exemple "public", "private", "protected").
+     *
      * @param label Le label à décorer.
      * @return Le label décoré avec le modificateur de visibilité spécifié.
      */
