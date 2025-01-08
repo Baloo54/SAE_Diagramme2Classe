@@ -35,11 +35,22 @@ public class Package {
     }
 
     /**
-     * Méthode permettant d'ajouter une classe au package
+     * Méthode permettant d'ajouter une classe au package ou de la mettre à jour si elle existe déjà
      */
     public void ajouterClasse(Interface classe) {
-        //TODO
+        if (!interfaces.contains(classe)) {
+            interfaces.add(classe);
+        }
+        //si la classe est déjà présente on part du principe que l'utilisateur veut la mettre a jour
+        else {interfaces.remove(classe);
+            interfaces.add(classe);
+        }
     }
+
+    /**
+     * Méthode permettant d'ajouter un package au package ou de fusionner les packages si le package existe déjà
+     * @param p
+     */
     public void addPackage(Package p) {
         if (!packages.contains(p)) {
             packages.add(p);
@@ -50,7 +61,9 @@ public class Package {
                 for (Interface inter : p.getInterfaces()) {
                     packages.get(i).ajouterClasse(inter);
                 }
-
+                for (Package pack : p.getPackages()) {
+                    packages.get(i).addPackage(pack);
+                }
             }
         }
     }
@@ -63,6 +76,13 @@ public class Package {
     }
 
     public ArrayList<Interface> getInterfaces() {
+        return interfaces;
+    }
+
+    public ArrayList<Package> getPackages() {
+        return packages;
+    }
+    public ArrayList<Interface> getClasses() {
         return interfaces;
     }
 }
