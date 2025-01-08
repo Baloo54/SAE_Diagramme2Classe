@@ -15,8 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-
+import java.io.IOException;
 
 /**
  * Classe principale qui exécute l'application.
@@ -27,8 +26,7 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        // Récupération des dimensions de l'écran de l'utilisateur
+    public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
         double height = Screen.getPrimary().getBounds().getHeight();
         double width = Screen.getPrimary().getBounds().getWidth();
         primaryStage.setTitle("Générateur de diagrammes de classes");
@@ -40,7 +38,7 @@ public class App extends Application {
         Model model = new Model();
 
         // Vue
-        LoaderExterne.getInstance().loadClassFromFile("out\\production\\Diagramme2Classes\\diagramme\\Model.class");//permet de rendre chargeable la classe Model
+        LoaderExterne.getInstance().loadClassFromFile("out/production/SAE_Diagramme2Classe/diagramme/Model.class");//permet de rendre chargeable la classe Model
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
@@ -53,6 +51,8 @@ public class App extends Application {
         Button fichierButton = new Button("Fichier");
         fichierButton.setOnAction(importationControler);
         Button exportButton = new Button("Exporter");
+
+        exportButton.setOnAction(exportationControler);
 
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);
