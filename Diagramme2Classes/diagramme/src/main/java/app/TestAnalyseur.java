@@ -48,7 +48,7 @@ public class TestAnalyseur extends Application {
 
             // Affichage des résultats et exportation PlantUML
             analyseur.afficherResultats(classe);
-            String puml = analyseur.exportPuml(classe);
+            String puml = analyseur.exportPuml((Classe) classe);
             System.out.println(puml);
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
