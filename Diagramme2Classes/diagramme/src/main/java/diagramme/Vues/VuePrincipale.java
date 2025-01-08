@@ -1,6 +1,7 @@
 package diagramme.Vues;
 
 import classes.Classe;
+import classes.Interface;
 import diagramme.Model;
 import diagramme.Observateur;
 import diagramme.Position;
@@ -15,20 +16,20 @@ import java.util.Map;
 public class VuePrincipale extends StackPane implements Observateur {
 
     // Stocke les classes affichées avec leur vue correspondante
-    private HashMap<Classe, VueClasse> vues = new HashMap<>();
+    private HashMap<Interface, VueClasse> vues = new HashMap<>();
 
     @Override
     public void actualiser(Sujet s) {
         Model model = (Model) s;
 
         // Marquer toutes les vues comme "non vérifiées" pour supprimer ensuite celles qui ne sont plus nécessaires
-        HashMap<Classe, Boolean> marqueurs = new HashMap<>();
-        for (Classe classe : vues.keySet()) {
+        HashMap<Interface, Boolean> marqueurs = new HashMap<>();
+        for (Interface classe : vues.keySet()) {
             marqueurs.put(classe, false);
         }
 
         // Mettre à jour ou ajouter de nouvelles classes
-        for (Classe classe : model.getClasses()) {
+        for (Interface classe : model.getClasses()) {
             Position position = model.getPosition(classe);
 
             if (vues.containsKey(classe)) {
@@ -53,9 +54,9 @@ public class VuePrincipale extends StackPane implements Observateur {
         }
 
         // Supprimer les classes qui ne sont plus dans le modèle
-        Iterator<Map.Entry<Classe, VueClasse>> iterator = vues.entrySet().iterator();
+        Iterator<Map.Entry<Interface, VueClasse>> iterator = vues.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<Classe, VueClasse> entry = iterator.next();
+            Map.Entry<Interface, VueClasse> entry = iterator.next();
             if (!marqueurs.get(entry.getKey())) {
                 getChildren().remove(entry.getValue()); // Retirer du visuel
                 iterator.remove(); // Retirer de la HashMap

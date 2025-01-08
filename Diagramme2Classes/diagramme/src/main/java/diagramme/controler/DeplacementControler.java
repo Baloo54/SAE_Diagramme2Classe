@@ -1,6 +1,7 @@
 package diagramme.controler;
 
 import classes.Classe;
+import classes.Interface;
 import diagramme.Model;
 import diagramme.Position;
 import diagramme.Vues.VueClasse;
@@ -43,7 +44,7 @@ public class DeplacementControler {
                 vueClasse.setTranslateY(newY);
 
                 // Mettre à jour la position dans le modèle
-                Classe c = vueClasse.getClasse();
+                Interface c = vueClasse.getClasse();
                 model.deplacement(c, new Position(newX, newY));
             }
         });

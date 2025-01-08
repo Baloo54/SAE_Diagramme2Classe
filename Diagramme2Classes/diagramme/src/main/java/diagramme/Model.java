@@ -8,6 +8,8 @@ import java.util.List;
 
 import analyse.Analyseur;
 import classes.*;
+import classes.Package;
+
 /**
  * classe model
  */
@@ -17,8 +19,8 @@ public class Model implements Sujet{
      * folder correspond au dossier contenant le package .class
      */
     private ArrayList<Observateur> observateurs;
-    private ArrayList<Classe> classes = new ArrayList<>();
-    private HashMap<Classe, Position> positions = new HashMap<>();
+    private ArrayList<Interface> classes = new ArrayList<>();
+    private HashMap<Interface, Position> positions = new HashMap<>();
     /**
      * Constructeur
      */
@@ -53,9 +55,16 @@ public class Model implements Sujet{
         
         for (String string : classes) {
             try {
-                Classe c = (Classe)analyseur.analyserClasse(string).getInterfaces().getFirst();
-                this.classes.add(c);
-                this.positions.put(c, new Position(0,0));
+                for (Interface c : analyseur.analyserClasse(string).getInterfaces()) {
+                    this.classes.add(c);
+                    this.positions.put(c, new Position(0,0));
+                }
+                for (Package p : analyseur.analyserClasse(string).getPackages()) {
+                    for (Interface c : analyseur.analyserClasse(string).getInterfaces()) {
+                        this.classes.add(c);
+                        this.positions.put(c, new Position(0,0));
+                    }
+                }
             } catch (ClassNotFoundException e) {
                 System.out.println(e.getMessage());
             } catch (IOException e) {
@@ -68,13 +77,13 @@ public class Model implements Sujet{
      * getter getClasses
      * @return ArrayList<Classe>
      */
-    public ArrayList<Classe> getClasses() {
+    public ArrayList<Interface> getClasses() {
         return classes;
     }
-    public Position getPosition(Classe c) {
+    public Position getPosition(Interface c) {
         return positions.get(c);
     }
-    public void deplacement(Classe c, Position p){
+    public void deplacement(Interface c, Position p){
         this.positions.put(c,p);
         notifierObservateurs();
     }
