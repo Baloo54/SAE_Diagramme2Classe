@@ -1,5 +1,6 @@
 package app;
 
+import analyse.Analyseur;
 import diagramme.Model;
 import diagramme.Vues.VuePrincipale;
 import diagramme.controler.ImportationControler;
@@ -13,6 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 
 /**
  * Classe principale qui exécute l'application.
@@ -23,7 +26,7 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
         //récupération des dimensions de l'écran de l'utilisateur
         double height = Screen.getPrimary().getBounds().getHeight();
         double width = Screen.getPrimary().getBounds().getWidth();
@@ -33,6 +36,7 @@ public class App extends Application {
         //model
         Model model = new Model();
         //vue
+        Analyseur.getInstance().analyserClasse("C:\\Users\\mathi\\OneDrive\\Bureau\\Nouveau dossier (3)\\clone\\SAE_Diagramme2Classe\\Diagramme2Classes\\out\\production\\Diagramme2Classes\\diagramme\\Vues\\VuePrincipale.class");//permet de rendre chargeable la classe VuePrincipale
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
