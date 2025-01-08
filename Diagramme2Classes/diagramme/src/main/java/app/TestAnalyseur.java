@@ -16,7 +16,7 @@ public class TestAnalyseur extends Application{
     public void start(Stage primaryStage){
         Analyseur analyseur = Analyseur.getInstance();
         try {
-            Classe classe = (Classe)analyseur.analyserClasse("/home/nightmarev2/Documents/SAE_Diagramme2Classe/Diagramme2Classes/target/classes/classes/Interface.class").getClasses().getFirst();
+            Classe classe = (Classe)analyseur.analyserClasse("classes.Classe").getClasses().getFirst();
             VueClasse vueClasse = new VueClasse(classe);
             vueClasse.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
             Pane p = new Pane();
@@ -26,6 +26,9 @@ public class TestAnalyseur extends Application{
             primaryStage.setTitle("Diagramme UML");
             primaryStage.setScene(scene);
             primaryStage.show();
+            analyseur.afficherResultats(classe);
+           String puml = analyseur.exportPuml(classe);
+            System.out.println(puml);
         } catch (ClassNotFoundException e) {
            System.out.println(e.getMessage());
         } catch (IOException e){
