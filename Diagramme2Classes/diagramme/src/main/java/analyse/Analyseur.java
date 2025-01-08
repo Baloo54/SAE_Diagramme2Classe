@@ -54,6 +54,8 @@ public class Analyseur {
 
         // Analyse des attributs
         for (Field field : classe.getDeclaredFields()) {
+            System.out.println(field.getType().getName());
+            System.out.println(classe.getName());
             Attribut attribut = analyserAttribut(field);
             classeAnalysee.addAttribut(attribut);
         }

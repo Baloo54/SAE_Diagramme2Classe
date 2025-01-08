@@ -1,12 +1,14 @@
-package  analyse.loader;
+package analyse.loader;
 
 import java.io.*;
 
 public class LoaderExterne extends ClassLoader {
 
-    private static LoaderExterne loader = new LoaderExterne();
+    // Singleton pour gérer un seul instance de LoaderExterne
+    private static final LoaderExterne loader = new LoaderExterne();
+
     /**
-     * Charge une classe depuis un fichier .class en vérifiant le package.
+     * Charge une classe depuis un fichier .class en vérifiant le package et si elle est déjà chargée.
      *
      * @param filePath Chemin absolu du fichier .class
      * @return La classe chargée
@@ -14,35 +16,52 @@ public class LoaderExterne extends ClassLoader {
      * @throws IOException            Si une erreur d'E/S survient
      */
     public Class<?> loadClassFromFile(String filePath) throws ClassNotFoundException, IOException {
-        try {
-            return Class.forName(filePath);
-        } catch (ClassNotFoundException e) {
-            File file = new File(filePath);
-            if (!file.exists() || !file.isFile()) {
-                throw new ClassNotFoundException("Le fichier spécifié est introuvable : " + filePath);
-            }
-            // Lire le fichier .class en tant que tableau de bytes
-            byte[] classData = readFileAsBytes(file);
-
-            // Extraire le nom de la classe à partir du chemin et du contenu
-
-            String nomClass = SimpleDecompiler.getNomClasse(filePath);
-            // Charger la classe
-            return defineClass(nomClass, classData, 0, classData.length);
-
+        // Vérifier si le fichier est valide
+        File file = new File(filePath);
+        if (!file.exists() || !file.isFile()) {
+            throw new ClassNotFoundException("Le fichier spécifié est introuvable : " + filePath);
         }
+
+        // Extraire le nom de la classe à partir du chemin ou du contenu
+        String className = SimpleDecompiler.getNomClasse(filePath);
+
+        // Vérifier si la classe est déjà chargée
+        Class<?> loadedClass = findLoadedClass(className);
+        if (loadedClass != null) {
+            return loadedClass; // Retourner directement la classe si elle est déjà chargée
+        }
+
+        // Lire le fichier .class en tant que tableau d'octets
+        byte[] classData = readFileAsBytes(file);
+
+        // Charger la classe
+        return defineClass(className, classData, 0, classData.length);
     }
 
     /**
      * Lit le fichier donné sous forme de tableau de bytes.
+     *
+     * @param file Fichier à lire
+     * @return Tableau d'octets contenant le contenu du fichier
+     * @throws IOException En cas de problème de lecture
      */
     private byte[] readFileAsBytes(File file) throws IOException {
-        try (FileInputStream fis = new FileInputStream(file)) {
-            byte[] data = new byte[(int) file.length()];
-            fis.read(data);
-            return data;
+        try (FileInputStream fis = new FileInputStream(file);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                baos.write(buffer, 0, bytesRead);
+            }
+            return baos.toByteArray();
         }
     }
+
+    /**
+     * Retourne une instance singleton de LoaderExterne.
+     *
+     * @return Instance unique de LoaderExterne
+     */
     public static LoaderExterne getInstance() {
         return loader;
     }
