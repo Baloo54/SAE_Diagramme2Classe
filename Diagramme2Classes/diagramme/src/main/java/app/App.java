@@ -44,8 +44,9 @@ public class App extends Application {
         ImportationControler importationControler = new ImportationControler(model,primaryStage);
         //boutons
         Button fichierButton = new Button("Fichier");
+
         fichierButton.setOnAction(importationControler);
-      
+
 
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);
@@ -57,7 +58,7 @@ public class App extends Application {
         root.setCenter(diagramArea);
         root.setBottom(buttonBox);
 
-        
+
         Scene scene = new Scene(root, width, height);
         primaryStage.setScene(scene);
         primaryStage.show();

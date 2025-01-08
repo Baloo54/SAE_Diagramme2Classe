@@ -8,6 +8,14 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+
 
 import analyse.loader.LoaderExterne;
 
@@ -23,7 +31,7 @@ public class Analyseur {
 
     /**
      * Retourne l'instance unique de l'analyseur.
-     * 
+     *
      * @return L'instance de l'analyseur.
      */
     public static Analyseur getInstance() {
@@ -35,11 +43,11 @@ public class Analyseur {
 
     /**
      * Analyse une classe à partir de son chemin sous forme de chaîne de caractères.
-     * 
+     *
      * @param chemin Chemin vers la classe à analyser.
      * @return Un objet Classe contenant les résultats de l'analyse.
      * @throws ClassNotFoundException Si la classe n'est pas trouvée.
-     * @throws IOException 
+     * @throws IOException
      */
     public Interface analyserClasse(String chemin) throws ClassNotFoundException, IOException  {
         Class classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
@@ -78,7 +86,7 @@ public class Analyseur {
 
     /**
      * Analyse un attribut d'une classe.
-     * 
+     *
      * @param field Attribut à analyser.
      * @return Un objet Attribut représentant l'attribut analysé.
      */
@@ -90,7 +98,7 @@ public class Analyseur {
 
     /**
      * Analyse une méthode d'une classe.
-     * 
+     *
      * @param method Méthode à analyser.
      * @return Un objet Methode représentant la méthode analysée.
      */
@@ -109,7 +117,7 @@ public class Analyseur {
 
     /**
      * Retourne les modificateurs d'une classe sous forme de chaîne de caractères.
-     * 
+     *
      * @param c Classe à analyser.
      * @return Liste des modificateurs.
      */
@@ -124,7 +132,7 @@ public class Analyseur {
 
     /**
      * Retourne la visibilité d'un modificateur.
-     * 
+     *
      * @param modifiers Modificateurs sous forme d'entier.
      * @return La visibilité (public, private, protected ou package).
      */
@@ -250,5 +258,54 @@ public class Analyseur {
         if (modificateurs.contains("private")) return "-";
         if (modificateurs.contains("protected")) return "#";
         return "+";
+    }
+
+    /**
+     * Exporte le diagramme affiché dans un Pane JavaFX sous forme de fichier PNG.
+     *
+     * @param diagrammePane  le Pane contenant le diagramme à exporter.
+     * @param cheminFichier  le chemin de sortie du fichier PNG.
+     */
+    public void exporterDiagrammeEnPNG(Pane diagrammePane, String cheminFichier) {
+        try {
+            // Vérifie si le Pane est non nul
+            if (diagrammePane == null) {
+                throw new IllegalArgumentException("Le Pane contenant le diagramme ne peut pas être null.");
+            }
+
+            // Capture le contenu du Pane dans une image
+            WritableImage image = new WritableImage((int) diagrammePane.getWidth(), (int) diagrammePane.getHeight());
+            diagrammePane.snapshot(new SnapshotParameters(), image);
+
+            // Prépare l'image pour l'écriture dans un fichier
+            File fichierSortie = new File(cheminFichier);
+            ImageIO.write(toBufferedImage(image), "png", fichierSortie);
+
+            System.out.println("Diagramme exporté avec succès : " + cheminFichier);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'exportation du diagramme : " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.err.println("Erreur d'argument : " + e.getMessage());
+        }
+    }
+
+    /**
+     * Convertit une WritableImage en BufferedImage
+     *
+     * @param writableImage L'image capturée.
+     * @return Un BufferedImage prêt pour l'écriture.
+     */
+    private static java.awt.image.BufferedImage toBufferedImage(WritableImage writableImage) {
+        int largeur = (int) writableImage.getWidth();
+        int hauteur = (int) writableImage.getHeight();
+        java.awt.image.BufferedImage bufferedImage = new java.awt.image.BufferedImage(largeur, hauteur, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+
+        PixelReader pixelReader = writableImage.getPixelReader();
+        for (int y = 0; y < hauteur; y++) {
+            for (int x = 0; x < largeur; x++) {
+                bufferedImage.setRGB(x, y, pixelReader.getArgb(x, y));
+            }
+        }
+        return bufferedImage;
     }
 }
