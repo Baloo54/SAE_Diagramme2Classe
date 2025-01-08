@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import classes.*;
 import diagramme.Vues.decorateur.*;
 import javafx.geometry.Pos;
@@ -20,7 +19,7 @@ import javafx.scene.shape.Rectangle;
  * 
  * @package Diagramme
  */
-public class VueClasse extends StackPane {
+public class VueClasse extends StackPane{
     
     private Classe classe; // Instance de la classe représentée
 
@@ -157,5 +156,8 @@ public class VueClasse extends StackPane {
             }
         }
         return result;
+    }
+    public Classe getClasse(){
+        return this.classe;
     }
 }

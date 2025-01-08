@@ -3,6 +3,7 @@ package diagramme;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import analyse.Analyseur;
@@ -17,6 +18,7 @@ public class Model implements Sujet{
      */
     private ArrayList<Observateur> observateurs;
     private ArrayList<Classe> classes = new ArrayList<>();
+    private HashMap<Classe, Position> positions = new HashMap<>();
 
     /**
      * Constructeur
@@ -52,7 +54,9 @@ public class Model implements Sujet{
         
         for (String string : classes) {
             try {
-                this.classes.add(analyseur.analyserClasse(string));
+                Classe c = analyseur.analyserClasse(string);
+                this.classes.add(c);
+                this.positions.put(c, new Position(0,0));
             } catch (ClassNotFoundException e) {
                 System.out.println(e.getMessage());
             } catch (IOException e) {
@@ -62,10 +66,27 @@ public class Model implements Sujet{
         notifierObservateurs();
     }
     /**
+     * @param Classe
      * getter getClasses
+     * @return Position
+     */
+    public Position getPosition(Classe c) {
+        return positions.get(c);
+    }
+    /**
+     * getClasses
      * @return ArrayList<Classe>
      */
-    public ArrayList<Classe> getClasses() {
-        return classes;
+    public ArrayList<Classe> getClasses(){
+        return this.classes;
+    }
+    /**
+     * deplacement
+     * @param Classe
+     * @param Position
+     */
+    public void deplacement(Classe c, Position p){
+        this.positions.put(c,p);
+        notifierObservateurs();
     }
 }
