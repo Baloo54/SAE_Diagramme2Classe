@@ -18,17 +18,14 @@ import java.util.Map;
  * Représente le modèle pour l'analyse des classes et des relations.
  * Implémente le motif Observateur.
  */
-public class Model implements Sujet{
-    /**
-     * Attributs
-     * folder correspond au dossier contenant le package .class
-     */
+public class Model implements Sujet {
+
+    // Attributs
     private ArrayList<Observateur> observateurs;
-    private HashMap<String, ArrayList<Interface>> packages = new HashMap<>();
-    private HashMap<Interface, Position> positions = new HashMap<>();
+    private HashMap<String, ArrayList<Interface>> packages;
+    private HashMap<Interface, Position> positions;
     private ArrayList<Interface> classes;
     private HashMap<Interface, ArrayList<HashMap<String, Interface>>> relations;
-
 
     /**
      * Constructeur
@@ -36,10 +33,14 @@ public class Model implements Sujet{
      */
     public Model() {
         this.observateurs = new ArrayList<>();
-        this.classes = new ArrayList<>();
+        this.packages = new HashMap<>();
         this.positions = new HashMap<>();
+        this.classes = new ArrayList<>();
         this.relations = new HashMap<>();
     }
+
+    // Gestion des observateurs
+
     /**
      * Ajoute un observateur à la liste.
      * @param observateur L'observateur à ajouter.
@@ -71,25 +72,15 @@ public class Model implements Sujet{
         for (String string : chemin) {
             try {
                 Interface c = analyseur.analyserClasse(string);
-                if (!this.packages.containsKey(c.getPackageClasse())) {
-                    this.packages.put(c.getPackageClasse(), new ArrayList<Interface>());
-                    this.packages.get(c.getPackageClasse()).add(c);
-                } else {
-                    if (!this.packages.get(c.getPackageClasse()).contains(c)) {
-                        this.packages.get(c.getPackageClasse()).add(c);
-                    }
-                }
+                this.packages.computeIfAbsent(c.getPackageClasse(), k -> new ArrayList<>()).add(c);
                 this.positions.put(c, new Position(0, 0));
-            } catch (ClassNotFoundException e) {
-                System.out.println(e.getMessage());
-            } catch (IOException e) {
+            } catch (ClassNotFoundException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
         rechercheRelation();
         notifierObservateurs();
     }
-
 
     /**
      * Recherche des relations entre les classes en analysant attributs et méthodes.
@@ -103,11 +94,9 @@ public class Model implements Sujet{
 
             // Analyse des paramètres de méthodes
             for (Methode methode : classe.getMethodes()) {
-                List<HashMap<String, String>> hash = methode.getParametres();
-                for (HashMap<String, String> map : hash) {
-                    for (Map.Entry<String, String> entry : map.entrySet()) {
-                        String typeParametre = entry.getValue().split("arg")[0];
-                        ajouterRelationSiExiste(classe, typeParametre);
+                for (HashMap<String, String> map : methode.getParametres()) {
+                    for (String typeParametre : map.values()) {
+                        ajouterRelationSiExiste(classe, typeParametre.split("arg")[0]);
                     }
                 }
             }
@@ -122,9 +111,7 @@ public class Model implements Sujet{
     private void ajouterRelationSiExiste(Interface classe, String nom) {
         Interface associe = existeClasse(nom);
         if (associe != null) {
-            HashMap<String, Interface> relation = new HashMap<>();
-            relation.put("association", associe);
-            ajouterRelation(classe, relation);
+            ajouterRelation(classe, Map.of("association", associe));
         }
     }
 
@@ -133,12 +120,17 @@ public class Model implements Sujet{
      * @param cle La classe source.
      * @param nouvelElement La relation à ajouter.
      */
-    public void ajouterRelation(Interface cle, HashMap<String, Interface> nouvelElement) {
-        ArrayList<HashMap<String, Interface>> liste = relations.getOrDefault(cle, new ArrayList<>());
-        if (!liste.contains(nouvelElement)) {
-            liste.add(nouvelElement);
-            relations.put(cle, liste);
-        }
+    public void ajouterRelation(Interface cle, Map<String, Interface> nouvelElement) {
+        relations.computeIfAbsent(cle, k -> new ArrayList<>()).add(new HashMap<>(nouvelElement));
+    }
+
+    /**
+     * Vérifie si une classe existe.
+     * @param nom Le nom de la classe.
+     * @return La classe si elle existe, sinon null.
+     */
+    private Interface existeClasse(String nom) {
+        return this.classes.stream().filter(c -> c.getNom().equals(nom)).findFirst().orElse(null);
     }
 
     // Gestion des positions et déplacements
@@ -161,9 +153,10 @@ public class Model implements Sujet{
         this.positions.put(c, p);
         notifierObservateurs();
     }
-      /**
-     * change la visibilité de l'interface/classe
-     * @param c
+
+    /**
+     * Change la visibilité de l'interface/classe.
+     * @param c La classe ou l'interface.
      */
     public void changerVisibilite(Interface c) {
         c.changerVisibilite();
@@ -172,7 +165,6 @@ public class Model implements Sujet{
 
     /**
      * Change la visibilité de l'héritage d'une classe/interface.
-     *
      * @param c Classe ou interface.
      */
     public void changerVisibiliteHeritage(Interface c) {
@@ -180,40 +172,26 @@ public class Model implements Sujet{
         notifierObservateurs();
     }
 
-    /**
-     * Récupère les noms des classes dans le modèle.
-     *
-     * @return Liste des noms des classes.
-     */
-    public List<String> getClassesNoms() {
-        List<String> noms = new ArrayList<>();
-        for (Interface c : getClasses()) {
-            noms.add(c.getNom());
-        }
-        return noms;
-    }
+    // Gestion des ajouts
 
     /**
      * Ajoute une classe ou une interface.
-     *
-     * @param nom          Nom de la classe ou de l'interface.
+     * @param nom Nom de la classe ou de l'interface.
      * @param estInterface Indique si c'est une interface.
      */
     public void ajouterClasse(String nom, boolean estInterface) {
         Interface nouvelleClasse = estInterface
                 ? new Interface("interface", nom, "")
                 : new Interface("class", nom, "");
-        this.packages.putIfAbsent("", new ArrayList<>());
-        this.packages.get("").add(nouvelleClasse);
+        this.packages.computeIfAbsent("", k -> new ArrayList<>()).add(nouvelleClasse);
         this.positions.put(nouvelleClasse, new Position(0, 0));
         notifierObservateurs();
     }
 
     /**
      * Ajoute une méthode à une classe existante.
-     *
      * @param nomClasse Nom de la classe.
-     * @param methode   Méthode à ajouter.
+     * @param methode Méthode à ajouter.
      */
     public void ajouterMethode(String nomClasse, Methode methode) {
         for (Interface c : getClasses()) {
@@ -227,9 +205,8 @@ public class Model implements Sujet{
 
     /**
      * Ajoute un attribut à une classe existante.
-     *
      * @param nomClasse Nom de la classe.
-     * @param attribut  Attribut à ajouter.
+     * @param attribut Attribut à ajouter.
      */
     public void ajouterAttribut(String nomClasse, Attribut attribut) {
         for (Interface c : getClasses()) {
@@ -241,28 +218,45 @@ public class Model implements Sujet{
         }
     }
 
-   public Pane getDiagrammePane() {
-        return null;
+    // Accesseurs
+
+    /**
+     * Récupère les noms des classes dans le modèle.
+     * @return Liste des noms des classes.
+     */
+    public List<String> getClassesNoms() {
+        List<String> noms = new ArrayList<>();
+        for (Interface c : getClasses()) {
+            noms.add(c.getNom());
+        }
+        return noms;
     }
 
+    /**
+     * Récupère toutes les classes du modèle.
+     * @return Liste des classes.
+     */
     public ArrayList<Interface> getClasses() {
         ArrayList<Interface> classes = new ArrayList<>();
-        for (String key : this.packages.keySet()) {
-            classes.addAll(this.packages.get(key));
+        for (ArrayList<Interface> cls : this.packages.values()) {
+            classes.addAll(cls);
         }
         return classes;
     }
-        /**
-     * Vérifie si une classe existe.
-     * @param nom Le nom de la classe.
-     * @return La classe si elle existe, sinon null.
+
+    /**
+     * Récupère les relations entre les classes.
+     * @return Les relations.
      */
-    private Interface existeClasse(String nom) {
-        for (Interface classe : this.classes) {
-            if (nom.equals(classe.getNom())) {
-                return classe;
-            }
-        }
+    public HashMap<Interface, ArrayList<HashMap<String, Interface>>> getRelations() {
+        return relations;
+    }
+
+    /**
+     * Retourne un panneau de diagramme (placeholder).
+     * @return Panneau de diagramme.
+     */
+    public Pane getDiagrammePane() {
         return null;
     }
 }

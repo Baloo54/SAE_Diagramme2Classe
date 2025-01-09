@@ -1,30 +1,20 @@
 package app;
 
-<<<<<<< HEAD
-import analyse.loader.LoaderExterne;
-=======
->>>>>>> a5b784a (correction vue)
 import diagramme.Model;
 import diagramme.Vues.VuePrincipale;
-import diagramme.controler.ControlleurAfficherClasses;
 import diagramme.controler.ExportationControler;
 import diagramme.controler.ImportationControler;
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> a5b784a (correction vue)
 /**
  * Classe principale qui exécute l'application.
  */
@@ -46,10 +36,6 @@ public class App extends Application {
         Model model = new Model();
 
         // Vue
-<<<<<<< HEAD
-        LoaderExterne.getInstance().loadClassFromFile("out/production/SAE_Diagramme2Classe/diagramme/Model.class"); // Permet de rendre chargeable la classe Model
-=======
->>>>>>> a5b784a (correction vue)
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);

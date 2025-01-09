@@ -5,11 +5,6 @@ import classes.Attribut;
 import classes.Classe;
 import classes.Interface;
 import classes.Methode;
-//import org.apache.pdfbox.pdmodel.PDDocument;
-//import org.apache.pdfbox.pdmodel.PDPage;
-//import org.apache.pdfbox.pdmodel.PDPageContentStream;
-//import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -17,7 +12,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Classe réalisant l'analyse d'une classe Java.
@@ -50,8 +44,7 @@ public class Analyseur {
      * @throws IOException
      */
     public Interface analyserClasse(String chemin) throws ClassNotFoundException, IOException {
-<<<<<<< HEAD
-        Class classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
+        Class<?> classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
         String type = classe.isInterface() ? "interface" : "classe";
         Interface classeAnalysee;
         if (type.equals("classe")) {
@@ -60,11 +53,6 @@ public class Analyseur {
             classeAnalysee = new Interface(type, classe.getSimpleName(), classe.getPackageName());
         }
 
-=======
-        Class<?> classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
-        String type = classe.isInterface() ? "interface" : "class";
-        Classe classeAnalysee = new Classe(type, classe.getSimpleName());
->>>>>>> a5b784a (correction vue)
         // Analyse des modificateurs
         ArrayList<String> modifiers = getModifierClasse(classe);
         for (String modifier : modifiers) {
