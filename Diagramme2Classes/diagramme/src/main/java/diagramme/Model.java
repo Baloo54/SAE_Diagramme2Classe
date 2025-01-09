@@ -102,4 +102,22 @@ public class Model implements Sujet {
         this.positions.put(c, p);
         notifierObservateurs();
     }
+
+    /**
+     * change la visibilité de l'interface/classe
+     * @param c
+     */
+    public void changerVisibilite(Interface c) {
+        c.changerVisibilite();
+        notifierObservateurs();
+    }
+
+    /**
+     * change la visibilité de l'héritage de l'interface/classe
+     * @param c
+     */
+    public void changerVisibiliteHeritage(Interface c) {
+        c.changerVisibiliteHeritage();
+        notifierObservateurs();
+    }
 }
