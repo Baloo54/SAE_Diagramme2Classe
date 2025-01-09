@@ -1,7 +1,6 @@
 package app;
 
 import analyse.loader.LoaderExterne;
-import classes.Interface;
 import diagramme.Model;
 import diagramme.Vues.VuePrincipale;
 import diagramme.controler.ControlleurAfficherClasses;
@@ -42,21 +41,24 @@ public class App extends Application {
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
-
-        // Contrôleurs
+        
         ImportationControler importationControler = new ImportationControler(model, primaryStage);
         ExportationControler exportationControler = new ExportationControler(model);
 
-        // Menu principal
         MenuBar menuBar = new MenuBar();
+        Menu EditMenu = new Menu("ModifierDiagramme");
+        MenuItem AjoutClasse = new MenuItem("Ajouter une classe");
+        MenuItem AjoutMethode = new MenuItem("Ajouter une méthode");
+        MenuItem AjoutAttribut = new MenuItem("Ajouter un attribut");
+        //Ajout des items au menu
+        EditMenu.getItems().addAll(AjoutClasse, AjoutMethode, AjoutAttribut);
 
-        // Menu "Fichier"
+
         Menu fichierMenu = new Menu("Fichier");
         MenuItem fichierMenuItem = new MenuItem("Charger un fichier");
         fichierMenuItem.setOnAction(importationControler);
         fichierMenu.getItems().add(fichierMenuItem);
 
-        // Menu "Exporter"
         Menu exportMenu = new Menu("Exporter");
         MenuItem exportPuml = new MenuItem("Exporter en PUML");
         MenuItem exportPng = new MenuItem("Exporter en PNG");
@@ -73,31 +75,25 @@ public class App extends Application {
 
         exportMenu.getItems().addAll(exportPuml, exportPng);
 
-        // Menu "Visibilité"
         Menu visibiliteMenu = new Menu("Visibilité");
         MenuItem visibiliteMenuItem = new MenuItem("Afficher les classes");
 
-        // Création de la sidebar et du contrôleur
         sidebar = new VBox();
         sidebar.setAlignment(Pos.TOP_CENTER);
         sidebar.setSpacing(10);
 
-        // Création du contrôleur avec la sidebar et le modèle
         ControlleurAfficherClasses controlleurAfficherClasses = new ControlleurAfficherClasses(model, sidebar);
 
-        // On assigne l'action à "Afficher les classes"
         visibiliteMenuItem.setOnAction(e -> controlleurAfficherClasses.handle(e));
 
         visibiliteMenu.getItems().add(visibiliteMenuItem);
-        menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu);
+        menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu,EditMenu);
 
-        // Ajouter la sidebar au BorderPane
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
         root.setCenter(diagramArea);
-        root.setLeft(sidebar);  // Ajouter la sidebar ici
+        root.setLeft(sidebar);
 
-        // Configuration de la scène
         Scene scene = new Scene(root, width, height);
         primaryStage.setScene(scene);
         primaryStage.show();
