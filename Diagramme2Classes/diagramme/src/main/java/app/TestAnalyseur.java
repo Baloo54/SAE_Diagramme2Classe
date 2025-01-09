@@ -1,80 +1,66 @@
 package app;
 
-import java.io.IOException;
-
-import analyse.Analyseur;
-import classes.Interface;
-import diagramme.Vues.VueClasse;
+import diagramme.Model;
+import diagramme.Vues.VuePrincipale;
+import diagramme.controler.ModificationControler;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * Classe principale pour exécuter et tester l'application.
+ */
 public class TestAnalyseur extends Application {
-    @Override
-    public void start(Stage primaryStage) {
-        // Initialisation de l'analyseur
-        Analyseur analyseur = Analyseur.getInstance();
-        BorderPane root = new BorderPane();
-
-        try {
-            // Analyse de la classe et création de la vue
-            Interface classe = analyseur.analyserClasse("out/production/SAE_Diagramme2Classe/diagramme/Model.class");
-            VueClasse vueClasse = new VueClasse(classe);
-            vueClasse.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
-
-            // Création d'un Pane pour afficher le diagramme
-            Pane diagramPane = new Pane();
-            diagramPane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-            diagramPane.getChildren().add(vueClasse);
-
-            // Placement du diagramme au centre
-            root.setCenter(diagramPane);
-
-            // Configuration de la scène
-            Scene scene = new Scene(root, 800, 600);
-            primaryStage.setTitle("Diagramme UML");
-            primaryStage.setScene(scene);
-            primaryStage.show();
-
-            // Affichage des résultats d'analyse dans la console
-            analyseur.afficherResultats(classe);
-
-        } catch (ClassNotFoundException e) {
-            // Gestion des erreurs pour la classe introuvable
-            showError("Erreur d'analyse", "La classe spécifiée est introuvable.", e);
-        } catch (IOException e) {
-            // Gestion des erreurs pour les problèmes d'entrée/sortie
-            showError("Erreur d'entrée/sortie", "Une erreur est survenue lors de la lecture du fichier.", e);
-        }
-    }
-
-    /**
-     * Affiche une alerte d'erreur avec des informations détaillées.
-     *
-     * @param title   Titre de l'alerte.
-     * @param message Message principal de l'alerte.
-     * @param e       Exception à afficher (détails dans la console).
-     */
-    private void showError(String title, String message, Exception e) {
-        // Afficher l'exception dans la console pour débogage
-        e.printStackTrace();
-
-        // Affichage d'une boîte de dialogue d'alerte
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        double height = Screen.getPrimary().getBounds().getHeight();
+        double width = Screen.getPrimary().getBounds().getWidth();
+        primaryStage.setTitle("Test Générateur de Diagrammes de Classes");
+
+        VBox diagramArea = new VBox();
+        diagramArea.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: lightgray;");
+
+        // Modèle
+        Model model = new Model();
+
+        // Vue
+        VuePrincipale principal = new VuePrincipale();
+        model.ajouterObservateur(principal);
+        diagramArea.getChildren().add(principal);
+
+        // Menu principal
+        MenuBar menuBar = new MenuBar();
+
+        // Menu Modifier
+        Menu editMenu = new Menu("Modifier");
+        MenuItem ajoutClasse = new MenuItem("Ajouter une classe");
+        MenuItem ajoutMethode = new MenuItem("Ajouter une méthode");
+        MenuItem ajoutAttribut = new MenuItem("Ajouter un attribut");
+
+        // Ajouter des contrôleurs pour les actions
+        ajoutClasse.setOnAction(new ModificationControler(model, "ajoutClasse"));
+        ajoutMethode.setOnAction(new ModificationControler(model, "ajoutMethode"));
+        ajoutAttribut.setOnAction(new ModificationControler(model, "ajoutAttribut"));
+
+        editMenu.getItems().addAll(ajoutClasse, ajoutMethode, ajoutAttribut);
+        menuBar.getMenus().add(editMenu);
+
+        // Layout principal
+        BorderPane root = new BorderPane();
+        root.setTop(menuBar);
+        root.setCenter(diagramArea);
+
+        // Scène principale
+        Scene scene = new Scene(root, width * 0.8, height * 0.8);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 }
