@@ -2,54 +2,29 @@ package diagramme.controler;
 
 import classes.Interface;
 import diagramme.Model;
-import diagramme.Observateur;
-import diagramme.Sujet;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-public class ControlleurAfficherClasses  implements EventHandler<ActionEvent>,Observateur {
+public class ControlleurAfficherClasses implements EventHandler<ActionEvent> {
     private Model model;
-    private Stage stage;
-    public ControlleurAfficherClasses(Model model) {
+    private VBox sidebar;
+
+    public ControlleurAfficherClasses(Model model, VBox sidebar) {
         this.model = model;
-        stage = new Stage();
+        this.sidebar = sidebar;
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        // Créer une nouvelle fenêtre (Stage)
-        if(actionEvent == null){
-            if(stage.isShowing()){
-                //stage.close();
-                stage.setScene(creerScene());
-                stage.show();
-            }
-        }else {
-            if(stage.isShowing()){
-                stage.close();
-            }else {
-                stage.setScene(creerScene());
-                stage.show();
-            }
-        }
+        updateSidebar();  // Remplir la sidebar à chaque clic
     }
 
-    @Override
-    public void actualiser(Sujet s) {
-        handle(null);
-    }
-
-    public Scene creerScene(){
-        VBox root = new VBox();
-        for(Interface classe : model.getClasses()){
-            Label label = new Label(classe.getNom());
-            root.getChildren().add(label);
+    private void updateSidebar() {
+        sidebar.getChildren().clear();  // Vider la sidebar
+        for (Interface classe : model.getClasses()) {
+            sidebar.getChildren().add(new Label(classe.getNom()));  // Ajouter chaque classe à la sidebar
         }
-        Scene scene = new Scene(root);
-        return scene;
     }
 }

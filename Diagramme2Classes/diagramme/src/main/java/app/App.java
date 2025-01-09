@@ -1,6 +1,7 @@
 package app;
 
 import analyse.loader.LoaderExterne;
+import classes.Interface;
 import diagramme.Model;
 import diagramme.Vues.VuePrincipale;
 import diagramme.controler.ControlleurAfficherClasses;
@@ -11,17 +12,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
-/**
- * Classe principale qui exécute l'application.
- */
 public class App extends Application {
+    private VBox sidebar;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -32,6 +30,7 @@ public class App extends Application {
         double width = Screen.getPrimary().getBounds().getWidth();
         primaryStage.setTitle("Générateur de diagrammes de classes");
 
+        // Zone du diagramme principale
         VBox diagramArea = new VBox();
         diagramArea.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: lightgray;");
 
@@ -39,7 +38,7 @@ public class App extends Application {
         Model model = new Model();
 
         // Vue
-        LoaderExterne.getInstance().loadClassFromFile("out/production/SAE_Diagramme2Classe/diagramme/Model.class"); // Permet de rendre chargeable la classe Model
+        LoaderExterne.getInstance().loadClassFromFile("out/production/SAE_Diagramme2Classe/diagramme/Model.class");
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
@@ -77,14 +76,26 @@ public class App extends Application {
         // Menu "Visibilité"
         Menu visibiliteMenu = new Menu("Visibilité");
         MenuItem visibiliteMenuItem = new MenuItem("Afficher les classes");
-        visibiliteMenuItem.setOnAction(new ControlleurAfficherClasses(model));
-        visibiliteMenu.getItems().add(visibiliteMenuItem);
 
+        // Création de la sidebar et du contrôleur
+        sidebar = new VBox();
+        sidebar.setAlignment(Pos.TOP_CENTER);
+        sidebar.setSpacing(10);
+
+        // Création du contrôleur avec la sidebar et le modèle
+        ControlleurAfficherClasses controlleurAfficherClasses = new ControlleurAfficherClasses(model, sidebar);
+
+        // On assigne l'action à "Afficher les classes"
+        visibiliteMenuItem.setOnAction(e -> controlleurAfficherClasses.handle(e));
+
+        visibiliteMenu.getItems().add(visibiliteMenuItem);
         menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu);
 
+        // Ajouter la sidebar au BorderPane
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
         root.setCenter(diagramArea);
+        root.setLeft(sidebar);  // Ajouter la sidebar ici
 
         // Configuration de la scène
         Scene scene = new Scene(root, width, height);
