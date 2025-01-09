@@ -1,12 +1,12 @@
 package diagramme.controler;
 
-import classes.*;
 import classes.Classe;
 import classes.Interface;
 import diagramme.Model;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-
+import javafx.scene.layout.Pane;
+import classes.Export;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,18 +42,25 @@ public class ExportationControler implements EventHandler<ActionEvent> {
 
         if (!classes.isEmpty()) {
             Export export = new Export();
+            Pane diagrammePane = model.getDiagrammePane();  // Récupère le Pane contenant le diagramme
 
             switch (exportType.toLowerCase()) {
                 case "puml":
                     String pumlFile = export.exportPuml(classes);
                     System.out.println("Exportation en PUML terminée : " + pumlFile);
                     break;
+
                 case "png":
-                    String pngFile = export.exportPng(classes);
-                    System.out.println("Exportation en png terminée : " + pngFile);
+                    if (diagrammePane != null) {
+                        export.exportPng(diagrammePane);
+                        System.out.println("Exportation en PNG terminée.");
+                    } else {
+                        System.err.println("Erreur : le diagramme est vide.");
+                    }
                     break;
+
                 default:
-                    System.err.println("Erreur");
+                    System.err.println("Erreur : Type d'export non pris en charge.");
             }
         } else {
             System.out.println("Aucune classe à exporter.");

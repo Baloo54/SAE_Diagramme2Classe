@@ -1,7 +1,6 @@
 package classes;
 
 import javafx.scene.SnapshotParameters;
-import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 
@@ -107,41 +106,36 @@ public class Export {
     }
 
     /**
-     * Exporte un diagramme basé sur une liste de classes sous forme de fichier PNG.
-     *
-     * @param classes Liste des classes à inclure dans le diagramme.
-     * @return
+     * Exporte le diagramme affiché dans un Pane JavaFX sous forme de fichier PNG.
+     * @param diagrammePane Le Pane contenant le diagramme à exporter.
      */
-    public String exportPng(List<Classe> classes) {
-        // Chemin du fichier de sortie
+    public void exportPng(Pane diagrammePane) {
+        // Chemin fixe où le fichier PNG sera sauvegardé
         String cheminFichier = "Diagramme2Classes/diagramme/src/main/java/Export/diagramme.png";
 
         try {
-            // Vérifie si la liste de classes est vide
-            if (classes == null || classes.isEmpty()) {
-                throw new IllegalArgumentException("La liste de classes ne peut pas être vide.");
-            }
-
-            // Création d'un Pane pour dessiner le diagramme
-            Pane diagrammePane = new Pane();
-            diagrammePane.setPrefSize(800, 600);
-
-            // Ajoute les classes au diagramme (représentation graphique basique)
-            double yPosition = 20;
-            for (Classe classe : classes) {
-                javafx.scene.text.Text text = new javafx.scene.text.Text(20, yPosition, "Classe : " + classe.getNom());
-                diagrammePane.getChildren().add(text);
-                yPosition += 30;
+            // Vérifie si le Pane est non nul
+            if (diagrammePane == null) {
+                throw new IllegalArgumentException("Le Pane contenant le diagramme ne peut pas être null.");
             }
 
             // Capture le contenu du Pane dans une image
-            WritableImage image = new WritableImage((int) diagrammePane.getPrefWidth(), (int) diagrammePane.getPrefHeight());
-            diagrammePane.snapshot(new SnapshotParameters(), image);
+            WritableImage image = new WritableImage((int) diagrammePane.getWidth(), (int) diagrammePane.getHeight());
+            SnapshotParameters snapshotParams = new SnapshotParameters();
+            diagrammePane.snapshot(snapshotParams, image);
 
-            // Prépare l'image pour l'écriture dans un fichier
+            // Convertit l'image en BufferedImage pour pouvoir l'écrire avec ImageIO
+            BufferedImage bufferedImage = toBufferedImage(image);
+
+            // Crée le fichier et le répertoire si nécessaire
             File fichierSortie = new File(cheminFichier);
-            fichierSortie.getParentFile().mkdirs(); // Crée les dossiers nécessaires si inexistants
-            ImageIO.write(toBufferedImage(image), "png", fichierSortie);
+            File parentDir = fichierSortie.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs(); // Crée les répertoires parents si nécessaire
+            }
+
+            // Écrit l'image dans le fichier
+            ImageIO.write(bufferedImage, "png", fichierSortie);
 
             System.out.println("Diagramme exporté avec succès : " + cheminFichier);
         } catch (IOException e) {
@@ -149,31 +143,24 @@ public class Export {
         } catch (IllegalArgumentException e) {
             System.err.println("Erreur d'argument : " + e.getMessage());
         }
-        return cheminFichier;
     }
 
     /**
      * Convertit une WritableImage en BufferedImage.
      *
-     * @param writableImage L'image JavaFX à convertir.
-     * @return Une instance de BufferedImage.
+     * @param writableImage L'image capturée.
+     * @return Un BufferedImage prêt pour l'écriture.
      */
-    private BufferedImage toBufferedImage(WritableImage writableImage) {
-        BufferedImage bufferedImage = new BufferedImage(
-                (int) writableImage.getWidth(),
-                (int) writableImage.getHeight(),
-                BufferedImage.TYPE_INT_ARGB
-        );
-
-        PixelReader pixelReader = writableImage.getPixelReader();
-        for (int x = 0; x < writableImage.getWidth(); x++) {
-            for (int y = 0; y < writableImage.getHeight(); y++) {
-                int argb = pixelReader.getArgb(x, y);
-                bufferedImage.setRGB(x, y, argb);
+    private static BufferedImage toBufferedImage(WritableImage writableImage) {
+        int largeur = (int) writableImage.getWidth();
+        int hauteur = (int) writableImage.getHeight();
+        BufferedImage bufferedImage = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_ARGB);
+        javafx.scene.image.PixelReader pixelReader = writableImage.getPixelReader();
+        for (int y = 0; y < hauteur; y++) {
+            for (int x = 0; x < largeur; x++) {
+                bufferedImage.setRGB(x, y, pixelReader.getArgb(x, y));
             }
         }
-
         return bufferedImage;
     }
-
 }
