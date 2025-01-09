@@ -42,7 +42,6 @@ public class App extends Application {
         Model model = new Model();
 
         // Vue
-        LoaderExterne.getInstance().loadClassFromFile("out/production/SAE_Diagramme2Classe/diagramme/Model.class");//permet de rendre chargeable la classe Model
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);

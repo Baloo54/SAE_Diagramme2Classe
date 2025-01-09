@@ -7,13 +7,14 @@ import diagramme.Sujet;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ControlleurAfficherClasses  implements EventHandler<ActionEvent>,Observateur {
     private Model model;
-    private Stage stage;
     public ControlleurAfficherClasses(Model model) {
         this.model = model;
         stage = new Stage();
@@ -46,8 +47,10 @@ public class ControlleurAfficherClasses  implements EventHandler<ActionEvent>,Ob
     public Scene creerScene(){
         VBox root = new VBox();
         for(Interface classe : model.getClasses()){
+            HBox hBox = new HBox();
             Label label = new Label(classe.getNom());
-            root.getChildren().add(label);
+            Button button = new Button("afficher méthodes");
+            root.getChildren().addAll(label,button);
         }
         Scene scene = new Scene(root);
         return scene;
