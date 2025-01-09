@@ -1,6 +1,5 @@
 package diagramme.controler;
 
-import classes.Classe;
 import classes.Interface;
 import diagramme.Model;
 import diagramme.Position;

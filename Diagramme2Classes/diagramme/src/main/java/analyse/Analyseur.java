@@ -50,6 +50,7 @@ public class Analyseur {
      * @throws IOException
      */
     public Interface analyserClasse(String chemin) throws ClassNotFoundException, IOException {
+<<<<<<< HEAD
         Class classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
         String type = classe.isInterface() ? "interface" : "classe";
         Interface classeAnalysee;
@@ -59,6 +60,11 @@ public class Analyseur {
             classeAnalysee = new Interface(type, classe.getSimpleName(), classe.getPackageName());
         }
 
+=======
+        Class<?> classe = LoaderExterne.getInstance().loadClassFromFile(chemin);
+        String type = classe.isInterface() ? "interface" : "class";
+        Classe classeAnalysee = new Classe(type, classe.getSimpleName());
+>>>>>>> a5b784a (correction vue)
         // Analyse des modificateurs
         ArrayList<String> modifiers = getModifierClasse(classe);
         for (String modifier : modifiers) {
@@ -126,7 +132,7 @@ public class Analyseur {
      * @param c Classe à analyser.
      * @return Liste des modificateurs.
      */
-    private static ArrayList<String> getModifierClasse(Class c) {
+    private static ArrayList<String> getModifierClasse(Class<?> c) {
         int modifiers = c.getModifiers();
         ArrayList<String> result = new ArrayList<>();
         result.add(getModifierVisibilite(modifiers));

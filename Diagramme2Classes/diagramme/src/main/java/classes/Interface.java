@@ -21,6 +21,7 @@ public class Interface extends Attribut {
     // Mappage des interfaces filles et de leur visibilité (true ou false)
     private HashMap<Interface, Boolean> interfacesFilles;
 
+
     // Indique si l'héritage est visible
     private boolean heritageVisible = true;
 
@@ -156,8 +157,8 @@ public class Interface extends Attribut {
     }
 
     /**
-     * Ajoute une interface héritée.
-     *
+     * Ajoute une interface implémenté.
+     * 
      * @param inter L'interface à ajouter.
      */
     public void addInterface(Interface inter) {
@@ -190,6 +191,9 @@ public class Interface extends Attribut {
      */
     public ArrayList<Attribut> getAttributs() {
         return attributs;
+    }
+    public HashMap<Interface, Boolean> getInterfacesFilles() {
+        return interfacesFilles;
     }
 
     public String getPackageClasse() {

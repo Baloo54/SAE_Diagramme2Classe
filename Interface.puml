@@ -1,0 +1,24 @@
+@startuml
+class Interface {
+    - interfaces : ArrayList
+    - methodes : ArrayList
+    - attributs : ArrayList
+    - interfacesFilles : HashMap
+    - heritageVisible : boolean
+    + addAttribut(arg0 : Attribut) : void
+    + addMethode(arg0 : Methode) : void
+    + addInterface(arg0 : Interface) : void
+    + getAttributs() : ArrayList
+    + getMethodes() : ArrayList
+    + changerVisibiliteInterfaceFille(arg0 : Interface) : void
+    + changerVisibilite() : void
+    + etreVisibleFille(arg0 : Interface) : boolean
+    + changerVisibiliteHeritage() : void
+    + changerVisibiliteMethode(arg0 : Methode) : void
+    + getHeritageVisible() : boolean
+    + getInterfacesFilles() : HashMap
+    + equals(arg0 : Object) : boolean
+    + getInterfaces() : ArrayList
+}
+Attribut <|-- Interface
+@enduml

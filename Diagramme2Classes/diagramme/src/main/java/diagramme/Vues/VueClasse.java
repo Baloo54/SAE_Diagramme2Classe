@@ -8,8 +8,11 @@ import classes.*;
 import diagramme.Vues.decorateur.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -36,7 +39,7 @@ public class VueClasse extends StackPane{
         ArrayList<DecorateurLabel> attributs = new ArrayList<>();
         
         // Création du titre avec modificateurs.
-        DecorateurLabel title = getModificateurClasse(classe.getModificateurs(), new Label(classe.getNom()));
+        DecorateurLabel title = getModificateurClasse(new Label(classe.getNom()));
 
         // Traitement des méthodes visibles.
         for (Methode methode : classe.getMethodes()) {
@@ -48,7 +51,7 @@ public class VueClasse extends StackPane{
                     for (Map.Entry<String, String> entry : map.entrySet()) {
                         index--;
                         signature += entry.getValue().split("arg")[0];
-                        signature += index > 0 ? ",": "";
+                        signature += index > 0 && signature.charAt(signature.length() - 1) != ',' ? ",": "";
                     }
                 }
                 signature += "): " + methode.getTypeRetour();
@@ -59,7 +62,7 @@ public class VueClasse extends StackPane{
         // Traitement des attributs visibles.
         for(Attribut attribut : classe.getAttributs()){
             if(attribut.getVisible()){
-                attributs.add(getModificateur(attribut.getModificateurs(), new Label(attribut.getNom())));
+                attributs.add(getModificateur(attribut.getModificateurs(), new Label(attribut.getNom() + ": " + attribut.getType())));
             }
         }
 
@@ -103,54 +106,95 @@ public class VueClasse extends StackPane{
         }
         //bordure de la vbox
         vbox.setStyle("-fx-border-color: black; -fx-border-width: 1;"); // Bordure noire de 1px
+        setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
         getChildren().addAll(vbox);
     }
 
+    
     /**
      * Applique les modificateurs à un label représentant le titre de la classe UML.
      *
      * @param label Le label à décorer.
      * @return Le label décoré avec le modificateur spécifié.
      */
-    private DecorateurLabel getModificateurClasse(ArrayList<String> modificateurs, Label label){
+    private DecorateurLabel getModificateurClasse(Label label) {
         DecorateurLabel result = new DecorateurLabel(label);
-        if(classe.getType().equals("interface")){
-            result = new InterfaceDecorateur(result);
+    
+        // Créer une liste contenant le type et les modificateurs concaténés
+        List<String> modificateurs = new ArrayList<>();
+        modificateurs.add(classe.getType()); // Ajoute le type (par exemple, "interface")
+    
+        // Si ce n'est pas une interface, on ajoute les autres modificateurs
+        if (!classe.getType().equals("interface")) {
+            modificateurs.addAll(classe.getModificateurs()); // Ajoute les modificateurs (ex. "abstract", "final")
         }
-        else if (classe.getModificateurs().contains("abstract")){
-            result = new AbstractDecorateur(new ItaliqueDecorateur(result));
-        }
-        return result;
-    }
-
-    /**
-     * Applique les modificateurs de visibilité (public, private, protected) à un label représentant un attribut ou une méthode.
-     *
-     * @param label Le label à décorer.
-     * @return Le label décoré avec le modificateur de visibilité spécifié.
-     */
-    private DecorateurLabel getModificateur(ArrayList<String> modificateurs, Label label){
-        DecorateurLabel result = new DecorateurLabel(label);
+    
+        // Boucle for pour itérer sur la liste des modificateurs
         for (String modificateur : modificateurs) {
             switch (modificateur) {
-                case "public":
-                    result = new PublicDecorateur(result);
+                case "interface":
+                    result = new InterfaceDecorateur(result);
                     break;
-                case "private":
-                    result = new PrivateDecorateur(result);
-                    break;
-                case "protected":
-                    result = new ProtectedDecorateur(result);
-                    break;
-                case "static":
-                    result = new SoulignementDecorateur(result);
-                    break;
+                    
                 case "abstract":
-                    result = new ItaliqueDecorateur(result);
+                    result = new AbstractDecorateur(new ItaliqueDecorateur(result));
+                    break;
+                    
+                case "final":
+                    result = new FinalDecorateur(result);
+                    break;
+                    
+                default:
+                    break;
             }
         }
+        
         return result;
     }
+    
+    
+/**
+ * Applique les modificateurs de visibilité (public, private, protected) à un label représentant un attribut ou une méthode.
+ *
+ * @param modificateurs La liste des modificateurs à appliquer.
+ * @param label Le label à décorer.
+ * @return Le label décoré avec les modificateurs spécifiés.
+ */
+private DecorateurLabel getModificateur(ArrayList<String> modificateurs, Label label){
+    DecorateurLabel result = new DecorateurLabel(label);
+    
+    // Vérification du type de la classe pour exclure 'final' si le type est 'interface'
+    String typeClasse = classe.getType(); // On récupère le type de la classe (interface, etc.)
+    
+    for (String modificateur : modificateurs) {
+        switch (modificateur) {
+            case "public":
+                result = new PublicDecorateur(result);
+                break;
+            case "private":
+                result = new PrivateDecorateur(result);
+                break;
+            case "protected":
+                result = new ProtectedDecorateur(result);
+                break;
+            case "static":
+                result = new SoulignementDecorateur(result);
+                break;
+            case "abstract":
+                result = new ItaliqueDecorateur(result);
+                break;
+            case "final":
+                // On applique 'final' seulement si le type n'est pas 'interface'
+                if (!typeClasse.equals("interface")) {
+                    result = new FinalDecorateur(result);
+                }
+                break;
+        }
+    }
+    
+    return result;
+}
+
     public Interface getClasse(){
         return this.classe;
     }

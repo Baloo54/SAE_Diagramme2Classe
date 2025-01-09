@@ -11,11 +11,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * classe model
+ * Classe Model
+ * Représente le modèle pour l'analyse des classes et des relations.
+ * Implémente le motif Observateur.
  */
-public class Model implements Sujet {
+public class Model implements Sujet{
     /**
      * Attributs
      * folder correspond au dossier contenant le package .class
@@ -23,28 +26,30 @@ public class Model implements Sujet {
     private ArrayList<Observateur> observateurs;
     private HashMap<String, ArrayList<Interface>> packages = new HashMap<>();
     private HashMap<Interface, Position> positions = new HashMap<>();
+    private ArrayList<Interface> classes;
+    private HashMap<Interface, ArrayList<HashMap<String, Interface>>> relations;
+
 
     /**
      * Constructeur
+     * Initialise les structures de données.
      */
     public Model() {
-        this.observateurs = new ArrayList<Observateur>();
+        this.observateurs = new ArrayList<>();
+        this.classes = new ArrayList<>();
+        this.positions = new HashMap<>();
+        this.relations = new HashMap<>();
     }
-
     /**
-     * ajouter observateur
-     *
-     * @param observateur
-     * @return void
+     * Ajoute un observateur à la liste.
+     * @param observateur L'observateur à ajouter.
      */
     public void ajouterObservateur(Observateur observateur) {
         this.observateurs.add(observateur);
     }
 
     /**
-     * notifier observateurs
-     *
-     * @return void
+     * Notifie tous les observateurs.
      */
     public void notifierObservateurs() {
         for (Observateur observateur : this.observateurs) {
@@ -52,10 +57,11 @@ public class Model implements Sujet {
         }
     }
 
+    // Gestion des classes et packages
+
     /**
-     * ajouterPackage
-     *
-     * @param folder folder
+     * Ajoute un package et analyse ses classes.
+     * @param folder Le dossier contenant les fichiers .class.
      */
     public void ajouterPackage(File folder) {
         ReadFile reader = new ReadFile();
@@ -80,33 +86,82 @@ public class Model implements Sujet {
                 System.out.println(e.getMessage());
             }
         }
+        rechercheRelation();
         notifierObservateurs();
     }
 
-    /**
-     * getter getClasses
-     *
-     * @return ArrayList<Classe>
-     */
 
+    /**
+     * Recherche des relations entre les classes en analysant attributs et méthodes.
+     */
+    private void rechercheRelation() {
+        for (Interface classe : this.classes) {
+            // Analyse des attributs
+            for (Attribut attribut : classe.getAttributs()) {
+                ajouterRelationSiExiste(classe, attribut.getNom());
+            }
+
+            // Analyse des paramètres de méthodes
+            for (Methode methode : classe.getMethodes()) {
+                List<HashMap<String, String>> hash = methode.getParametres();
+                for (HashMap<String, String> map : hash) {
+                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                        String typeParametre = entry.getValue().split("arg")[0];
+                        ajouterRelationSiExiste(classe, typeParametre);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Ajoute une relation si la classe associée existe.
+     * @param classe La classe source.
+     * @param nom Le nom de la classe cible.
+     */
+    private void ajouterRelationSiExiste(Interface classe, String nom) {
+        Interface associe = existeClasse(nom);
+        if (associe != null) {
+            HashMap<String, Interface> relation = new HashMap<>();
+            relation.put("association", associe);
+            ajouterRelation(classe, relation);
+        }
+    }
+
+    /**
+     * Ajoute une relation à la liste des relations.
+     * @param cle La classe source.
+     * @param nouvelElement La relation à ajouter.
+     */
+    public void ajouterRelation(Interface cle, HashMap<String, Interface> nouvelElement) {
+        ArrayList<HashMap<String, Interface>> liste = relations.getOrDefault(cle, new ArrayList<>());
+        if (!liste.contains(nouvelElement)) {
+            liste.add(nouvelElement);
+            relations.put(cle, liste);
+        }
+    }
+
+    // Gestion des positions et déplacements
+
+    /**
+     * Obtient la position d'une classe.
+     * @param c La classe.
+     * @return La position de la classe.
+     */
     public Position getPosition(Interface c) {
         return positions.get(c);
     }
 
-    public ArrayList<Interface> getClasses() {
-        ArrayList<Interface> classes = new ArrayList<>();
-        for (String key : this.packages.keySet()) {
-            classes.addAll(this.packages.get(key));
-        }
-        return classes;
-    }
-
+    /**
+     * Déplace une classe vers une nouvelle position.
+     * @param c La classe.
+     * @param p La nouvelle position.
+     */
     public void deplacement(Interface c, Position p) {
         this.positions.put(c, p);
         notifierObservateurs();
     }
-
-    /**
+      /**
      * change la visibilité de l'interface/classe
      * @param c
      */
@@ -187,6 +242,27 @@ public class Model implements Sujet {
     }
 
    public Pane getDiagrammePane() {
+        return null;
+    }
+
+    public ArrayList<Interface> getClasses() {
+        ArrayList<Interface> classes = new ArrayList<>();
+        for (String key : this.packages.keySet()) {
+            classes.addAll(this.packages.get(key));
+        }
+        return classes;
+    }
+        /**
+     * Vérifie si une classe existe.
+     * @param nom Le nom de la classe.
+     * @return La classe si elle existe, sinon null.
+     */
+    private Interface existeClasse(String nom) {
+        for (Interface classe : this.classes) {
+            if (nom.equals(classe.getNom())) {
+                return classe;
+            }
+        }
         return null;
     }
 }

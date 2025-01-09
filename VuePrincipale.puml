@@ -1,0 +1,12 @@
+@startuml
+class VuePrincipale {
+    - vues : HashMap
+    - fleches : ArrayList
+    - ajouterRelationComplexe(arg0 : FabriqueAbstraiteVueFleche, arg1 : VueClasse, arg2 : VueClasse) : void
+    + actualiser(arg0 : Sujet) : void
+}
+StackPane <|-- VuePrincipale
+interface Observateur {
+}
+Observateur <|.. VuePrincipale
+@enduml

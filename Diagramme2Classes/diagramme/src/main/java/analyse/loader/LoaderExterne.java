@@ -1,11 +1,16 @@
 package analyse.loader;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoaderExterne extends ClassLoader {
 
-    // Singleton pour gérer un seul instance de LoaderExterne
+    // Singleton pour gérer une seule instance de LoaderExterne
     private static final LoaderExterne loader = new LoaderExterne();
+
+    // Cache pour les classes chargées
+    private final Map<String, Class<?>> loadedClasses = new HashMap<>();
 
     /**
      * Charge une classe depuis un fichier .class en vérifiant le package et si elle est déjà chargée.
@@ -25,17 +30,29 @@ public class LoaderExterne extends ClassLoader {
         // Extraire le nom de la classe à partir du chemin ou du contenu
         String className = SimpleDecompiler.getNomClasse(filePath);
 
-        // Vérifier si la classe est déjà chargée
+        // Vérifier si la classe est déjà chargée par le parent
+        try {
+            return getParent().loadClass(className);
+        } catch (ClassNotFoundException e) {
+            // Ignorer si le parent ne trouve pas la classe
+        }
+
+        // Vérifier si la classe est déjà chargée localement
         Class<?> loadedClass = findLoadedClass(className);
         if (loadedClass != null) {
-            return loadedClass; // Retourner directement la classe si elle est déjà chargée
+            return loadedClass;
         }
 
         // Lire le fichier .class en tant que tableau d'octets
         byte[] classData = readFileAsBytes(file);
 
-        // Charger la classe
-        return defineClass(className, classData, 0, classData.length);
+        // Charger la classe principale
+        loadedClass = defineClass(className, classData, 0, classData.length);
+
+        // Ajouter la classe au cache
+        loadedClasses.put(className, loadedClass);
+
+        return loadedClass;
     }
 
     /**
