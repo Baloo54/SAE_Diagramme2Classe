@@ -6,19 +6,18 @@ import diagramme.controler.ControlleurAfficherClasses;
 import diagramme.controler.ExportationControler;
 import diagramme.controler.ImportationControler;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
-/**
- * Classe principale qui exécute l'application.
- */
 public class App extends Application {
+    private VBox sidebar;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -29,6 +28,7 @@ public class App extends Application {
         double width = Screen.getPrimary().getBounds().getWidth();
         primaryStage.setTitle("Générateur de diagrammes de classes");
 
+        // Zone du diagramme principale
         VBox diagramArea = new VBox();
         diagramArea.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: lightgray;");
 
@@ -40,20 +40,23 @@ public class App extends Application {
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
 
-        // Contrôleurs
         ImportationControler importationControler = new ImportationControler(model, primaryStage);
         ExportationControler exportationControler = new ExportationControler(model);
 
-        // Menu principal
         MenuBar menuBar = new MenuBar();
+        Menu EditMenu = new Menu("ModifierDiagramme");
+        MenuItem AjoutClasse = new MenuItem("Ajouter une classe");
+        MenuItem AjoutMethode = new MenuItem("Ajouter une méthode");
+        MenuItem AjoutAttribut = new MenuItem("Ajouter un attribut");
+        //Ajout des items au menu
+        EditMenu.getItems().addAll(AjoutClasse, AjoutMethode, AjoutAttribut);
 
-        // Menu "Fichier"
+
         Menu fichierMenu = new Menu("Fichier");
         MenuItem fichierMenuItem = new MenuItem("Charger un fichier");
         fichierMenuItem.setOnAction(importationControler);
         fichierMenu.getItems().add(fichierMenuItem);
 
-        // Menu "Exporter"
         Menu exportMenu = new Menu("Exporter");
         MenuItem exportPuml = new MenuItem("Exporter en PUML");
         MenuItem exportPng = new MenuItem("Exporter en PNG");
@@ -70,19 +73,25 @@ public class App extends Application {
 
         exportMenu.getItems().addAll(exportPuml, exportPng);
 
-        // Menu "Visibilité"
         Menu visibiliteMenu = new Menu("Visibilité");
         MenuItem visibiliteMenuItem = new MenuItem("Afficher les classes");
-        visibiliteMenuItem.setOnAction(new ControlleurAfficherClasses(model));
-        visibiliteMenu.getItems().add(visibiliteMenuItem);
 
-        menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu);
+        sidebar = new VBox();
+        sidebar.setAlignment(Pos.TOP_CENTER);
+        sidebar.setSpacing(10);
+
+        ControlleurAfficherClasses controlleurAfficherClasses = new ControlleurAfficherClasses(model, sidebar);
+
+        visibiliteMenuItem.setOnAction(e -> controlleurAfficherClasses.handle(e));
+
+        visibiliteMenu.getItems().add(visibiliteMenuItem);
+        menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu,EditMenu);
 
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
         root.setCenter(diagramArea);
+        root.setLeft(sidebar);
 
-        // Configuration de la scène
         Scene scene = new Scene(root, width, height);
         primaryStage.setScene(scene);
         primaryStage.show();

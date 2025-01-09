@@ -1,0 +1,18 @@
+Itération 2
+Fonctionnalité prévue :
+Chargement d’un .class grâce à un chemin absolu.
+Vérifier que le fichier est un .class
+Étendre l'introspection
+Afficher les informations de la classe
+Créer les éléments nécessaires pour la génération du diagramme
+Lecture d’un package n'importe où sur l'ordinateur (classLoader externe).
+
+UseCase :
+- Importer un package Java :
+L'utilisateur sélectionne un package sur son ordinateur par l'intermédiaire de l’application pour analyse via une introspection.
+- Générer un diagramme de classes
+Le système crée une représentation des classes et des relations.
+
+Résultat attendu :
+L'utilisateur peut importer un package Java de n'importe où sur l'ordinateur et générer les objets nécessaires pour la génération du diagramme.
+L'introspection est faisable sur chaque .classe du package.

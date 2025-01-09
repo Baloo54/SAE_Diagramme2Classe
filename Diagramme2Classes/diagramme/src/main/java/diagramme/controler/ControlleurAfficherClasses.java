@@ -2,43 +2,29 @@ package diagramme.controler;
 
 import classes.Interface;
 import diagramme.Model;
-import diagramme.Observateur;
-import diagramme.Sujet;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class ControlleurAfficherClasses  implements EventHandler<ActionEvent>,Observateur {
+public class ControlleurAfficherClasses implements EventHandler<ActionEvent> {
     private Model model;
-    public ControlleurAfficherClasses(Model model) {
-        this.model = model;}
+    private VBox sidebar;
+
+    public ControlleurAfficherClasses(Model model, VBox sidebar) {
+        this.model = model;
+        this.sidebar = sidebar;
+    }
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        // Créer une nouvelle fenêtre (Stage)
-        if(actionEvent == null){
-
-        }
+        updateSidebar();  // Remplir la sidebar à chaque clic
     }
 
-    @Override
-    public void actualiser(Sujet s) {
-        handle(null);
-    }
-
-    public Scene creerScene(){
-        VBox root = new VBox();
-        for(Interface classe : model.getClasses()){
-            HBox hBox = new HBox();
-            Label label = new Label(classe.getNom());
-            Button button = new Button("afficher méthodes");
-            root.getChildren().addAll(label,button);
+    private void updateSidebar() {
+        sidebar.getChildren().clear();  // Vider la sidebar
+        for (Interface classe : model.getClasses()) {
+            sidebar.getChildren().add(new Label(classe.getNom()));  // Ajouter chaque classe à la sidebar
         }
-        Scene scene = new Scene(root);
-        return scene;
     }
 }

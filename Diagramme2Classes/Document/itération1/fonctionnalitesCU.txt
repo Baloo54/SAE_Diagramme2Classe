@@ -1,0 +1,12 @@
+Itération 1
+Fonctionnalité prévue :
+Importation et Lecture d’un package .class
+
+UseCase :
+- Importer un package Java :
+L'utilisateur sélectionne un package sur son ordinateur par l'intermédiaire de l’application pour analyse via une introspection.
+
+Résultat attendu :
+Un package peut être importé dans l'application avec une interface graphique.
+Un package peut être analysé via une introspection.
+

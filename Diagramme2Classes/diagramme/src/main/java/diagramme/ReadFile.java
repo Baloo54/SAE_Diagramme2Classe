@@ -34,11 +34,13 @@ public class ReadFile {
      * @param classFilePaths la liste pour stocker les chemins des fichiers .class trouvés
      */
     private void findClassFilesRecursive(File folder, List<String> classFilePaths) {
-        for (File file : folder.listFiles()) {
-            if (file.isDirectory()) {
-                findClassFilesRecursive(file, classFilePaths);
-            } else if (file.isFile() && file.getName().endsWith(".class") && !file.getName().equals("module-info.class") && !file.getName().contains("$")) {
-                classFilePaths.add(file.getAbsolutePath());
+        if(folder.listFiles() != null) {
+            for (File file : folder.listFiles()) {
+                if (file.isDirectory()) {
+                    findClassFilesRecursive(file, classFilePaths);
+                } else if (file.isFile() && file.getName().endsWith(".class") && !file.getName().equals("module-info.class") && !file.getName().contains("$")) {
+                    classFilePaths.add(file.getAbsolutePath());
+                }
             }
         }
     }
