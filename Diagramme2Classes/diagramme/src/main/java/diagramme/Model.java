@@ -1,6 +1,7 @@
 package diagramme;
 
 import analyse.Analyseur;
+import classes.Attribut;
 import classes.Interface;
 import classes.Methode;
 import javafx.scene.layout.Pane;
@@ -117,8 +118,9 @@ public class Model implements Sujet {
     }
 
     /**
-     * change la visibilité de l'héritage de l'interface/classe
-     * @param c
+     * Change la visibilité de l'héritage d'une classe/interface.
+     *
+     * @param c Classe ou interface.
      */
     public void changerVisibiliteHeritage(Interface c) {
         c.changerVisibiliteHeritage();
@@ -134,6 +136,66 @@ public class Model implements Sujet {
         int i = packages.get(c.getPackageClasse()).indexOf(c);
         packages.get(c.getPackageClasse()).set(i, c);
         notifierObservateurs();
+    }
+    /**
+     * Récupère les noms des classes dans le modèle.
+     *
+     * @return Liste des noms des classes.
+     */
+    public List<String> getClassesNoms() {
+        List<String> noms = new ArrayList<>();
+        for (Interface c : getClasses()) {
+            noms.add(c.getNom());
+        }
+        return noms;
+    }
+
+    /**
+     * Ajoute une classe ou une interface.
+     *
+     * @param nom          Nom de la classe ou de l'interface.
+     * @param estInterface Indique si c'est une interface.
+     */
+    public void ajouterClasse(String nom, boolean estInterface) {
+        Interface nouvelleClasse = estInterface
+                ? new Interface("interface", nom, "")
+                : new Interface("class", nom, "");
+        this.packages.putIfAbsent("", new ArrayList<>());
+        this.packages.get("").add(nouvelleClasse);
+        this.positions.put(nouvelleClasse, new Position(0, 0));
+        notifierObservateurs();
+    }
+
+    /**
+     * Ajoute une méthode à une classe existante.
+     *
+     * @param nomClasse Nom de la classe.
+     * @param methode   Méthode à ajouter.
+     */
+    public void ajouterMethode(String nomClasse, Methode methode) {
+        for (Interface c : getClasses()) {
+            if (c.getNom().equals(nomClasse)) {
+                c.addMethode(methode);
+                notifierObservateurs();
+                return;
+            }
+        }
+    }
+
+    /**
+     * Ajoute un attribut à une classe existante.
+     *
+     * @param nomClasse Nom de la classe.
+     * @param attribut  Attribut à ajouter.
+     */
+    public void ajouterAttribut(String nomClasse, Attribut attribut) {
+        for (Interface c : getClasses()) {
+            if (c.getNom().equals(nomClasse)) {
+                c.addAttribut(attribut);
+                notifierObservateurs();
+                return;
+            }
+        }
     }
 
    public Pane getDiagrammePane() {

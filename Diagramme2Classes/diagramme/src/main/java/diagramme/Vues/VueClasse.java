@@ -154,6 +154,7 @@ public class VueClasse extends StackPane{
         return this.classe;
     }
 
+
     public void update(Interface classe) {
         this.classe = classe;
 
@@ -169,4 +170,80 @@ public class VueClasse extends StackPane{
             decorateurLabel.setVisible(methode.getVisible());
         }
     }
+    /**
+     * Met à jour l'affichage des méthodes et des attributs.
+     * Cette méthode est appelée lorsqu'une modification dans la classe représentée est détectée.
+     */
+//    public void mettreAJourAffichage() {
+//        // Effacer les enfants existants (tout sauf la bordure principale)
+//        this.getChildren().clear();
+//
+//        ArrayList<DecorateurLabel> methodes = new ArrayList<>();
+//        ArrayList<DecorateurLabel> attributs = new ArrayList<>();
+//
+//        // Recalcul des méthodes visibles
+//        for (Methode methode : classe.getMethodes()) {
+//            if (methode.getVisible()) {
+//                List<HashMap<String, String>> hash = methode.getParametres();
+//                String signature = methode.getNom() + "(";
+//                int index = hash.size();
+//                for (HashMap<String, String> map : hash) {
+//                    for (Map.Entry<String, String> entry : map.entrySet()) {
+//                        index--;
+//                        signature += entry.getValue().split("arg")[0];
+//                        signature += index > 0 ? "," : "";
+//                    }
+//                }
+//                signature += "): " + methode.getTypeRetour();
+//                methodes.add(getModificateur(methode.getModificateurs(), new Label(signature)));
+//            }
+//        }
+//
+//        // Recalcul des attributs visibles
+//        for (Attribut attribut : classe.getAttributs()) {
+//            if (attribut.getVisible()) {
+//                attributs.add(getModificateur(attribut.getModificateurs(), new Label(attribut.getNom())));
+//            }
+//        }
+//
+//        // Création graphique mise à jour
+//        VBox vbox = new VBox();
+//
+//        // Calcul de la largeur et de la hauteur
+//        double largeur = 0;
+//        double hauteur = 0;
+//        for (DecorateurLabel label : methodes) {
+//            largeur = Math.max(largeur, label.getLabelWidth());
+//            hauteur += label.getLabelHeight();
+//        }
+//        for (DecorateurLabel label : attributs) {
+//            largeur = Math.max(largeur, label.getLabelWidth());
+//            hauteur += label.getLabelHeight();
+//        }
+//
+//        // Ajustements graphiques
+//        largeur += 5;
+//        hauteur += 10;
+//
+//        vbox.setMaxWidth(largeur);
+//        vbox.setMaxHeight(hauteur);
+//
+//        // Ajout des séparateurs et des labels
+//        vbox.getChildren().add(new Label(classe.getNom())); // Titre
+//        vbox.getChildren().add(new Rectangle(largeur, 1)); // Séparation
+//
+//        for (DecorateurLabel attr : attributs) {
+//            vbox.getChildren().add(attr);
+//        }
+//
+//        vbox.getChildren().add(new Rectangle(largeur, 1)); // Séparation
+//
+//        for (DecorateurLabel meth : methodes) {
+//            vbox.getChildren().add(meth);
+//        }
+//
+//        vbox.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+//        this.getChildren().add(vbox);
+//    }
+
 }

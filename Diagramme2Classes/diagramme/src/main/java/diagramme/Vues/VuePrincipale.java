@@ -33,13 +33,13 @@ public class VuePrincipale extends StackPane implements Observateur {
             Position position = model.getPosition(classe);
 
             if (vues.containsKey(classe)) {
-                // Si la classe existe déjà, mettre à jour sa position
+                // Si la classe existe déjà, mettre à jour sa position et son contenu
                 VueClasse vueClasse = vues.get(classe);
                 vueClasse.setTranslateX(position.getX());
                 vueClasse.setTranslateY(position.getY());
-                vueClasse.update(classe);
+                vueClasse.update(classe); // Mise à jour des méthodes et attributs
             } else {
-                // Si la classe est nouvelle, créer une vue et l'ajouter
+                // Création d'une nouvelle VueClasse si nécessaire
                 VueClasse nouvelleVue = new VueClasse(classe);
                 DeplacementControler controler = new DeplacementControler(model);
                 controler.ajouterEvenements(nouvelleVue);
@@ -48,7 +48,9 @@ public class VuePrincipale extends StackPane implements Observateur {
                 nouvelleVue.setTranslateY(position.getY());
                 getChildren().add(nouvelleVue);
                 vues.put(classe, nouvelleVue); // Ajouter dans la liste
+
             }
+
             // Marquer la classe comme vérifiée
             marqueurs.put(classe, true);
         }
