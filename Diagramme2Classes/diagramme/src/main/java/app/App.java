@@ -1,8 +1,10 @@
 package app;
 
+
 import analyse.loader.LoaderExterne;
 import diagramme.Model;
 import diagramme.Vues.VuePrincipale;
+import diagramme.controler.ControlleurAfficherClasses;
 import diagramme.controler.ExportationControler;
 import diagramme.controler.ImportationControler;
 import javafx.application.Application;
@@ -73,9 +75,12 @@ public class App extends Application {
         exportMenuButton.getItems().addAll(exportPuml, exportPng);
 
         // Layout des boutons
+        Button exportButton = new Button("Exporter");
+        Button VisibiliteButton = new Button("Visibilité");
+        VisibiliteButton.setOnAction(new ControlleurAfficherClasses(model));
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().addAll(fichierButton, exportMenuButton);
+        buttonBox.getChildren().addAll(fichierButton, exportMenuButton, VisibiliteButton );
 
         // Mise en page du root
         BorderPane root = new BorderPane();

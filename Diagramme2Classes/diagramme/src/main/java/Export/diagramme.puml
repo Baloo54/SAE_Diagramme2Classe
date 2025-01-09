@@ -1,70 +1,28 @@
 @startuml
-class App {
-    + main(arg0 : String[]) : void
-    + start(arg0 : Stage) : void
-    - lambda$start$1(arg0 : ExportationControler, arg1 : ActionEvent) : void
-    - lambda$start$0(arg0 : ExportationControler, arg1 : ActionEvent) : void
-}
-Application <|-- App
-class TestAnalyseur {
-    + main(arg0 : String[]) : void
-    + start(arg0 : Stage) : void
-    - showError(arg0 : String, arg1 : String, arg2 : Exception) : void
-}
-Application <|-- TestAnalyseur
-class Model {
-    - observateurs : ArrayList
-    - packages : HashMap
-    - positions : HashMap
-    + getClasses() : ArrayList
-    + ajouterObservateur(arg0 : Observateur) : void
-    + getPosition(arg0 : Interface) : Position
-    + deplacement(arg0 : Interface, arg1 : Position) : void
-    + ajouterPackage(arg0 : File) : void
-    + notifierObservateurs() : void
-}
-Object <|-- Model
-interface Sujet {
-}
-Sujet <|.. Model
-class Position {
-    - x : double
-    - y : double
-    + getY() : double
-    + getX() : double
-    + setY(arg0 : double) : void
-    + setX(arg0 : double) : void
-}
-Object <|-- Position
-class ReadFile {
-    - findClassFilesRecursive(arg0 : File, arg1 : List) : void
-    + findClassFiles(arg0 : File) : List
-}
-Object <|-- ReadFile
 class Attribut {
     - nom : String
     - type : String
     - modificateurs : ArrayList
     + equals(arg0 : Object) : boolean
     + getType() : String
-    + getNom() : String
     + getModificateurs() : ArrayList
     + addModificateur(arg0 : String) : void
+    + getNom() : String
 }
 Visible <|-- Attribut
 class Classe {
     - classeParent : Classe
     - classesFilles : HashMap
-    + changerVisibiliteHeritage() : void
     + changerVisibiliteClasseFille(arg0 : Classe) : void
+    + changerVisibiliteHeritage() : void
     + changerVisibilite() : void
-    + getClasseParent() : Classe
     + setClasseParent(arg0 : Classe) : void
+    + getClasseParent() : Classe
 }
 Interface <|-- Classe
 class Export {
-    + exportPuml(arg0 : List) : String
     + exportPng(arg0 : List) : String
+    + exportPuml(arg0 : List) : String
     - getPumlModificateur(arg0 : List) : String
     - toBufferedImage(arg0 : WritableImage) : BufferedImage
 }
@@ -79,17 +37,17 @@ class Interface {
     + equals(arg0 : Object) : boolean
     + getInterfaces() : ArrayList
     + addMethode(arg0 : Methode) : void
-    + changerVisibiliteHeritage() : void
     + changerVisibiliteMethode(arg0 : Methode) : void
-    + getPackageClasse() : String
     + changerVisibiliteInterfaceFille(arg0 : Interface) : void
-    + addAttribut(arg0 : Attribut) : void
+    + changerVisibiliteHeritage() : void
     + changerVisibilite() : void
-    + getMethodes() : ArrayList
+    + getPackageClasse() : String
     + getHeritageVisible() : boolean
-    + etreVisibleFille(arg0 : Interface) : boolean
     + addInterface(arg0 : Interface) : void
     + getAttributs() : ArrayList
+    + addAttribut(arg0 : Attribut) : void
+    + etreVisibleFille(arg0 : Interface) : boolean
+    + getMethodes() : ArrayList
 }
 Attribut <|-- Interface
 class Methode {
@@ -98,10 +56,10 @@ class Methode {
     - parametres : List
     - modificateurs : ArrayList
     + equals(arg0 : Object) : boolean
-    + getNom() : String
     + getModificateurs() : ArrayList
     + getTypeRetour() : String
     + getParametres() : List
+    + getNom() : String
 }
 Visible <|-- Methode
 class Visible {
@@ -110,100 +68,4 @@ class Visible {
     + changerVisibilite() : void
 }
 Object <|-- Visible
-class Analyseur {
-    + INSTANCE : Analyseur
-    + getInstance() : Analyseur
-    - getModifierVisibilite(arg0 : int) : String
-    + analyserClasse(arg0 : String) : Interface
-    - getModifierClasse(arg0 : Class) : ArrayList
-    - analyserAttribut(arg0 : Field) : Attribut
-    - analyserMethode(arg0 : Method) : Methode
-    + afficherResultats(arg0 : Interface) : void
-    - getModifierMethode(arg0 : Method) : ArrayList
-}
-Object <|-- Analyseur
-class VueClasse {
-    - classe : Interface
-    - getModificateurClasse(arg0 : ArrayList, arg1 : Label) : DecorateurLabel
-    - getModificateur(arg0 : ArrayList, arg1 : Label) : DecorateurLabel
-    + getClasse() : Interface
-}
-StackPane <|-- VueClasse
-class VuePrincipale {
-    - vues : HashMap
-    + actualiser(arg0 : Sujet) : void
-}
-StackPane <|-- VuePrincipale
-interface Observateur {
-}
-Observateur <|.. VuePrincipale
-class ControlleurVisibilite {
-    - model : Model
-    + changerVisibilite() : void
-}
-Object <|-- ControlleurVisibilite
-class DeplacementControler {
-    - model : Model
-    + ajouterEvenements(arg0 : VueClasse) : void
-}
-Object <|-- DeplacementControler
-class ExportationControler {
-    + model : Model
-    - exportType : String
-    + handle(arg0 : Event) : void
-    + handle(arg0 : ActionEvent) : void
-    + setExportType(arg0 : String) : void
-}
-Object <|-- ExportationControler
-interface EventHandler {
-}
-EventHandler <|.. ExportationControler
-class ImportationControler {
-    - model : Model
-    - primaryStage : Stage
-    + userHome : String
-    + handle(arg0 : ActionEvent) : void
-    + handle(arg0 : Event) : void
-}
-Object <|-- ImportationControler
-interface EventHandler {
-}
-EventHandler <|.. ImportationControler
-class AbstractDecorateur {
-}
-DecorateurLabel <|-- AbstractDecorateur
-class DecorateurLabel {
-    + getLabelHeight() : double
-    + getLabelWidth() : double
-}
-Label <|-- DecorateurLabel
-class InterfaceDecorateur {
-}
-DecorateurLabel <|-- InterfaceDecorateur
-class ItaliqueDecorateur {
-}
-DecorateurLabel <|-- ItaliqueDecorateur
-class PrivateDecorateur {
-}
-DecorateurLabel <|-- PrivateDecorateur
-class ProtectedDecorateur {
-}
-DecorateurLabel <|-- ProtectedDecorateur
-class PublicDecorateur {
-}
-DecorateurLabel <|-- PublicDecorateur
-class SoulignementDecorateur {
-}
-DecorateurLabel <|-- SoulignementDecorateur
-class LoaderExterne {
-    + loader : LoaderExterne
-    + getInstance() : LoaderExterne
-    + loadClassFromFile(arg0 : String) : Class
-    - readFileAsBytes(arg0 : File) : byte[]
-}
-ClassLoader <|-- LoaderExterne
-class SimpleDecompiler {
-    + getNomClasse(arg0 : String) : String
-}
-Object <|-- SimpleDecompiler
 @enduml
