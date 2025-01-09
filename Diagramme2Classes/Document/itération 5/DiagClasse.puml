@@ -1,0 +1,165 @@
+@startuml
+class AbstractDecorateur {
+  + AbstractDecorateur(Label)
+}
+class Analyseur {
+  + exporterDiagrammeEnPNG(Pane, String): void
+  + afficherResultats(Interface): void
+  - toBufferedImage(WritableImage): BufferedImage
+  - analyserAttribut(Field): Attribut
+  - getModifierMethode(Method): ArrayList<String>
+  - getPumlModificateur(List<String>): String
+  + analyserClasse(String): Interface
+  - analyserMethode(Method): Methode
+  - getModifierClasse(Class): ArrayList<String>
+  - getModifierVisibilite(int): String
+  + exportPuml(Classe): String
+}
+class App {
+  + main(String[]): void
+  + start(Stage): void
+}
+class Attribut {
+  - nom: String
+  - type: String
+  - modificateurs: ArrayList<String>
+  + equals(Object): boolean
+  + addModificateur(String): void
+}
+class Classe {
+  - classeParent: Classe
+  + changerVisibilite(): void
+  + changerVisibiliteClasseFille(Classe): void
+  + changerVisibiliteHeritage(): void
+}
+class ControlleurVisibilite {
+  + changerVisibilite(): void
+}
+class DecorateurLabel {
+  + getLabelWidth(): double
+  + getLabelHeight(): double
+}
+class DeplacementControler {
+  + ajouterEvenements(VueClasse): void
+}
+class Export {
+  + exportPuml(List<Classe>): String
+  - getPumlModificateur(List<String>): String
+}
+class ExportationControler {
+  + handle(ActionEvent): void
+}
+class ImportationControler {
+  + handle(ActionEvent): void
+}
+class Interface {
+  - packageClasse: String
+  - interfaces: ArrayList<Interface>
+  - heritageVisible: boolean
+  - methodes: ArrayList<Methode>
+  - attributs: ArrayList<Attribut>
+  + addMethode(Methode): void
+  + changerVisibilite(): void
+  + equals(Object): boolean
+}
+class InterfaceDecorateur {
+}
+class ItaliqueDecorateur {
+}
+class LoaderExterne {
+  + loadClassFromFile(String): Class<?>
+}
+class Methode {
+  - typeRetour: String
+  - parametres: List<HashMap<String, String>>
+  - modificateurs: ArrayList<String>
+  - nom: String
+  + equals(Object): boolean
+}
+class Model {
+  + deplacement(Interface, Position): void
+  + notifierObservateurs(): void
+  + ajouterObservateur(Observateur): void
+  + ajouterPackage(File): void
+  + getPosition(Interface): Position
+}
+interface Observateur {
+  + actualiser(Sujet): void
+}
+class Position {
+  - x: double
+  - y: double
+}
+class PrivateDecorateur {
+}
+class ProtectedDecorateur {
+}
+class PublicDecorateur {
+}
+class ReadFile {
+  + findClassFiles(File): List<String>
+}
+class SimpleDecompiler {
+  + getNomClasse(String): String
+}
+class SoulignementDecorateur {
+}
+interface Sujet {
+  + ajouterObservateur(Observateur): void
+  + notifierObservateurs(): void
+}
+class TestAnalyseur {
+  + main(String[]): void
+  + start(Stage): void
+}
+class Visible {
+  - visible: boolean
+  + changerVisibilite(): void
+}
+class VueClasse {
+  - classe: Interface
+  - getModificateur(ArrayList<String>, Label): DecorateurLabel
+  - getModificateurClasse(ArrayList<String>, Label): DecorateurLabel
+}
+class VuePrincipale {
+  + actualiser(Sujet): void
+}
+
+AbstractDecorateur      <|-down- DecorateurLabel
+Analyseur               --> Attribut
+Analyseur               --> Classe
+Analyseur               --> Interface
+Analyseur               --> Methode
+App                     --> ExportationControler
+App                     --> ImportationControler
+App                     --> Model
+App                     --> VuePrincipale
+Attribut                <|-down- Visible
+Classe                  <|-down- Interface
+ControlleurVisibilite   *--> Model
+DeplacementControler    *--> Model
+DeplacementControler    --> Position
+ExportationControler    --> Export
+ExportationControler    *--> Model
+ImportationControler    *--> Model
+Interface               *--> Attribut
+Interface               *--> Methode
+InterfaceDecorateur     <|-down- DecorateurLabel
+ItaliqueDecorateur      <|-down- DecorateurLabel
+Methode                 <|-down- Visible
+Model                   *--> Interface
+Model                   *--> Observateur
+Model                   *--> Position
+Model                   --> ReadFile
+Model                   <|-- Sujet
+PrivateDecorateur       <|-down- DecorateurLabel
+ProtectedDecorateur     <|-down- DecorateurLabel
+PublicDecorateur        <|-down- DecorateurLabel
+SoulignementDecorateur  <|-down- DecorateurLabel
+TestAnalyseur           --> VueClasse
+VueClasse               *--> Interface
+VuePrincipale           --> DeplacementControler
+VuePrincipale           <|-- Observateur
+VuePrincipale           *--> VueClasse
+
+@enduml

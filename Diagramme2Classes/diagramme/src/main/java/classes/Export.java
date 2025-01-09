@@ -1,6 +1,7 @@
 package classes;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,20 +11,20 @@ import java.util.List;
 public class Export {
 
     /**
-     * Exporte toutes les classes vers un diagramme UML en format Puml
+     * Exporte toutes les classes au format puml
      *
-     * @param classes : liste des classes à exporter
-     * @return le nom du fichier généré
+     * @param classes : liste des classes
+     * @return le nom du fichier .puml
      */
     public String exportPuml(List<Classe> classes) {
         StringBuilder puml = new StringBuilder();
         puml.append("@startuml\n");
 
-        // Exportation de toutes les classes
+        // Exportation des classes
         for (Classe classe : classes) {
             puml.append("class ").append(classe.getNom()).append(" {\n");
 
-            // Exportation des attributs
+            // Exportation attributs
             for (Attribut attribut : classe.getAttributs()) {
                 ArrayList<String> modificateurs = (ArrayList<String>) attribut.getModificateurs();
                 String visibility = getPumlModificateur(modificateurs);
@@ -32,7 +33,7 @@ public class Export {
                         .append(" : ").append(attribut.getType()).append("\n");
             }
 
-            // Exportation des méthodes
+            // Exportation méthodes
             for (Methode methode : classe.getMethodes()) {
                 String visibility = getPumlModificateur(methode.getModificateurs());
                 puml.append("    ").append(visibility)
@@ -51,13 +52,13 @@ public class Export {
             }
             puml.append("}\n");
 
-            // Relations avec la classe parent (si applicable)
+            // Relations avec classe parent
             if (classe.getClasseParent() != null) {
                 puml.append(classe.getClasseParent().getNom())
                         .append(" <|-- ").append(classe.getNom()).append("\n");
             }
 
-            // Exportation des interfaces
+            // Exportation interfaces
             for (Interface inter : classe.getInterfaces()) {
                 puml.append("interface ").append(inter.getNom()).append(" {\n");
                 for (Methode methode : inter.getMethodes()) {
@@ -69,9 +70,13 @@ public class Export {
         }
 
         puml.append("@enduml\n");
-
+        String doss = "Diagramme2Classes/diagramme/src/main/java/Export/";
+        File dossier = new File(doss);
+        if (!dossier.exists()) {
+            System.out.println("Dossier introuvable");
+        }
         // Écriture dans un fichier
-        String fileName = "diagramme2Classe.puml";
+        String fileName = doss + "diagramme.puml";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(puml.toString());
             System.out.println("Fichier généré : " + fileName);
@@ -94,4 +99,3 @@ public class Export {
         return "+";
     }
 }
-    
