@@ -37,6 +37,7 @@ public class VuePrincipale extends StackPane implements Observateur {
                 VueClasse vueClasse = vues.get(classe);
                 vueClasse.setTranslateX(position.getX());
                 vueClasse.setTranslateY(position.getY());
+                vueClasse.update(classe);
             } else {
                 // Si la classe est nouvelle, créer une vue et l'ajouter
                 VueClasse nouvelleVue = new VueClasse(classe);
@@ -47,7 +48,6 @@ public class VuePrincipale extends StackPane implements Observateur {
                 nouvelleVue.setTranslateY(position.getY());
                 getChildren().add(nouvelleVue);
                 vues.put(classe, nouvelleVue); // Ajouter dans la liste
-
             }
             // Marquer la classe comme vérifiée
             marqueurs.put(classe, true);

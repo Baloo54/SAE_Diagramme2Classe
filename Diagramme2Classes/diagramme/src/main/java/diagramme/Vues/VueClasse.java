@@ -22,7 +22,7 @@ import javafx.scene.shape.Rectangle;
 public class VueClasse extends StackPane{
     
     private Interface classe; // Instance de la classe représentée
-
+    ArrayList<DecorateurLabel> methodes = new ArrayList<>();
     /**
      * Constructeur de la classe VueClasse.
      * Ce constructeur initialise la classe représentée et crée la structure graphique pour afficher la classe UML
@@ -32,7 +32,6 @@ public class VueClasse extends StackPane{
      */
     public VueClasse(Interface classe){
         this.classe = classe;
-        ArrayList<DecorateurLabel> methodes = new ArrayList<>();
         ArrayList<DecorateurLabel> attributs = new ArrayList<>();
         
         // Création du titre avec modificateurs.
@@ -153,5 +152,21 @@ public class VueClasse extends StackPane{
     }
     public Interface getClasse(){
         return this.classe;
+    }
+
+    public void update(Interface classe) {
+        this.classe = classe;
+
+        // Afficher ou masquer la vue en fonction de la visibilité de la classe
+        this.setVisible(this.classe.getVisible());
+
+        // Mettre à jour la visibilité des méthodes
+        for (int i = 0; i < this.methodes.size(); i++) {
+            DecorateurLabel decorateurLabel = this.methodes.get(i);
+            Methode methode = this.classe.getMethodes().get(i); // Suppose que les index correspondent
+
+            // Ajuster la visibilité du DecorateurLabel en fonction de l'attribut "visibilite" de la méthode
+            decorateurLabel.setVisible(methode.getVisible());
+        }
     }
 }

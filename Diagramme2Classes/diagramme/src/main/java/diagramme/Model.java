@@ -2,6 +2,7 @@ package diagramme;
 
 import analyse.Analyseur;
 import classes.Interface;
+import classes.Methode;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
@@ -110,6 +111,8 @@ public class Model implements Sujet {
      */
     public void changerVisibilite(Interface c) {
         c.changerVisibilite();
+        int i = packages.get(c.getPackageClasse()).indexOf(c);
+        packages.get(c.getPackageClasse()).set(i, c);
         notifierObservateurs();
     }
 
@@ -119,6 +122,17 @@ public class Model implements Sujet {
      */
     public void changerVisibiliteHeritage(Interface c) {
         c.changerVisibiliteHeritage();
+        notifierObservateurs();
+    }
+
+    /**
+     * change la visibilité des méthodes de l'interface/classe
+     * @param c
+     */
+    public void changerVisibiliteMethode(Interface c, Methode m) {
+        c.changerVisibiliteMethode(m);
+        int i = packages.get(c.getPackageClasse()).indexOf(c);
+        packages.get(c.getPackageClasse()).set(i, c);
         notifierObservateurs();
     }
 

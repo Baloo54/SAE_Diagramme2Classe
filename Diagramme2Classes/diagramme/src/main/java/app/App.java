@@ -78,19 +78,21 @@ public class App extends Application {
 
         sidebar = new VBox();
         sidebar.setAlignment(Pos.TOP_CENTER);
-        sidebar.setSpacing(10);
-
-        ControlleurAfficherClasses controlleurAfficherClasses = new ControlleurAfficherClasses(model, sidebar);
+        VBox methodbar = new VBox();
+        methodbar.setAlignment(Pos.TOP_CENTER);
+        ControlleurAfficherClasses controlleurAfficherClasses = new ControlleurAfficherClasses(model, sidebar,methodbar);
 
         visibiliteMenuItem.setOnAction(e -> controlleurAfficherClasses.handle(e));
 
         visibiliteMenu.getItems().add(visibiliteMenuItem);
         menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu,EditMenu);
 
+        model.ajouterObservateur(controlleurAfficherClasses);
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
         root.setCenter(diagramArea);
         root.setLeft(sidebar);
+        root.setRight(methodbar);
 
         Scene scene = new Scene(root, width, height);
         primaryStage.setScene(scene);
