@@ -1,0 +1,32 @@
+Itération 5
+Faire une méthode pour ajouter des Package dans Diagramme et une méthode pour ajouter une classe dans un package déjà existant
+Empêcher la superposition des classes
+Fix l'export en png
+Ajout graphique de la gestion des relations
+Visibilité contrôleur
+
+
+UseCase :
+- Générer un diagramme de classes
+Le système crée une représentation des classes et des relations.
+- Modifier un diagramme
+L'utilisateur peut :
+Ajouter de nouvelles classes.
+Ajouter des méthodes à des classes existantes.
+- Afficher/masquer certains éléments
+L'utilisateur peut :
+Afficher/masquer des classes.
+Afficher/masquer des méthodes.
+Afficher/masquer la classe parente ou les interfaces d'une classe.
+- Exporter un diagramme
+Le diagramme peut être exporté sous :
+Différents formats d'images.
+Fichier source PlantUML.
+Résultat compilé PlantUML.
+
+
+Résultat attendu :
+L'utilisateur peut modifier le diagramme de classes généré.
+Les relations entre les classes sont affichées.
+Les classes ne se superposent pas.
+Le diagramme peut être exporté en png et en Puml.

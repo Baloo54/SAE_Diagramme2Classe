@@ -1,0 +1,3 @@
+Lors de cette itération, le classLoader externe a été terminé.
+Nous avons également commencé l'implémentation de la génération du diagramme.
+La liaison entre la partie graphique et la partie analyseur n'est pas encore complète, il sera important de régler cela lors de l'itération prochaine.

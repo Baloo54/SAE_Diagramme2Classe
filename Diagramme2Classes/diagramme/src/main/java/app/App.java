@@ -41,7 +41,7 @@ public class App extends Application {
         VuePrincipale principal = new VuePrincipale();
         model.ajouterObservateur(principal);
         diagramArea.getChildren().add(principal);
-        
+
         ImportationControler importationControler = new ImportationControler(model, primaryStage);
         ExportationControler exportationControler = new ExportationControler(model);
 

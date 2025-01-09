@@ -1,0 +1,4 @@
+Lors de cette itération, nous avons commencé l'implémentation de l'introspection sur un .class présent n'importe où sur l'ordinateur grâce à la création d'un classLoader externe.
+La classe analyseur est désormais capable de fournir les informations de chaque .class du package.
+La liaison entre la partie graphique et la partie analyseur n'est pas encore complète, nous pensons pouvoir régler cela lors de l'itération prochaine.
+Le classLoader externe sera également terminé lors de l'itération prochaine.

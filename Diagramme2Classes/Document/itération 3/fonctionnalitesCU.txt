@@ -1,0 +1,16 @@
+Itération 3
+Fonctionnalité prévue :
+Créer l’interface graphique.
+Faire une vue pour les flèches
+Faire une vue pour les textes méthodes et attributs en utilisant la fabrique
+Faire une vue pour une classe (faire une fabrique de vue pour créer les différentes classes/interfaces)
+Faire une vue pour un package
+Introspection détaillée et définitive (ajouts modificateurs et héritage)
+
+UseCase :
+- Générer un diagramme de classes
+Le système crée une représentation des classes et des relations.
+
+Résultat attendu :
+L'utilisateur peut choisir un package sur son ordinateur et générer un diagramme de classes.
+Le diagramme de classes est généré avec les classes, les interfaces, les méthodes, les attributs, les modificateurs et les relations.

@@ -1,0 +1,4 @@
+Suite à la dernière itération, nous avons restructuré le projet pour qu'il soit fonctionnel.
+Nous sommes partis sur de nouvelles bases en reprenant les dernières fonctionnalités et en les rendant claires pour chaque membre du groupe.
+L'application possède maintenant une interface graphique qui permet de charger un package n'importe où sur l'ordinateur et affiche désormais les classes.
+Lors de la prochaine itération, nous prévoyons d'améliorer l'affichage de l'application ainsi que l'ajout des relations est des flèches.

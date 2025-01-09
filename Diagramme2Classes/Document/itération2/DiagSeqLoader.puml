@@ -1,0 +1,27 @@
+@startuml
+
+actor Utilisateur
+
+participant "LoaderExterne"
+participant "SimpleDecompiler"
+participant "ClassReader"
+participant "FileInputStream"
+participant "Class"
+
+Utilisateur -> LoaderExterne : loadClassFromFile(filePath)
+LoaderExterne -> LoaderExterne : Vérifier si le fichier existe
+alt Fichier valide
+    LoaderExterne -> SimpleDecompiler : getNomClasse(filePath)
+    SimpleDecompiler -> FileInputStream : Ouvrir fichier .class
+    FileInputStream -> ClassReader : Lire fichier
+    ClassReader -> ClassReader : Analyser classe
+    ClassReader -> SimpleDecompiler : Retourner nom de la classe
+    SimpleDecompiler -> LoaderExterne : Retourner nom de la classe
+    LoaderExterne -> LoaderExterne : Vérifie si la classe est déjà chargée
+    LoaderExterne -> Class : creation de la classe
+    LoaderExterne -> Utilisateur : Retourner la classe
+else Fichier invalide
+    LoaderExterne -> Utilisateur : Error ClassNotFoundException
+end
+
+@enduml
