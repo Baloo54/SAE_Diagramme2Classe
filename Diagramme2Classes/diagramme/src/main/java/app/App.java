@@ -49,7 +49,19 @@ public class App extends Application {
         ExportationControler exportationControler = new ExportationControler(model);
 
         // Menu principal
+
+        //Bar
         MenuBar menuBar = new MenuBar();
+
+        //Menu
+        Menu EditMenu = new Menu("ModifierDiagramme");
+
+        //Item
+        MenuItem AjoutClasse = new MenuItem("Ajouter une classe");
+        MenuItem AjoutMethode = new MenuItem("Ajouter une méthode");
+        MenuItem AjoutAttribut = new MenuItem("Ajouter un attribut");
+
+
 
         // Menu "Fichier"
         Menu fichierMenu = new Menu("Fichier");
