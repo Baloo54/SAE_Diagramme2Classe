@@ -1,5 +1,11 @@
 package classes;
 
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -97,5 +103,64 @@ public class Export {
         if (modificateurs.contains("private")) return "-";
         if (modificateurs.contains("protected")) return "#";
         return "+";
+    }
+
+    /**
+     * Exporte le diagramme affiché dans un Pane JavaFX sous forme de fichier PNG.
+     * @param diagrammePane Le Pane contenant le diagramme à exporter.
+     */
+    public void exportPng(Pane diagrammePane) {
+        // Chemin fixe où le fichier PNG sera sauvegardé
+        String cheminFichier = "Diagramme2Classes/diagramme/src/main/java/Export/diagramme.png";
+
+        try {
+            // Vérifie si le Pane est non nul
+            if (diagrammePane == null) {
+                throw new IllegalArgumentException("Le Pane contenant le diagramme ne peut pas être null.");
+            }
+
+            // Capture le contenu du Pane dans une image
+            WritableImage image = new WritableImage((int) diagrammePane.getWidth(), (int) diagrammePane.getHeight());
+            SnapshotParameters snapshotParams = new SnapshotParameters();
+            diagrammePane.snapshot(snapshotParams, image);
+
+            // Convertit l'image en BufferedImage pour pouvoir l'écrire avec ImageIO
+            BufferedImage bufferedImage = toBufferedImage(image);
+
+            // Crée le fichier et le répertoire si nécessaire
+            File fichierSortie = new File(cheminFichier);
+            File parentDir = fichierSortie.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs(); // Crée les répertoires parents si nécessaire
+            }
+
+            // Écrit l'image dans le fichier
+            ImageIO.write(bufferedImage, "png", fichierSortie);
+
+            System.out.println("Diagramme exporté avec succès : " + cheminFichier);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'exportation du diagramme : " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.err.println("Erreur d'argument : " + e.getMessage());
+        }
+    }
+
+    /**
+     * Convertit une WritableImage en BufferedImage.
+     *
+     * @param writableImage L'image capturée.
+     * @return Un BufferedImage prêt pour l'écriture.
+     */
+    private static BufferedImage toBufferedImage(WritableImage writableImage) {
+        int largeur = (int) writableImage.getWidth();
+        int hauteur = (int) writableImage.getHeight();
+        BufferedImage bufferedImage = new BufferedImage(largeur, hauteur, BufferedImage.TYPE_INT_ARGB);
+        javafx.scene.image.PixelReader pixelReader = writableImage.getPixelReader();
+        for (int y = 0; y < hauteur; y++) {
+            for (int x = 0; x < largeur; x++) {
+                bufferedImage.setRGB(x, y, pixelReader.getArgb(x, y));
+            }
+        }
+        return bufferedImage;
     }
 }

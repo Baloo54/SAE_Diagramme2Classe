@@ -11,31 +11,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class ControlleurAfficherClasses  implements EventHandler<ActionEvent>,Observateur {
     private Model model;
     public ControlleurAfficherClasses(Model model) {
-        this.model = model;
-        stage = new Stage();
-    }
+        this.model = model;}
 
     @Override
     public void handle(ActionEvent actionEvent) {
         // Créer une nouvelle fenêtre (Stage)
         if(actionEvent == null){
-            if(stage.isShowing()){
-                //stage.close();
-                stage.setScene(creerScene());
-                stage.show();
-            }
-        }else {
-            if(stage.isShowing()){
-                stage.close();
-            }else {
-                stage.setScene(creerScene());
-                stage.show();
-            }
+
         }
     }
 

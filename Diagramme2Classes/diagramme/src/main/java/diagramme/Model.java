@@ -2,6 +2,7 @@ package diagramme;
 
 import analyse.Analyseur;
 import classes.Interface;
+import javafx.scene.layout.Pane;
 
 import java.io.File;
 import java.io.IOException;
@@ -119,5 +120,9 @@ public class Model implements Sujet {
     public void changerVisibiliteHeritage(Interface c) {
         c.changerVisibiliteHeritage();
         notifierObservateurs();
+    }
+
+   public Pane getDiagrammePane() {
+        return null;
     }
 }

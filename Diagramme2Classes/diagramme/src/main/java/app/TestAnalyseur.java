@@ -1,12 +1,14 @@
 package app;
 
 import java.io.IOException;
+
 import analyse.Analyseur;
-import diagramme.Vues.*;
-import classes.*;
+import classes.Interface;
+import diagramme.Vues.VueClasse;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -15,8 +17,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class TestAnalyseur extends Application {
+    @Override
     public void start(Stage primaryStage) {
+        // Initialisation de l'analyseur
         Analyseur analyseur = Analyseur.getInstance();
+        BorderPane root = new BorderPane();
+
         try {
             // Analyse de la classe et création de la vue
             Interface classe = analyseur.analyserClasse("out/production/SAE_Diagramme2Classe/diagramme/Model.class");
@@ -24,21 +30,12 @@ public class TestAnalyseur extends Application {
             vueClasse.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
 
             // Création d'un Pane pour afficher le diagramme
-            Pane p = new Pane();
-            p.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
-            p.getChildren().add(vueClasse);
+            Pane diagramPane = new Pane();
+            diagramPane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            diagramPane.getChildren().add(vueClasse);
 
-            // Bouton pour exporter le diagramme en PNG
-            Button exportButton = new Button("Exporter en PNG");
-            exportButton.setOnAction(event -> {
-                analyseur.exporterDiagrammeEnPNG(p, "diagramme.png");
-                System.out.println("Diagramme exporté en PNG");
-            });
-
-            // Mise en page avec BorderPane
-            BorderPane root = new BorderPane();
-            root.setCenter(p);
-            root.setBottom(exportButton);
+            // Placement du diagramme au centre
+            root.setCenter(diagramPane);
 
             // Configuration de la scène
             Scene scene = new Scene(root, 800, 600);
@@ -46,15 +43,35 @@ public class TestAnalyseur extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
 
-            // Affichage des résultats et exportation PlantUML
+            // Affichage des résultats d'analyse dans la console
             analyseur.afficherResultats(classe);
-            String puml = analyseur.exportPuml((Classe) classe);
-            System.out.println(puml);
+
         } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            // Gestion des erreurs pour la classe introuvable
+            showError("Erreur d'analyse", "La classe spécifiée est introuvable.", e);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            // Gestion des erreurs pour les problèmes d'entrée/sortie
+            showError("Erreur d'entrée/sortie", "Une erreur est survenue lors de la lecture du fichier.", e);
         }
+    }
+
+    /**
+     * Affiche une alerte d'erreur avec des informations détaillées.
+     *
+     * @param title   Titre de l'alerte.
+     * @param message Message principal de l'alerte.
+     * @param e       Exception à afficher (détails dans la console).
+     */
+    private void showError(String title, String message, Exception e) {
+        // Afficher l'exception dans la console pour débogage
+        e.printStackTrace();
+
+        // Affichage d'une boîte de dialogue d'alerte
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public static void main(String[] args) {
