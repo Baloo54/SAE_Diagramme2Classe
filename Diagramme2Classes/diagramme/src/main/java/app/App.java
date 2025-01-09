@@ -50,16 +50,19 @@ public class App extends Application {
 
         // Menu principal
 
+
+
+        //Menu "Modifier"
         //Bar
         MenuBar menuBar = new MenuBar();
-
         //Menu
         Menu EditMenu = new Menu("ModifierDiagramme");
-
         //Item
         MenuItem AjoutClasse = new MenuItem("Ajouter une classe");
         MenuItem AjoutMethode = new MenuItem("Ajouter une méthode");
         MenuItem AjoutAttribut = new MenuItem("Ajouter un attribut");
+        //Ajout des items au menu
+        EditMenu.getItems().addAll(AjoutClasse, AjoutMethode, AjoutAttribut);
 
 
 
@@ -92,7 +95,7 @@ public class App extends Application {
         visibiliteMenuItem.setOnAction(new ControlleurAfficherClasses(model));
         visibiliteMenu.getItems().add(visibiliteMenuItem);
 
-        menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu);
+        menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu,EditMenu);
 
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
