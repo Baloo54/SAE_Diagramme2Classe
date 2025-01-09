@@ -2,24 +2,26 @@
 class App {
     + main(arg0 : String[]) : void
     + start(arg0 : Stage) : void
+    - lambda$start$1(arg0 : ExportationControler, arg1 : ActionEvent) : void
+    - lambda$start$0(arg0 : ExportationControler, arg1 : ActionEvent) : void
 }
 Application <|-- App
 class TestAnalyseur {
     + main(arg0 : String[]) : void
     + start(arg0 : Stage) : void
-    - lambda$start$0(arg0 : Analyseur, arg1 : Pane, arg2 : ActionEvent) : void
+    - showError(arg0 : String, arg1 : String, arg2 : Exception) : void
 }
 Application <|-- TestAnalyseur
 class Model {
     - observateurs : ArrayList
     - packages : HashMap
     - positions : HashMap
-    + getPosition(arg0 : Interface) : Position
     + getClasses() : ArrayList
     + ajouterObservateur(arg0 : Observateur) : void
-    + notifierObservateurs() : void
+    + getPosition(arg0 : Interface) : Position
     + deplacement(arg0 : Interface, arg1 : Position) : void
     + ajouterPackage(arg0 : File) : void
+    + notifierObservateurs() : void
 }
 Object <|-- Model
 interface Sujet {
@@ -28,15 +30,15 @@ Sujet <|.. Model
 class Position {
     - x : double
     - y : double
-    + getX() : double
     + getY() : double
+    + getX() : double
     + setY(arg0 : double) : void
     + setX(arg0 : double) : void
 }
 Object <|-- Position
 class ReadFile {
-    + findClassFiles(arg0 : File) : List
     - findClassFilesRecursive(arg0 : File, arg1 : List) : void
+    + findClassFiles(arg0 : File) : List
 }
 Object <|-- ReadFile
 class Attribut {
@@ -45,24 +47,26 @@ class Attribut {
     - modificateurs : ArrayList
     + equals(arg0 : Object) : boolean
     + getType() : String
+    + getNom() : String
     + getModificateurs() : ArrayList
     + addModificateur(arg0 : String) : void
-    + getNom() : String
 }
 Visible <|-- Attribut
 class Classe {
     - classeParent : Classe
     - classesFilles : HashMap
+    + changerVisibiliteHeritage() : void
     + changerVisibiliteClasseFille(arg0 : Classe) : void
     + changerVisibilite() : void
-    + setClasseParent(arg0 : Classe) : void
     + getClasseParent() : Classe
-    + changerVisibiliteHeritage() : void
+    + setClasseParent(arg0 : Classe) : void
 }
 Interface <|-- Classe
 class Export {
     + exportPuml(arg0 : List) : String
+    + exportPng(arg0 : List) : String
     - getPumlModificateur(arg0 : List) : String
+    - toBufferedImage(arg0 : WritableImage) : BufferedImage
 }
 Object <|-- Export
 class Interface {
@@ -74,18 +78,18 @@ class Interface {
     - packageClasse : String
     + equals(arg0 : Object) : boolean
     + getInterfaces() : ArrayList
-    + getPackageClasse() : String
-    + changerVisibiliteInterfaceFille(arg0 : Interface) : void
-    + getHeritageVisible() : boolean
-    + getAttributs() : ArrayList
-    + etreVisibleFille(arg0 : Interface) : boolean
-    + getMethodes() : ArrayList
-    + changerVisibilite() : void
-    + addAttribut(arg0 : Attribut) : void
-    + addInterface(arg0 : Interface) : void
     + addMethode(arg0 : Methode) : void
     + changerVisibiliteHeritage() : void
     + changerVisibiliteMethode(arg0 : Methode) : void
+    + getPackageClasse() : String
+    + changerVisibiliteInterfaceFille(arg0 : Interface) : void
+    + addAttribut(arg0 : Attribut) : void
+    + changerVisibilite() : void
+    + getMethodes() : ArrayList
+    + getHeritageVisible() : boolean
+    + etreVisibleFille(arg0 : Interface) : boolean
+    + addInterface(arg0 : Interface) : void
+    + getAttributs() : ArrayList
 }
 Attribut <|-- Interface
 class Methode {
@@ -94,32 +98,28 @@ class Methode {
     - parametres : List
     - modificateurs : ArrayList
     + equals(arg0 : Object) : boolean
-    + getParametres() : List
-    + getTypeRetour() : String
-    + getModificateurs() : ArrayList
     + getNom() : String
+    + getModificateurs() : ArrayList
+    + getTypeRetour() : String
+    + getParametres() : List
 }
 Visible <|-- Methode
 class Visible {
     - visible : boolean
-    + changerVisibilite() : void
     + getVisible() : boolean
+    + changerVisibilite() : void
 }
 Object <|-- Visible
 class Analyseur {
     + INSTANCE : Analyseur
     + getInstance() : Analyseur
-    + analyserClasse(arg0 : String) : Interface
-    + exportPuml(arg0 : Classe) : String
-    + afficherResultats(arg0 : Interface) : void
-    - toBufferedImage(arg0 : WritableImage) : BufferedImage
-    - analyserMethode(arg0 : Method) : Methode
-    - getModifierClasse(arg0 : Class) : ArrayList
-    - getModifierMethode(arg0 : Method) : ArrayList
-    - analyserAttribut(arg0 : Field) : Attribut
-    + exporterDiagrammeEnPNG(arg0 : Pane, arg1 : String) : void
-    - getPumlModificateur(arg0 : List) : String
     - getModifierVisibilite(arg0 : int) : String
+    + analyserClasse(arg0 : String) : Interface
+    - getModifierClasse(arg0 : Class) : ArrayList
+    - analyserAttribut(arg0 : Field) : Attribut
+    - analyserMethode(arg0 : Method) : Methode
+    + afficherResultats(arg0 : Interface) : void
+    - getModifierMethode(arg0 : Method) : ArrayList
 }
 Object <|-- Analyseur
 class VueClasse {
@@ -149,8 +149,10 @@ class DeplacementControler {
 Object <|-- DeplacementControler
 class ExportationControler {
     + model : Model
-    + handle(arg0 : ActionEvent) : void
+    - exportType : String
     + handle(arg0 : Event) : void
+    + handle(arg0 : ActionEvent) : void
+    + setExportType(arg0 : String) : void
 }
 Object <|-- ExportationControler
 interface EventHandler {
@@ -171,8 +173,8 @@ class AbstractDecorateur {
 }
 DecorateurLabel <|-- AbstractDecorateur
 class DecorateurLabel {
-    + getLabelWidth() : double
     + getLabelHeight() : double
+    + getLabelWidth() : double
 }
 Label <|-- DecorateurLabel
 class InterfaceDecorateur {
