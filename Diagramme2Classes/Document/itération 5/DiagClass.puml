@@ -1,0 +1,344 @@
+@startuml
+
+top to bottom direction
+
+class AbstractDecorateur {
+  + AbstractDecorateur(Label): 
+}
+class Analyseur {
+  + Analyseur(): 
+  - instance: Analyseur
+  - getModifierVisibilite(int): String
+  - analyserMethode(Method): Methode
+  + afficherResultats(Interface): void
+  - getModifierClasse(Class<?>): ArrayList<String>
+  - analyserAttribut(Field): Attribut
+  - getModifierMethode(Method): ArrayList<String>
+  + analyserClasse(String): Interface
+   instance: Analyseur
+}
+class App {
+  + App(): 
+  + start(Stage): void
+  + main(String[]): void
+}
+class Attribut {
+  + Attribut(String, String): 
+  - nom: String
+  - type: String
+  - modificateurs: ArrayList<String>
+  + equals(Object): boolean
+  + addModificateur(String): void
+   modificateurs: ArrayList<String>
+   nom: String
+   type: String
+}
+class Classe {
+  + Classe(String, String, String): 
+  - classeParent: Classe
+   classeParent: Classe
+}
+class ControlleurAfficherClasses {
+  + ControlleurAfficherClasses(Model, VBox, VBox): 
+  + actualiser(Sujet): void
+  - updateSidebar(): void
+  + handle(ActionEvent): void
+}
+class ControlleurAfficherMethodes {
+  + ControlleurAfficherMethodes(Model, VBox, Interface): 
+  + actualiser(Sujet): void
+  + handle(ActionEvent): void
+  - updateSidebar(): void
+}
+class ControlleurVisibilite {
+  + ControlleurVisibilite(Model, Interface): 
+  + handle(ActionEvent): void
+}
+class ControlleurVisibiliteHeritage {
+  + ControlleurVisibiliteHeritage(Model, Interface): 
+  + handle(ActionEvent): void
+}
+class ControlleurVisibiliteMethode {
+  + ControlleurVisibiliteMethode(Model, Interface, Methode): 
+  + handle(ActionEvent): void
+}
+class DecorateurLabel {
+  + DecorateurLabel(Label): 
+   labelHeight: double
+   labelWidth: double
+}
+class DeplacementControler {
+  + DeplacementControler(Model): 
+  + ajouterEvenements(VueClasse): void
+}
+class Export {
+  + Export(): 
+  + exportPuml(List<Classe>): String
+  - toBufferedImage(WritableImage): BufferedImage
+  + exportPng(Pane): void
+  - getPumlModificateur(List<String>): String
+}
+class ExportationControler {
+  + ExportationControler(Model): 
+  - exportType: String
+  + handle(ActionEvent): void
+   exportType: String
+}
+class FabriqueAbstraiteVueFleche {
+  + FabriqueAbstraiteVueFleche(double, double, double, double): 
+  - drawArrow(double, double, double, double): void
+  + setStartPosition(double, double): void
+  + setPosition(double, double, double, double): void
+  # styleArrowHead(): void
+  # styleLine(): void
+}
+class FinalDecorateur {
+  + FinalDecorateur(Label): 
+}
+class FlecheNormal {
+  + FlecheNormal(double, double, double, double): 
+  # styleLine(): void
+  # styleArrowHead(): void
+}
+class FlechePointille {
+  + FlechePointille(double, double, double, double): 
+  # styleLine(): void
+  # styleArrowHead(): void
+}
+class FlecheTeteRemplie {
+  + FlecheTeteRemplie(double, double, double, double): 
+  # styleLine(): void
+  # styleArrowHead(): void
+}
+class FlecheTeteRempliePointille {
+  + FlecheTeteRempliePointille(double, double, double, double): 
+  # styleArrowHead(): void
+  # styleLine(): void
+}
+class ImportationControler {
+  + ImportationControler(Model, Stage): 
+  + handle(ActionEvent): void
+}
+class Interface {
+  + Interface(String, String, String): 
+  - packageClasse: String
+  - heritageVisible: boolean
+  - interfaces: ArrayList<Interface>
+  - methodes: ArrayList<Methode>
+  - attributs: ArrayList<Attribut>
+  - interfacesFilles: HashMap<Interface, Boolean>
+  + changerVisibiliteInterfaceFille(Interface): void
+  + changerVisibilite(): void
+  + etreVisibleFille(Interface): boolean
+  + addInterface(Interface): void
+  + changerVisibiliteHeritage(): void
+  + addMethode(Methode): void
+  + changerVisibiliteMethode(Methode): void
+  + addAttribut(Attribut): void
+  + equals(Object): boolean
+   packageClasse: String
+   attributs: ArrayList<Attribut>
+   interfaces: ArrayList<Interface>
+   interfacesFilles: HashMap<Interface, Boolean>
+   heritageVisible: boolean
+   methodes: ArrayList<Methode>
+}
+class InterfaceDecorateur {
+  + InterfaceDecorateur(Label): 
+}
+class ItaliqueDecorateur {
+  + ItaliqueDecorateur(Label): 
+}
+class LoaderExterne {
+  + LoaderExterne(): 
+  - readFileAsBytes(File): byte[]
+  + loadClassFromFile(String): Class<?>
+   instance: LoaderExterne
+}
+class Methode {
+  + Methode(String, String, List<HashMap<String, String>>, ArrayList<String>): 
+  - typeRetour: String
+  - nom: String
+  - modificateurs: ArrayList<String>
+  - parametres: List<HashMap<String, String>>
+  + equals(Object): boolean
+   parametres: List<HashMap<String, String>>
+   nom: String
+   modificateurs: ArrayList<String>
+   typeRetour: String
+}
+class Model {
+  + Model(): 
+  - packages: HashMap<String, ArrayList<Interface>>
+  + ajouterPackage(File): void
+  + ajouterObservateur(Observateur): void
+  + deplacement(Interface, Position): void
+  + changerVisibiliteHeritage(Interface): void
+  + changerVisibiliteMethode(Interface, Methode): void
+  + creerVue(): void
+  + ajouterMethode(String, Methode): void
+  + changerVisibilite(Interface): void
+  + ajouterAttribut(String, Attribut): void
+  - existeClasse(String): Interface?
+  + ajouterClasse(String, boolean): void
+  - rechercheRelation(): void
+  - ajouterRelationSiExiste(Interface, String, String): void
+  + ajouterRelation(Interface, HashMap<String, Interface>): void
+  + notifierObservateurs(): void
+  + getPosition(Interface): Position
+   vueFleches: ArrayList<HashMap<FabriqueAbstraiteVueFleche, HashMap<VueClasse, VueClasse>>>
+   classes: ArrayList<Interface>
+   classesNoms: List<String>
+   packages: HashMap<String, ArrayList<Interface>>
+   vueClasse: ArrayList<VueClasse>
+   diagrammePane: Pane
+}
+class ModificationControler {
+  + ModificationControler(Model, String): 
+  + handle(ActionEvent): void
+  - ouvrirFenetreClasse(): void
+  - ouvrirFenetreMethode(): void
+  - ouvrirFenetreAttribut(): void
+}
+interface Observateur << interface >> {
+  + actualiser(Sujet): void
+}
+class Position {
+  + Position(double, double): 
+  - y: double
+  - x: double
+   x: double
+   y: double
+}
+class PrivateDecorateur {
+  + PrivateDecorateur(Label): 
+}
+class ProtectedDecorateur {
+  + ProtectedDecorateur(Label): 
+}
+class PublicDecorateur {
+  + PublicDecorateur(Label): 
+}
+class ReadFile {
+  + ReadFile(): 
+  + findClassFiles(File): List<String>
+  - findClassFilesRecursive(File, List<String>): void
+}
+class SimpleDecompiler {
+  + SimpleDecompiler(): 
+  + getNomClasse(String): String
+}
+class SoulignementDecorateur {
+  + SoulignementDecorateur(Label): 
+}
+interface Sujet << interface >> {
+  + notifierObservateurs(): void
+  + ajouterObservateur(Observateur): void
+}
+class TestAnalyseur {
+  + TestAnalyseur(): 
+  + start(Stage): void
+  + main(String[]): void
+}
+class Visible {
+  + Visible(): 
+  - visible: boolean
+  + changerVisibilite(): void
+   visible: boolean
+}
+class VueClasse {
+  + VueClasse(Interface): 
+  - classe: Interface
+  - getModificateurClasse(Label): DecorateurLabel
+  - getModificateur(ArrayList<String>, Label): DecorateurLabel
+  + mettreAJourAffichage(): void
+   classe: Interface
+}
+class VuePackage {
+  + VuePackage(String, ArrayList<VueClasse>): 
+}
+class VuePrincipale {
+  + VuePrincipale(): 
+  + actualiser(Sujet): void
+}
+
+AbstractDecorateur             --^  DecorateurLabel               
+Analyseur                      -->  Attribut                      : "«create»"
+Analyseur                      -->  Classe                        : "«create»"
+Analyseur                      -->  Interface                     : "«create»"
+Analyseur                      -->  Methode                       : "«create»"
+App                            -->  ControlleurAfficherClasses    : "«create»"
+App                            -->  ExportationControler          : "«create»"
+App                            -->  ImportationControler          : "«create»"
+App                            -->  Model                         : "«create»"
+App                            -->  ModificationControler         : "«create»"
+App                            -->  VuePrincipale                 : "«create»"
+Attribut                       --^  Visible                       
+Classe                         --^  Interface                     
+ControlleurAfficherClasses     -->  ControlleurAfficherMethodes   : "«create»"
+ControlleurAfficherClasses     -->  ControlleurVisibilite         : "«create»"
+ControlleurAfficherClasses     -->  ControlleurVisibiliteHeritage : "«create»"
+ControlleurAfficherClasses    "1" *--> "model\n1" Model                         
+ControlleurAfficherClasses     --^  Observateur                   
+ControlleurAfficherMethodes    -->  ControlleurVisibiliteMethode  : "«create»"
+ControlleurAfficherMethodes   "1" *--> "classe\n1" Interface                     
+ControlleurAfficherMethodes   "1" *--> "model\n1" Model                         
+ControlleurAfficherMethodes    --^  Observateur                   
+ControlleurVisibilite         "1" *--> "classe\n1" Interface                     
+ControlleurVisibilite         "1" *--> "model\n1" Model                         
+ControlleurVisibiliteHeritage "1" *--> "classe\n1" Interface                     
+ControlleurVisibiliteHeritage "1" *--> "model\n1" Model                         
+ControlleurVisibiliteMethode  "1" *--> "classe\n1" Interface                     
+ControlleurVisibiliteMethode  "1" *--> "methode\n1" Methode                       
+ControlleurVisibiliteMethode  "1" *--> "model\n1" Model                         
+DeplacementControler          "1" *--> "model\n1" Model                         
+DeplacementControler           -->  Position                      : "«create»"
+ExportationControler           -->  Export                        : "«create»"
+ExportationControler          "1" *--> "model\n1" Model                         
+FinalDecorateur                --^  DecorateurLabel               
+FlecheNormal                   --^  FabriqueAbstraiteVueFleche    
+FlechePointille                --^  FabriqueAbstraiteVueFleche    
+FlecheTeteRemplie              --^  FabriqueAbstraiteVueFleche    
+FlecheTeteRempliePointille     --^  FabriqueAbstraiteVueFleche    
+ImportationControler          "1" *--> "model\n1" Model                         
+Interface                      --^  Attribut                      
+Interface                     "1" *--> "attributs\n*" Attribut                      
+Interface                     "1" *--> "methodes\n*" Methode                       
+InterfaceDecorateur            --^  DecorateurLabel               
+ItaliqueDecorateur             --^  DecorateurLabel               
+Methode                        --^  Visible                       
+Model                          -->  DeplacementControler          : "«create»"
+Model                          -->  FlechePointille               : "«create»"
+Model                          -->  FlecheTeteRemplie             : "«create»"
+Model                          -->  FlecheTeteRempliePointille    : "«create»"
+Model                          -->  Interface                     : "«create»"
+Model                         "1" *--> "positions\n*" Interface                     
+Model                         "1" *--> "observateurs\n*" Observateur                   
+Model                         "1" *--> "positions\n*" Position                      
+Model                          -->  Position                      : "«create»"
+Model                          -->  ReadFile                      : "«create»"
+Model                          --^  Sujet                         
+Model                          -->  VueClasse                     : "«create»"
+Model                         "1" *--> "vuesClasses\n*" VueClasse                     
+ModificationControler          -->  Attribut                      : "«create»"
+ModificationControler          -->  Methode                       : "«create»"
+ModificationControler         "1" *--> "model\n1" Model                         
+PrivateDecorateur              --^  DecorateurLabel               
+ProtectedDecorateur            --^  DecorateurLabel               
+PublicDecorateur               --^  DecorateurLabel               
+SoulignementDecorateur         --^  DecorateurLabel               
+TestAnalyseur                  -->  VueClasse                     : "«create»"
+VueClasse                      -->  AbstractDecorateur            : "«create»"
+VueClasse                      -->  DecorateurLabel               : "«create»"
+VueClasse                     "1" *--> "title\n1" DecorateurLabel               
+VueClasse                      -->  FinalDecorateur               : "«create»"
+VueClasse                     "1" *--> "classe\n1" Interface                     
+VueClasse                      -->  InterfaceDecorateur           : "«create»"
+VueClasse                      -->  ItaliqueDecorateur            : "«create»"
+VueClasse                      -->  PrivateDecorateur             : "«create»"
+VueClasse                      -->  ProtectedDecorateur           : "«create»"
+VueClasse                      -->  PublicDecorateur              : "«create»"
+VueClasse                      -->  SoulignementDecorateur        : "«create»"
+VuePrincipale                  --^  Observateur                   
+VuePrincipale                 "1" *--> "vues\n*" VueClasse                     
+@enduml
