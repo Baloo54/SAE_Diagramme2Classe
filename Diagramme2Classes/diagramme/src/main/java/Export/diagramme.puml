@@ -47,10 +47,10 @@ class Model {
     + changerVisibiliteMethode(arg0 : Interface, arg1 : Methode) : void
     + getClasses() : ArrayList
     + getPackages() : HashMap
-    + getPosition(arg0 : Interface) : Position
     + ajouterObservateur(arg0 : Observateur) : void
     - lambda$0(arg0 : String) : ArrayList
     - lambda$1(arg0 : String) : ArrayList
+    + getPosition(arg0 : Interface) : Position
 }
 Object <|-- Model
 interface Sujet {
@@ -115,10 +115,10 @@ class Interface {
     + addAttribut(arg0 : Attribut) : void
     + changerVisibiliteMethode(arg0 : Methode) : void
     + getHeritageVisible() : boolean
-    + etreVisibleFille(arg0 : Interface) : boolean
-    + getInterfacesFilles() : HashMap
-    + addInterface(arg0 : Interface) : void
     + changerVisibiliteInterfaceFille(arg0 : Interface) : void
+    + getInterfacesFilles() : HashMap
+    + etreVisibleFille(arg0 : Interface) : boolean
+    + addInterface(arg0 : Interface) : void
     + equals(arg0 : Object) : boolean
     + getInterfaces() : ArrayList
 }
@@ -130,8 +130,8 @@ class Methode {
     - modificateurs : ArrayList
     + getNom() : String
     + getParametres() : List
-    + getTypeRetour() : String
     + getModificateurs() : ArrayList
+    + getTypeRetour() : String
     + equals(arg0 : Object) : boolean
 }
 Visible <|-- Methode
@@ -162,12 +162,12 @@ Visible <|-- Attribut
 class Analyseur {
     + instance : Analyseur
     + analyserClasse(arg0 : String) : Interface
-    + afficherResultats(arg0 : Interface) : void
-    - getModifierClasse(arg0 : Class) : ArrayList
+    - analyserAttribut(arg0 : Field) : Attribut
     - getModifierVisibilite(arg0 : int) : String
     - getModifierMethode(arg0 : Method) : ArrayList
-    - analyserAttribut(arg0 : Field) : Attribut
+    - getModifierClasse(arg0 : Class) : ArrayList
     - analyserMethode(arg0 : Method) : Methode
+    + afficherResultats(arg0 : Interface) : void
     + getInstance() : Analyseur
 }
 Object <|-- Analyseur
@@ -175,9 +175,9 @@ class VueClasse {
     - classe : Interface
     + title : DecorateurLabel
     + getClasse() : Interface
+    - getModificateur(arg0 : ArrayList, arg1 : Label) : DecorateurLabel
     - getModificateurClasse(arg0 : Label) : DecorateurLabel
     + mettreAJourAffichage() : void
-    - getModificateur(arg0 : ArrayList, arg1 : Label) : DecorateurLabel
 }
 StackPane <|-- VueClasse
 class VuePackage {
@@ -276,12 +276,12 @@ Observateur <|.. ControlleurAfficherClasses
 class ModificationControler {
     + model : Model
     + actionType : String
+    - lambda$2(arg0 : ComboBox, arg1 : TextField, arg2 : TextField, arg3 : Stage, arg4 : ActionEvent) : void
+    - ouvrirFenetreAttribut() : void
     - ouvrirFenetreClasse() : void
     - ouvrirFenetreMethode() : void
-    - ouvrirFenetreAttribut() : void
-    - lambda$2(arg0 : ComboBox, arg1 : TextField, arg2 : TextField, arg3 : Stage, arg4 : ActionEvent) : void
-    + handle(arg0 : ActionEvent) : void
     + handle(arg0 : Event) : void
+    + handle(arg0 : ActionEvent) : void
     - lambda$0(arg0 : TextField, arg1 : CheckBox, arg2 : Stage, arg3 : ActionEvent) : void
     - lambda$1(arg0 : ComboBox, arg1 : TextField, arg2 : ComboBox, arg3 : Stage, arg4 : ActionEvent) : void
 }

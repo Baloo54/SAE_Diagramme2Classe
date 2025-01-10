@@ -75,12 +75,28 @@ public class Export {
             }
         }
 
+        for (Classe classe : classes) {
+            for (Attribut attribut : classe.getAttributs()) {
+                String typeAttribut = attribut.getType();
+                for (Classe autreClasse : classes) {
+                    if (autreClasse.getNom().equals(typeAttribut)) {
+                        puml.append(classe.getNom())
+                                .append(" --> ")
+                                .append(autreClasse.getNom())
+                                .append("\n");
+                    }
+                }
+            }
+        }
+
         puml.append("@enduml\n");
+
         String doss = "Diagramme2Classes/diagramme/src/main/java/Export/";
         File dossier = new File(doss);
         if (!dossier.exists()) {
             System.out.println("Dossier introuvable");
         }
+
         // Écriture dans un fichier
         String fileName = doss + "diagramme.puml";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
@@ -93,6 +109,7 @@ public class Export {
         return fileName;
     }
 
+
     /**
      * Méthode permettant de traduire les modificateurs au format Puml
      *
@@ -104,7 +121,6 @@ public class Export {
         if (modificateurs.contains("protected")) return "#";
         return "+";
     }
-
     /**
      * Exporte le diagramme affiché dans un Pane JavaFX sous forme de fichier PNG.
      * @param diagrammePane Le Pane contenant le diagramme à exporter.
