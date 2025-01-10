@@ -246,6 +246,8 @@ public class Model implements Sujet {
         c.changerVisibilite();
         int i = packages.get(c.getPackageClasse()).indexOf(c);
         packages.get(c.getPackageClasse()).set(i, c);
+        vuesClasses.get(c).setClasse(c);
+        vuesClasses.get(c).mettreAJourAffichage();
         notifierObservateurs();
     }
 
@@ -359,6 +361,8 @@ public class Model implements Sujet {
         c.changerVisibiliteMethode(m);
         int i = packages.get(c.getPackageClasse()).indexOf(c);
         packages.get(c.getPackageClasse()).set(i, c);
+        vuesClasses.get(c).setClasse(c);
+        vuesClasses.get(c).mettreAJourAffichage();
         notifierObservateurs();
     }
 }

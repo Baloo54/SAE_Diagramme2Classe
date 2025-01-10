@@ -31,7 +31,6 @@ public class VuePrincipale extends StackPane implements Observateur {
             if (!this.vues.contains(classe)) {
                 getChildren().add(classe);
                 vues.add(classe);
-                
             }
         }
         // Supprimer les classes qui ne sont plus dans le modèle
