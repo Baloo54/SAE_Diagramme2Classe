@@ -2,10 +2,16 @@ package diagramme;
 
 import analyse.Analyseur;
 import classes.Attribut;
+import classes.Classe;
 import classes.Interface;
 import classes.Methode;
+import diagramme.Vues.VueClasse;
+import diagramme.Vues.arrow.FabriqueAbstraiteVueFleche;
+import diagramme.Vues.arrow.FlechePointille;
+import diagramme.Vues.arrow.FlecheTeteRemplie;
+import diagramme.Vues.arrow.FlecheTeteRempliePointille;
+import diagramme.controler.DeplacementControler;
 import javafx.scene.layout.Pane;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,8 +30,9 @@ public class Model implements Sujet {
     private ArrayList<Observateur> observateurs;
     private HashMap<String, ArrayList<Interface>> packages;
     private HashMap<Interface, Position> positions;
-    private ArrayList<Interface> classes;
     private HashMap<Interface, ArrayList<HashMap<String, Interface>>> relations;
+    private HashMap<Interface, VueClasse> vuesClasses;
+    private ArrayList<HashMap<FabriqueAbstraiteVueFleche, HashMap<VueClasse, VueClasse>>> vuesFleches;
 
     /**
      * Constructeur
@@ -35,8 +42,9 @@ public class Model implements Sujet {
         this.observateurs = new ArrayList<>();
         this.packages = new HashMap<>();
         this.positions = new HashMap<>();
-        this.classes = new ArrayList<>();
         this.relations = new HashMap<>();
+        this.vuesClasses = new HashMap<>();
+        this.vuesFleches = new ArrayList<>();
     }
 
     // Gestion des observateurs
@@ -79,6 +87,7 @@ public class Model implements Sujet {
             }
         }
         rechercheRelation();
+        creerVue();
         notifierObservateurs();
     }
 
@@ -86,33 +95,65 @@ public class Model implements Sujet {
      * Recherche des relations entre les classes en analysant attributs et méthodes.
      */
     private void rechercheRelation() {
-        for (Interface classe : this.classes) {
-            // Analyse des attributs
-            for (Attribut attribut : classe.getAttributs()) {
-                ajouterRelationSiExiste(classe, attribut.getNom());
-            }
+        for (Map.Entry<String, ArrayList<Interface>> entry : packages.entrySet()) {
+        ArrayList<Interface> interfaces = entry.getValue();
+            for (Interface classe : interfaces) {
+                // Analyse des attributs
+                for (Attribut attribut : classe.getAttributs()) {
+                    ajouterRelationSiExiste(classe, attribut.getNom(), "association");
+                }
 
-            // Analyse des paramètres de méthodes
-            for (Methode methode : classe.getMethodes()) {
-                for (HashMap<String, String> map : methode.getParametres()) {
-                    for (String typeParametre : map.values()) {
-                        ajouterRelationSiExiste(classe, typeParametre.split("arg")[0]);
+                // Analyse des paramètres de méthodes
+                for (Methode methode : classe.getMethodes()) {
+                    for (HashMap<String, String> map : methode.getParametres()) {
+                        for (String typeParametre : map.values()) {
+                            ajouterRelationSiExiste(classe, typeParametre.split("arg")[0], "association");
+                        }
                     }
+                }
+                // Analyse des classes parents donc héritage
+                if (classe instanceof Classe) {
+                    Classe classeAnalysee = (Classe) classe; // Caster l'interface en classe
+                    Classe classeParent = classeAnalysee.getClasseParent();
+                    if(classeParent!=null){
+                        ajouterRelationSiExiste(classe, classeParent.getNom(), "heritage");
+                    }
+                }
+                // Analyse des classes implemente
+                for(Interface i : classe.getInterfaces()){
+                    ajouterRelationSiExiste(classe, i.getNom(), "implementation");
                 }
             }
         }
     }
-
     /**
      * Ajoute une relation si la classe associée existe.
      * @param classe La classe source.
      * @param nom Le nom de la classe cible.
      */
-    private void ajouterRelationSiExiste(Interface classe, String nom) {
+    private void ajouterRelationSiExiste(Interface classe, String nom, String type) {
         Interface associe = existeClasse(nom);
         if (associe != null) {
-            ajouterRelation(classe, Map.of("association", associe));
+            HashMap<String, Interface> relation = new HashMap<>();
+            relation.put(type, associe);
+            ajouterRelation(classe, relation);
         }
+    }
+    /**
+     * Vérifie si une classe existe.
+     * @param nom Le nom de la classe.
+     * @return La classe si elle existe, sinon null.
+     */
+    private Interface existeClasse(String nom) {
+        for (Map.Entry<String, ArrayList<Interface>> entry : packages.entrySet()) {
+            ArrayList<Interface> interfaces = entry.getValue();
+            for (Interface classe : interfaces) {
+                if (nom.equals(classe.getNom())) {
+                    return classe;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -120,19 +161,62 @@ public class Model implements Sujet {
      * @param cle La classe source.
      * @param nouvelElement La relation à ajouter.
      */
-    public void ajouterRelation(Interface cle, Map<String, Interface> nouvelElement) {
-        relations.computeIfAbsent(cle, k -> new ArrayList<>()).add(new HashMap<>(nouvelElement));
+    public void ajouterRelation(Interface cle, HashMap<String, Interface> nouvelElement) {
+        ArrayList<HashMap<String, Interface>> liste = relations.getOrDefault(cle, new ArrayList<>());
+        if (!liste.contains(nouvelElement)) {
+            liste.add(nouvelElement);
+            relations.put(cle, liste);
+        }
     }
-
     /**
-     * Vérifie si une classe existe.
-     * @param nom Le nom de la classe.
-     * @return La classe si elle existe, sinon null.
+     * création des Vuesclasses et vueFleches
      */
-    private Interface existeClasse(String nom) {
-        return this.classes.stream().filter(c -> c.getNom().equals(nom)).findFirst().orElse(null);
-    }
+    public void creerVue(){
+        for (Map.Entry<String, ArrayList<Interface>> entry : packages.entrySet()) {
+            ArrayList<Interface> interfaces = entry.getValue();
+            for (Interface classe : interfaces) {
+                Position position = getPosition(classe);
+                VueClasse nouvelleVue = new VueClasse(classe);
+                DeplacementControler controler = new DeplacementControler(this);
+                controler.ajouterEvenements(nouvelleVue);
+                nouvelleVue.setTranslateX(position.getX());
+                nouvelleVue.setTranslateY(position.getY());
+                vuesClasses.put(classe, nouvelleVue);
+            }
+        }
+        for (Map.Entry<Interface, ArrayList<HashMap<String, Interface>>> entree : relations.entrySet()) {
+            // récupère la classevue source
+            VueClasse source = vuesClasses.get(entree.getKey());
+            // Parcourt les relations associées
+            for (HashMap<String, Interface> relation : entree.getValue()) {
+                for (Map.Entry<String, Interface> rel : relation.entrySet()) {
+                    //récupère la classvue cible
+                    VueClasse cible = vuesClasses.get(rel.getValue());
+                    FabriqueAbstraiteVueFleche fleche;
+                    switch (rel.getKey()) {
+                        case "heritage": 
+                            fleche = new FlecheTeteRempliePointille(0,0,0,0);
+                            break;
 
+                        case "implementation": 
+                            fleche = new FlechePointille(0,0,0,0);
+                            break;
+                        default:
+                        fleche = new FlecheTeteRemplie(0,0,0,0);
+                        break;
+                    }
+                    fleche.setMouseTransparent(true);
+                    HashMap<VueClasse, VueClasse> relationInterne = new HashMap<>();
+                    relationInterne.put(source, cible);
+
+                    HashMap<FabriqueAbstraiteVueFleche, HashMap<VueClasse, VueClasse>> relationExterne = new HashMap<>();
+                    relationExterne.put(fleche, relationInterne);
+                    vuesFleches.add(relationExterne);
+                }
+            }
+        }
+    }
+    
     // Gestion des positions et déplacements
 
     /**
@@ -243,20 +327,26 @@ public class Model implements Sujet {
         }
         return classes;
     }
-
-    /**
-     * Récupère les relations entre les classes.
-     * @return Les relations.
-     */
-    public HashMap<Interface, ArrayList<HashMap<String, Interface>>> getRelations() {
-        return relations;
-    }
-
     /**
      * Retourne un panneau de diagramme (placeholder).
      * @return Panneau de diagramme.
      */
     public Pane getDiagrammePane() {
         return null;
+    }
+    /**
+     * 
+     * @return liste des packages
+     */
+    public HashMap<String, ArrayList<Interface>> getPackages() {
+        return packages;
+    }
+
+    public ArrayList<VueClasse> getVueClasse() {
+        return new ArrayList<>(vuesClasses.values());
+    }
+
+    public ArrayList<HashMap<FabriqueAbstraiteVueFleche, HashMap<VueClasse, VueClasse>>> getVueFleches() {
+        return vuesFleches;
     }
 }

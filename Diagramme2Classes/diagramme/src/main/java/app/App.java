@@ -94,7 +94,7 @@ public class App extends Application {
         menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu,EditMenu);
 
         BorderPane root = new BorderPane();
-        root.setTop(menuBar);
+        root.setBottom(menuBar);
         root.setCenter(diagramArea);
 
         // Configuration de la scène

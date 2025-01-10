@@ -12,8 +12,10 @@ module version1 {
     exports diagramme.Vues.decorateur;
     exports analyse.loader;
     exports classes;
+    exports diagramme.Vues.arrow; // Ajout pour résoudre l'erreur
 
-    // Les packages restants peuvent être ouverts pour JavaFX uniquement si nécessaire
+    // Ouvrir les packages pour JavaFX ou réflexion si nécessaire
     opens diagramme.Vues to javafx.graphics;
     opens diagramme.controler to javafx.graphics;
+    opens diagramme.Vues.arrow to javafx.graphics; // Ajout si besoin d'accès réflexif
 }

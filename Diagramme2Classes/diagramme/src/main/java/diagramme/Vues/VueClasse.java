@@ -25,6 +25,7 @@ import javafx.scene.shape.Rectangle;
 public class VueClasse extends StackPane{
     
     private Interface classe; // Instance de la classe représentée
+    DecorateurLabel title;
 
     /**
      * Constructeur de la classe VueClasse.
@@ -35,79 +36,7 @@ public class VueClasse extends StackPane{
      */
     public VueClasse(Interface classe){
         this.classe = classe;
-        ArrayList<DecorateurLabel> methodes = new ArrayList<>();
-        ArrayList<DecorateurLabel> attributs = new ArrayList<>();
-        
-        // Création du titre avec modificateurs.
-        DecorateurLabel title = getModificateurClasse(new Label(classe.getNom()));
-
-        // Traitement des méthodes visibles.
-        for (Methode methode : classe.getMethodes()) {
-            if(methode.getVisible()){
-                List<HashMap<String,String>> hash = methode.getParametres();
-                String signature = methode.getNom() + "(";
-                int index = hash.size();
-                for (HashMap<String, String> map : hash) {
-                    for (Map.Entry<String, String> entry : map.entrySet()) {
-                        index--;
-                        signature += entry.getValue().split("arg")[0];
-                        signature += index > 0 && signature.charAt(signature.length() - 1) != ',' ? ",": "";
-                    }
-                }
-                signature += "): " + methode.getTypeRetour();
-                methodes.add(getModificateur(methode.getModificateurs(), new Label(signature)));
-            }
-        }
-
-        // Traitement des attributs visibles.
-        for(Attribut attribut : classe.getAttributs()){
-            if(attribut.getVisible()){
-                attributs.add(getModificateur(attribut.getModificateurs(), new Label(attribut.getNom() + ": " + attribut.getType())));
-            }
-        }
-
-        // Calcul de la largeur maximale pour l'affichage.
-        ArrayList<DecorateurLabel> testTaille = new ArrayList<>();
-        testTaille.add(title);
-        testTaille.addAll(methodes);
-        testTaille.addAll(attributs);
-
-        double largeur = 0;
-        double hauteur = 0;
-
-        for (DecorateurLabel label : testTaille) {
-            if(label.getLabelWidth() > largeur) largeur = label.getLabelWidth();
-            if(label.getLabelHeight() > hauteur) hauteur = label.getLabelHeight();
-        }
-        largeur += 5;
-        hauteur *= testTaille.size();
-
-        // Création de la structure graphique pour le diagramme de classe.
-        VBox vbox = new VBox();
-        //fixer la largeur de vBox
-        vbox.setMaxWidth(largeur);
-        vbox.setMaxHeight(hauteur);
-        this.setMaxWidth(largeur);
-        this.setMaxHeight(hauteur);
-        //centré le titre
-        StackPane panecenter = new StackPane();
-        panecenter.getChildren().add(title);
-        panecenter.setAlignment(Pos.CENTER);
-        vbox.getChildren().add(panecenter);
-
-        vbox.getChildren().add(new Rectangle(largeur, 1)); // Ligne de séparation
-        for (DecorateurLabel attr : attributs) {
-            vbox.getChildren().add(attr);
-        }
-
-        vbox.getChildren().add(new Rectangle(largeur, 1)); // Ligne de séparation
-        for (DecorateurLabel meth : methodes) {
-            vbox.getChildren().add(meth);
-        }
-        //bordure de la vbox
-        vbox.setStyle("-fx-border-color: black; -fx-border-width: 1;"); // Bordure noire de 1px
-        setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
-        getChildren().addAll(vbox);
+        mettreAJourAffichage();
     }
 
     
@@ -204,23 +133,26 @@ private DecorateurLabel getModificateur(ArrayList<String> modificateurs, Label l
      * Cette méthode est appelée lorsqu'une modification dans la classe représentée est détectée.
      */
     public void mettreAJourAffichage() {
-        // Effacer les enfants existants (tout sauf la bordure principale)
+        // Effacer les enfants existants
         this.getChildren().clear();
-
+        //création 
         ArrayList<DecorateurLabel> methodes = new ArrayList<>();
         ArrayList<DecorateurLabel> attributs = new ArrayList<>();
+        
+        // Création du titre avec modificateurs.
+        this.title = getModificateurClasse(new Label(classe.getNom()));
 
-        // Recalcul des méthodes visibles
+        // Traitement des méthodes visibles.
         for (Methode methode : classe.getMethodes()) {
-            if (methode.getVisible()) {
-                List<HashMap<String, String>> hash = methode.getParametres();
+            if(methode.getVisible()){
+                List<HashMap<String,String>> hash = methode.getParametres();
                 String signature = methode.getNom() + "(";
                 int index = hash.size();
                 for (HashMap<String, String> map : hash) {
                     for (Map.Entry<String, String> entry : map.entrySet()) {
                         index--;
                         signature += entry.getValue().split("arg")[0];
-                        signature += index > 0 ? "," : "";
+                        signature += index > 0 && signature.charAt(signature.length() - 1) != ',' ? ",": "";
                     }
                 }
                 signature += "): " + methode.getTypeRetour();
@@ -228,51 +160,54 @@ private DecorateurLabel getModificateur(ArrayList<String> modificateurs, Label l
             }
         }
 
-        // Recalcul des attributs visibles
-        for (Attribut attribut : classe.getAttributs()) {
-            if (attribut.getVisible()) {
-                attributs.add(getModificateur(attribut.getModificateurs(), new Label(attribut.getNom())));
+        // Traitement des attributs visibles.
+        for(Attribut attribut : classe.getAttributs()){
+            if(attribut.getVisible()){
+                attributs.add(getModificateur(attribut.getModificateurs(), new Label(attribut.getNom() + ": " + attribut.getType())));
             }
         }
 
-        // Création graphique mise à jour
-        VBox vbox = new VBox();
+        // Calcul de la largeur maximale pour l'affichage.
+        ArrayList<DecorateurLabel> testTaille = new ArrayList<>();
+        testTaille.add(this.title);
+        testTaille.addAll(methodes);
+        testTaille.addAll(attributs);
 
-        // Calcul de la largeur et de la hauteur
         double largeur = 0;
         double hauteur = 0;
-        for (DecorateurLabel label : methodes) {
-            largeur = Math.max(largeur, label.getLabelWidth());
-            hauteur += label.getLabelHeight();
-        }
-        for (DecorateurLabel label : attributs) {
-            largeur = Math.max(largeur, label.getLabelWidth());
-            hauteur += label.getLabelHeight();
-        }
 
-        // Ajustements graphiques
+        for (DecorateurLabel label : testTaille) {
+            if(label.getLabelWidth() > largeur) largeur = label.getLabelWidth();
+            if(label.getLabelHeight() > hauteur) hauteur = label.getLabelHeight();
+        }
         largeur += 5;
-        hauteur += 10;
+        hauteur *= testTaille.size();
 
+        // Création de la structure graphique pour le diagramme de classe.
+        VBox vbox = new VBox();
+        //fixer la largeur de vBox
         vbox.setMaxWidth(largeur);
         vbox.setMaxHeight(hauteur);
+        this.setMaxWidth(largeur);
+        this.setMaxHeight(hauteur);
+        //centré le titre
+        StackPane panecenter = new StackPane();
+        panecenter.getChildren().add(title);
+        panecenter.setAlignment(Pos.CENTER);
+        vbox.getChildren().add(panecenter);
 
-        // Ajout des séparateurs et des labels
-        vbox.getChildren().add(new Label(classe.getNom())); // Titre
-        vbox.getChildren().add(new Rectangle(largeur, 1)); // Séparation
-
+        vbox.getChildren().add(new Rectangle(largeur, 1)); // Ligne de séparation
         for (DecorateurLabel attr : attributs) {
             vbox.getChildren().add(attr);
         }
 
-        vbox.getChildren().add(new Rectangle(largeur, 1)); // Séparation
-
+        vbox.getChildren().add(new Rectangle(largeur, 1)); // Ligne de séparation
         for (DecorateurLabel meth : methodes) {
             vbox.getChildren().add(meth);
         }
-
-        vbox.setStyle("-fx-border-color: black; -fx-border-width: 1;");
-        this.getChildren().add(vbox);
+        //bordure de la vbox
+        vbox.setStyle("-fx-border-color: black; -fx-border-width: 1;"); // Bordure noire de 1px
+        setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
+        getChildren().addAll(vbox);
     }
-
 }
