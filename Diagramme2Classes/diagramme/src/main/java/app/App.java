@@ -5,6 +5,7 @@ import diagramme.Vues.VuePrincipale;
 import diagramme.controler.ControlleurAfficherClasses;
 import diagramme.controler.ExportationControler;
 import diagramme.controler.ImportationControler;
+import diagramme.controler.ModificationControler;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -61,6 +62,11 @@ public class App extends Application {
         MenuItem AjoutAttribut = new MenuItem("Ajouter un attribut");
         //Ajout des items au menu
         EditMenu.getItems().addAll(AjoutClasse, AjoutMethode, AjoutAttribut);
+
+        //Ajout Action
+        AjoutClasse.setOnAction(new ModificationControler(model, "ajoutClasse"));
+        AjoutMethode.setOnAction(new ModificationControler(model, "ajoutMethode"));
+        AjoutAttribut.setOnAction(new ModificationControler(model, "ajoutAttribut"));
 
 
 
