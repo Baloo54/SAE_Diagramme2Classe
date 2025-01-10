@@ -52,7 +52,7 @@ public class Interface extends Attribut {
         super.changerVisibilite();
         if (!this.getVisible()) {
             for (Interface i : interfaces) {
-                if (i.interfacesFilles.get(this)) {
+                if (i.interfacesFilles.get(this)!=null) {
                     i.interfacesFilles.put(this, false);
                 }
             }
@@ -126,7 +126,7 @@ public class Interface extends Attribut {
      */
     @Override
     public boolean equals(Object obj) {
-        return getNom().equals(((Interface) obj).getNom());
+        return getNom().equals(((Interface) obj).getNom())&&getPackageClasse().equals(((Interface) obj).getPackageClasse());
     }
 
     /**
@@ -199,4 +199,5 @@ public class Interface extends Attribut {
     public String getPackageClasse() {
         return packageClasse;
     }
+
 }

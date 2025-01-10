@@ -2,9 +2,11 @@ package app;
 
 import diagramme.Model;
 import diagramme.Vues.VuePrincipale;
+import diagramme.controler.ControlleurAfficherClasses;
 import diagramme.controler.ExportationControler;
 import diagramme.controler.ImportationControler;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -88,14 +90,24 @@ public class App extends Application {
         // Menu "Visibilité"
         Menu visibiliteMenu = new Menu("Visibilité");
         MenuItem visibiliteMenuItem = new MenuItem("Afficher les classes");
-      //  visibiliteMenuItem.setOnAction(new ControlleurAfficherClasses(model));
+
+        VBox sidebar = new VBox();
+        sidebar.setAlignment(Pos.TOP_CENTER);
+        VBox methodbar = new VBox();
+        methodbar.setAlignment(Pos.TOP_CENTER);
+        ControlleurAfficherClasses controlleurAfficherClasses = new ControlleurAfficherClasses(model, sidebar,methodbar);
+
+     visibiliteMenuItem.setOnAction(controlleurAfficherClasses);
         visibiliteMenu.getItems().add(visibiliteMenuItem);
 
         menuBar.getMenus().addAll(fichierMenu, exportMenu, visibiliteMenu,EditMenu);
 
+        model.ajouterObservateur(controlleurAfficherClasses);
         BorderPane root = new BorderPane();
         root.setBottom(menuBar);
         root.setCenter(diagramArea);
+        root.setLeft(sidebar);
+        root.setRight(methodbar);
 
         // Configuration de la scène
         Scene scene = new Scene(root, width, height);
