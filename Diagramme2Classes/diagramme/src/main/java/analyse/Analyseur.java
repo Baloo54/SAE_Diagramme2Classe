@@ -59,18 +59,25 @@ public class Analyseur {
             classeAnalysee.addModificateur(modifier);
         }
 
-        // Analyse des attributs
-        for (Field field : classe.getDeclaredFields()) {
-            Attribut attribut = analyserAttribut(field);
-            classeAnalysee.addAttribut(attribut);
+        try {
+            // Analyse des attributs
+            for (Field field : classe.getDeclaredFields()) {
+                Attribut attribut = analyserAttribut(field);
+                classeAnalysee.addAttribut(attribut);
+            }
+        } catch (java.lang.NoClassDefFoundError e) {
+            // Capture d'autres exceptions si nécessaire, mais on ne fait rien
         }
-
-        // Analyse des méthodes
-        for (Method method : classe.getDeclaredMethods()) {
-            Methode methode = analyserMethode(method);
-            classeAnalysee.addMethode(methode);
+        try {
+            // Analyse des méthodes
+            for (Method method : classe.getDeclaredMethods()) {
+                Methode methode = analyserMethode(method);
+                classeAnalysee.addMethode(methode);
+            }
+        } catch (java.lang.NoClassDefFoundError e) {
+            // Capture d'autres exceptions si nécessaire, mais on ne fait rien
         }
-
+        
         // Analyse des interfaces implémentées
         for (Class<?> interfaceClass : classe.getInterfaces()) {
             Interface inter = new Interface("interface", interfaceClass.getSimpleName(), interfaceClass.getPackageName());

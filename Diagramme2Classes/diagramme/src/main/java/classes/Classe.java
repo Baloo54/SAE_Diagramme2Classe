@@ -1,6 +1,5 @@
 package classes;
 
-import java.util.HashMap;
 
 /**
  * Classe représentant une classe dans un modèle orienté objet.

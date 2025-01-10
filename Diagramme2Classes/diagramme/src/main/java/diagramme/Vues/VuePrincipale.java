@@ -67,9 +67,9 @@ public class VuePrincipale extends StackPane implements Observateur {
 
                         case "FlecheTeteRemplie":
                             x1 = source.localToScene(source.getWidth(), 0).getX();
-                            y1 = source.localToScene(source.getHeight() * 0.75, 0).getY();
+                            y1 = source.localToScene(0, source.getHeight() * 0.1).getY();
                             x2 = cible.localToScene(0, 0).getX();
-                            y2 = cible.localToScene(cible.getHeight() * 0.75, 0).getY();
+                            y2 = cible.localToScene(0,cible.getHeight() * 0.1).getY();
                             break;
 
                         default:
